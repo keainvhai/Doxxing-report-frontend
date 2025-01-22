@@ -1,0 +1,27 @@
+.report-list {
+  padding: 20px;
+}
+
+.report-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(1, 1fr); /* 默认小屏幕占满整行 */
+}
+
+@media screen and (min-width: 768px) {
+  .report-grid {
+    grid-template-columns: repeat(2, 1fr); /* 每行 2 个 */
+  }
+}
+@media screen and (min-width: 1024px) {
+  .report-grid {
+    grid-template-columns: repeat(3, 1fr); /* 每行 3 个 */
+  }
+}
+
+/* ✅ 超大屏幕：每行 4 个 */
+@media screen and (min-width: 1400px) {
+  .report-grid {
+    grid-template-columns: repeat(4, 1fr); /* 每行 4 个 */
+  }
+}

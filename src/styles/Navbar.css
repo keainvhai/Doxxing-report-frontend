@@ -1,0 +1,91 @@
+/* 🌟 Navbar 基础样式 */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background: rgba(0, 0, 0, 0.85); */
+  background-color: #333;
+  padding: 10px 20px;
+  color: white;
+  position: relative;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.navbar .logo {
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  margin-right: 15px;
+  font-size: 16px;
+  transition: color 0.3s ease-in-out;
+}
+
+.navbar a:hover {
+  font-weight: bold;
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-links {
+  margin-right: 1rem;
+}
+
+/* 处理小屏幕的菜单 */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+  margin-right: 1.2rem;
+}
+
+/* 响应式：小屏幕下的菜单 */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    background: #333;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 10px 0;
+    text-align: center;
+  }
+
+  .nav-links.show {
+    display: flex;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  .nav-links a {
+    padding: 12px;
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.2); */
+    width: 100%;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

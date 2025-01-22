@@ -1,0 +1,48 @@
+.report-details {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.report-details h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.report-details p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.report-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.report-detail-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.source-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #444;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.source-link:hover {
+  background-color: #333;
+}

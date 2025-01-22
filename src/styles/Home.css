@@ -1,0 +1,35 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: #f8f9fa; /* ✅ 淡灰色背景 */
+  min-height: 100vh; /* ✅ 页面高度至少占满全屏 */
+  padding: 40px 20px;
+}
+
+/* 🌟 让标题和描述更显眼 */
+.home-content {
+  margin-bottom: 30px;
+}
+
+.home-content h1 {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.home-content p {
+  font-size: 18px;
+  color: #555;
+}
+
+/* 🌟 让 Search 组件有一个居中的 card 样式 */
+.search-section {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 95%;
+}

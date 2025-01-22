@@ -1,0 +1,49 @@
+.loginContainer {
+  width: 100%;
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.loginContainer h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.loginContainer input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.loginContainer button {
+  width: 50%;
+  padding: 10px;
+  background: #2196f3;
+  color: white;
+  border: none;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.loginContainer button:hover {
+  background: #1e87db;
+}
+
+/* 🌟 响应式调整 */
+@media (max-width: 500px) {
+  .loginContainer {
+    width: 90%;
+  }
+}
