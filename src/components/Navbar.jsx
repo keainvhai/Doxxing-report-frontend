@@ -50,11 +50,14 @@ const Navbar = () => {
         ☰
       </button>
       <div ref={menuRef} className={`nav-links ${menuOpen ? "show" : ""}`}>
-        <Link to="/submit" onClick={() => setMenuOpen(false)}>
-          Submit Report
-        </Link>
         <Link to="/search" onClick={() => setMenuOpen(false)}>
           Search
+        </Link>
+        <Link to="/leaderboard" onClick={() => setMenuOpen(false)}>
+          Leaderboard
+        </Link>
+        <Link to="/submit" onClick={() => setMenuOpen(false)}>
+          Submit Report
         </Link>
         {!authState.status ? (
           <>

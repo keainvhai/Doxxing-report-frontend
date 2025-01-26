@@ -22,6 +22,9 @@ const ReportEdit = () => {
 
   const [newImages, setNewImages] = useState([]);
 
+  const [showToast, setShowToast] = useState(false); // ✅ 控制 Toast 状态
+  const [toastMessage, setToastMessage] = useState(""); // ✅ 动态设置 Toast 消息
+
   // 处理日期格式，确保前端 input[type="date"] 能正确识别
   const formatDate = (dateString) => {
     return dateString ? dateString.split("T")[0] : "";
@@ -66,11 +69,23 @@ const ReportEdit = () => {
 
     try {
       await updateReport(id, formData);
-      alert("✅ Report updated successfully!");
-      navigate("/admin");
+      // alert("✅ Report updated successfully!");
+      // navigate("/admin");
+      setToastMessage("✅ Report updated successfully!");
+      setShowToast(true);
+
+      setTimeout(() => {
+        setShowToast(false);
+        navigate("/admin"); // ✅ 3 秒后跳转到 Admin
+      }, 3000);
     } catch (err) {
       console.error("❌ Error updating report:", err);
-      alert("Failed to update report.");
+      // alert("Failed to update report.");
+      // ✅ 显示错误消息
+      setToastMessage("❌ Failed to update report.");
+      setShowToast(true);
+
+      setTimeout(() => setShowToast(false), 3000);
     }
   };
 
@@ -79,6 +94,9 @@ const ReportEdit = () => {
 
   return (
     <div className="report-edit-container">
+      {/* ✅ Toast Notification */}
+      {showToast && <div className="toast">{toastMessage}</div>}
+
       <div className="report-edit">
         <h2>Edit Report</h2>
 

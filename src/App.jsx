@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import { AuthContext } from "./helpers/AuthContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Leaderboard from "./components/Leaderboard";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -51,6 +52,7 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/report/:id" element={<ReportEdit />} />
           <Route path="/report/:id" element={<ReportDetails />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
         </Routes>
       </Router>
     </AuthContext.Provider>

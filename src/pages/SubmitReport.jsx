@@ -14,6 +14,8 @@ const SubmitReport = () => {
     images: [],
   });
 
+  const [showToast, setShowToast] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,7 +41,10 @@ const SubmitReport = () => {
 
     console.log("Report Submitted:", formData);
 
-    alert("Report submitted!");
+    // alert("Report submitted!");
+    setShowToast(true); // ✅ 显示 Toast
+    setTimeout(() => setShowToast(false), 3000); // ✅ 3秒后自动关闭
+
     setForm({
       url: "",
       title: "",
@@ -55,6 +60,12 @@ const SubmitReport = () => {
   return (
     <div className="form-container">
       <h2>Submit a Doxxing Report</h2>
+
+      {/* ✅ 小窗口 Toast 通知 */}
+      {showToast && (
+        <div className="toast">✅ Report submitted successfully!</div>
+      )}
+
       <form onSubmit={handleSubmit}>
         {/* Report URL */}
         <label htmlFor="url">🔗 Report URL *</label>

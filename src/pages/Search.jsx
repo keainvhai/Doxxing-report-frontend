@@ -54,7 +54,7 @@ const Search = ({ hideTitle }) => {
     <div className="search-page">
       {!hideTitle && <h2>🔍 Discover Incidents</h2>}
       <SearchComponent
-        placeholder="Search reports by title or author..."
+        placeholder="Type Here..."
         onSearch={handleSearch} // ✅ 传递 handleSearch 方法
       />
       {loading && <p>Loading...</p>}
