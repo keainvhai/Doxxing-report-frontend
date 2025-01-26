@@ -1,40 +1,186 @@
-/* ✅ 让整个搜索组件区域居中 */
+/* ✅ 搜索框区域 */
 .search-container {
   display: flex;
-  gap: 20px;
-  /* margin-bottom: 10px; */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 90%; /* ✅ 让整个搜索框区域占 90% */
+  gap: 15px;
+  width: 90%;
   max-width: 900px;
   margin: 1rem auto;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* ✅ 搜索框样式 */
+/* ✅ 搜索框 + 按钮在一行 */
+.search-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+}
+
+/* ✅ 搜索框 */
 .search-box {
   flex: 1;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-  height: 40px;
-  min-width: 250px; /* ✅ 确保输入框不会过窄 */
 }
 
-/* ✅ 搜索按钮样式 */
-.search-btn {
-  flex: 0.2;
-  padding: 10px 12px;
-  background-color: blue;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+/* ✅ 搜索按钮和高级搜索按钮的容器 */
+.search-btn-container {
+  display: flex;
+  gap: 10px;
+}
+
+/* ✅ 搜索按钮和高级搜索按钮 */
+.search-btn,
+.toggle-advanced-btn {
+  padding: 10px 15px;
   font-size: 16px;
-  height: 42px;
-  min-width: 100px;
+  font-weight: bold;
+  color: white;
+  background-color: blue;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.search-btn:hover {
+.search-btn:hover,
+.toggle-advanced-btn:hover {
   background-color: #0056b3;
+}
+
+/* ✅ 高级搜索按钮 */
+.toggle-advanced-btn {
+  min-width: 180px;
+}
+
+/* ✅ Advanced Search 默认隐藏 */
+.advanced-search {
+  display: none;
+  width: 100%;
+  padding: 15px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ 当 showAdvancedSearch 为 true 时显示 */
+.advanced-search.show {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  width: 95%;
+}
+
+/* ✅ 日期范围选择框 */
+.date-range-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.date-range-container label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.date-range-container span {
+  font-size: 14px;
+  color: #333;
+}
+
+/* ✅ 高级搜索选项的输入框和下拉框 */
+.advanced-search input,
+.advanced-search select {
+  flex: 1;
+  min-width: 180px;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: white;
+}
+
+/* ✅ 清除筛选按钮 */
+.clear-filters-btn {
+  background-color: #ff5e5e; /* 亮红色 */
+  color: white;
+  font-weight: bold;
+  padding: 10px 15px;
+  border: 1px solid #ff3b3b; /* 添加边框 */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* ✅ 悬停效果 */
+.clear-filters-btn:hover {
+  background-color: #ff3b3b; /* 深一点的红 */
+  border-color: #d32f2f;
+  box-shadow: 0 2px 4px rgba(211, 47, 47, 0.3); /* 增加轻微阴影 */
+}
+
+/* ✅ 响应式优化（适配小屏幕） */
+@media (max-width: 768px) {
+  .search-container {
+    width: 95%;
+    padding: 10px;
+  }
+
+  /* ✅ 小屏幕：搜索框独占一行 */
+  .search-row {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .search-box {
+    width: 95%;
+  }
+
+  /* ✅ 小屏幕：按钮组在一行 */
+  .search-btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .search-btn,
+  .toggle-advanced-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  /* ✅ 小屏幕：高级搜索选项自动适配 */
+  .advanced-search {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .advanced-search input,
+  .advanced-search select {
+    width: 95%;
+  }
+  .clear-filters-btn {
+    width: 30%;
+    text-align: center;
+  }
+  .date-range-container {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
 }

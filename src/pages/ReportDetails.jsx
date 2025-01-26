@@ -53,6 +53,9 @@ const ReportDetails = () => {
           {new Date(report.incident_date).toLocaleDateString()}
         </p>
       )}
+      <p>
+        <strong>Source:</strong> {report.url}
+      </p>
 
       {/* ✅ 报告描述 */}
       <p>{report.text}</p>

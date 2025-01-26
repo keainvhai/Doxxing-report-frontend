@@ -30,4 +30,5 @@ export const searchReports = (query) =>
   API.get("/reports", { params: { search: query.trim() } });
 
 // get all Approved report
-export const fetchApprovedReports = () => API.get("/reports/approved"); // ✅ 确保正确访问
+export const fetchApprovedReports = (filters = {}) =>
+  API.get("/reports/approved", { params: filters });
