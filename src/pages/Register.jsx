@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -12,6 +12,9 @@ function Register() {
   };
 
   const navigate = useNavigate();
+  const [showToast, setShowToast] = useState(false); // ✅ 控制 Toast 状态
+  const [toastMessage, setToastMessage] = useState(""); // ✅ 动态设置 Toast 消息
+  const [toastType, setToastType] = useState("success"); // ✅ 记录 Toast 类型
 
   // ✅ Yup 验证规则
   const validationSchema = Yup.object().shape({
@@ -28,8 +31,16 @@ function Register() {
       .post("http://localhost:3001/users/register", values)
       .then((response) => {
         if (response.data.success) {
-          alert("✅ Registration successful! Please login.");
-          navigate("/login");
+          // alert("✅ Registration successful! Please login.");
+          // navigate("/login"); // ✅ 使用 Toast 显示成功信息
+          setToastMessage("✅ Registration successful! Please login.");
+          setToastType("success");
+          setShowToast(true);
+
+          setTimeout(() => {
+            setShowToast(false);
+            navigate("/login"); // ✅ 3 秒后跳转到 Login
+          }, 3000);
         }
       })
       .catch((error) => {
@@ -41,10 +52,20 @@ function Register() {
           if (error.response.status === 400) {
             setErrors({ email: errorMsg }); // 显示在 Email 下方
           } else {
-            alert(errorMsg);
+            // ✅ 显示错误 Toast
+            setToastMessage(`❌ ${errorMsg}`);
+            setToastType("error");
+            setShowToast(true);
+
+            setTimeout(() => setShowToast(false), 3000);
           }
         } else {
           alert("Server error, please try again later.");
+          setToastMessage("❌ Server error, please try again later.");
+          setToastType("error");
+          setShowToast(true);
+
+          setTimeout(() => setShowToast(false), 3000);
         }
       })
       .finally(() => {
@@ -54,6 +75,9 @@ function Register() {
 
   return (
     <div className="registerContainer">
+      {/* ✅ Toast Notification */}
+      {showToast && <div className={`toast ${toastType}`}>{toastMessage}</div>}
+
       <h2>Register</h2>
       <Formik
         initialValues={initialValues}

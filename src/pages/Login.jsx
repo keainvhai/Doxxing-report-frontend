@@ -14,6 +14,9 @@ function Login() {
     email: "",
     password: "",
   };
+  const [showToast, setShowToast] = useState(false); // ✅ 控制 Toast 状态
+  const [toastMessage, setToastMessage] = useState(""); // ✅ 动态设置 Toast 消息
+  const [toastType, setToastType] = useState("success"); // ✅ 记录 Toast 类型
 
   // ✅ 表单验证规则（Yup）
   const validationSchema = Yup.object().shape({
@@ -36,8 +39,16 @@ function Login() {
             status: true,
           });
 
-          // 跳转到主页
-          navigate("/");
+          // ✅ 先显示 Toast
+          setToastMessage("✅ Login successful! Redirecting...");
+          setToastType("success");
+          setShowToast(true);
+
+          // ✅ 3 秒后跳转到主页 `/`
+          setTimeout(() => {
+            setShowToast(false);
+            navigate("/");
+          }, 3000);
         }
       })
       .catch((error) => {
@@ -50,10 +61,19 @@ function Login() {
             // 🔹 如果是 401（未授权），显示错误
             setErrors({ email: errorMsg });
           } else {
-            alert(errorMsg);
+            // ✅ 显示错误 Toast
+            setToastMessage(`❌ ${errorMsg}`);
+            setToastType("error");
+            setShowToast(true);
+
+            setTimeout(() => setShowToast(false), 3000);
           }
         } else {
-          alert("Server error, please try again later.");
+          setToastMessage("❌ Server error, please try again later.");
+          setToastType("error");
+          setShowToast(true);
+
+          setTimeout(() => setShowToast(false), 3000);
         }
       })
       .finally(() => {
@@ -63,6 +83,9 @@ function Login() {
 
   return (
     <div className="loginContainer">
+      {/* ✅ Toast Notification */}
+      {showToast && <div className={`toast ${toastType}`}>{toastMessage}</div>}
+
       <h2>Login</h2>
       <Formik
         initialValues={initialValues}
