@@ -83,7 +83,67 @@
   width: 95%;
 }
 
+.filters-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 列等宽 */
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+}
+
 /* ✅ Dropdown Filters */
+.dropdown-container {
+  position: absolute;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.source-search input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+.source-list {
+  max-height: 250px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.source-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-radius: 4px;
+}
+
+.source-item:hover {
+  background: #f0f0f0;
+}
+
+.source-item.active {
+  background: #007bff;
+  color: white;
+}
+
+.source-count {
+  background: #ddd;
+  padding: 3px 6px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+}
 
 .dropdown-filter {
   width: 100%;
@@ -152,18 +212,6 @@
   align-items: center;
 }
 
-/* ✅ 高级搜索选项的输入框和下拉框 */
-/* .advanced-search input,
-.advanced-search select {
-  flex: 1;
-  min-width: 180px;
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background: white;
-} */
-
 /* ✅ 清除筛选按钮 */
 .clear-filters-btn {
   background-color: #acabab;
@@ -224,5 +272,10 @@
   .advanced-search input,
   .advanced-search select {
     width: 95%;
+  }
+
+  .filters-row {
+    grid-template-columns: 1fr; /* 变成单列 */
+    gap: 8px;
   }
 }

@@ -14,6 +14,7 @@ export const fetchReports = () => API.get("/reports");
 // Get reports by id
 export const fetchReportById = (id) => API.get(`/reports/${id}`);
 // ✅ 更新 Report API，确保发送 FormData
+
 export const updateReport = (id, formData) =>
   API.put(`/reports/update/${id}`, formData, {
     headers: { "Content-Type": "multipart/form-data" }, // 必须加 multipart 头
@@ -32,3 +33,6 @@ export const searchReports = (query) =>
 // get all Approved report
 export const fetchApprovedReports = (filters = {}) =>
   API.get("/reports/approved", { params: filters });
+
+// 获取所有可用的 source 域名
+export const fetchSources = () => API.get("/reports/sources");

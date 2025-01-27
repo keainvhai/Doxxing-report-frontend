@@ -7,25 +7,29 @@ const SearchComponent = ({
   onClearFilters,
   showAdvancedSearch,
   setShowAdvancedSearch,
+  sources, // ✅ 从 `Search.jsx` 传入 sources
+  selectedSource,
+  setSelectedSource,
 }) => {
   const [query, setQuery] = useState("");
   const [advancedFilters, setAdvancedFilters] = useState({
-    source: "",
     published_from: "",
     published_to: "",
     incident_from: "",
     incident_to: "",
   });
 
-  // 控制 Published Date 和 Incident Date 的显示
+  // ✅ 控制 Source 显示
+  const [showSourceFilter, setShowSourceFilter] = useState(false);
   const [showPublishedFilter, setShowPublishedFilter] = useState(false);
   const [showIncidentFilter, setShowIncidentFilter] = useState(false);
+  const [searchText, setSearchText] = useState(""); // ✅ 搜索 source
 
-  // 用 ref 监听 dropdown-filter
   const publishedRef = useRef(null);
   const incidentRef = useRef(null);
+  const sourceRef = useRef(null);
 
-  // 监听点击事件，自动关闭 dropdown
+  // ✅ 监听点击事件，自动关闭 dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -36,6 +40,9 @@ const SearchComponent = ({
       }
       if (incidentRef.current && !incidentRef.current.contains(event.target)) {
         setShowIncidentFilter(false);
+      }
+      if (sourceRef.current && !sourceRef.current.contains(event.target)) {
+        setShowSourceFilter(false);
       }
     };
 
@@ -51,19 +58,18 @@ const SearchComponent = ({
 
   const handleClearFilters = () => {
     setAdvancedFilters({
-      source: "",
       published_from: "",
       published_to: "",
       incident_from: "",
       incident_to: "",
     });
     setQuery("");
+    setSelectedSource("All Sources"); // ✅ 重置 source
     onClearFilters();
   };
 
   return (
     <div className="search-container">
-      {/* 🔍 搜索框 */}
       <div className="search-row">
         <input
           type="text"
@@ -72,8 +78,6 @@ const SearchComponent = ({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-
-        {/* ✅ Advanced Search 按钮，点击时切换 `showAdvancedSearch` 状态 */}
 
         <div className="search-btn-container">
           <button
@@ -91,17 +95,53 @@ const SearchComponent = ({
       {/* ✅ Advanced Search 面板 */}
       {showAdvancedSearch && (
         <div className="advanced-search show">
-          <input
-            type="text"
-            placeholder="Source (e.g., twitter.com)"
-            value={advancedFilters.source}
-            onChange={(e) =>
-              setAdvancedFilters({ ...advancedFilters, source: e.target.value })
-            }
-          />
+          {/* ✅ Source Filter */}
 
-          <div className="date-filters">
-            {/* 📅 Published Date 按钮 + 下拉框 */}
+          <div className="filters-row">
+            <div className="dropdown-filter" ref={sourceRef}>
+              <button
+                className="filter-btn"
+                onClick={() => setShowSourceFilter((prev) => !prev)}
+              >
+                📄 Source
+              </button>
+              {showSourceFilter && (
+                <div className="dropdown-container show">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                  />
+                  <ul className="source-list">
+                    {sources
+                      .filter((src) =>
+                        (src.domain || "")
+                          .toLowerCase()
+                          .includes(searchText.toLowerCase())
+                      )
+                      .map((src, index) => (
+                        <li
+                          key={index}
+                          className={`source-item ${
+                            selectedSource === src.domain ? "active" : ""
+                          }`}
+                          onClick={() => {
+                            setSelectedSource(src.domain);
+                            setShowSourceFilter(false);
+                          }}
+                        >
+                          {src.domain}
+                          <span className="source-count">{src.count}</span>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* ✅ Date Filters */}
+            {/* <div className="date-filters"> */}
             <div className="dropdown-filter" ref={publishedRef}>
               <button
                 className="filter-btn"
@@ -136,7 +176,8 @@ const SearchComponent = ({
                 </div>
               )}
             </div>
-            {/* 📅 Incident Date 按钮 + 下拉框 */}
+
+            {/* 📅 Incident Date */}
             <div className="dropdown-filter" ref={incidentRef}>
               <button
                 className="filter-btn"
@@ -171,9 +212,9 @@ const SearchComponent = ({
                 </div>
               )}
             </div>
+            {/* </div> */}
           </div>
 
-          {/* ✅ 清除筛选按钮 */}
           <button className="clear-filters-btn" onClick={handleClearFilters}>
             Clear Filters
           </button>
