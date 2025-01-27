@@ -45,7 +45,7 @@
   font-size: 16px;
   font-weight: bold;
   color: white;
-  background-color: blue;
+  background-color: #007bff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -83,26 +83,77 @@
   width: 95%;
 }
 
-/* ✅ 日期范围选择框 */
-.date-range-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* ✅ Dropdown Filters */
+
+.dropdown-filter {
   width: 100%;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+}
+
+.date-filters {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+}
+
+/* ✅ 按钮样式 */
+.filter-btn {
+  width: 100%;
+  padding: 10px;
+  font-weight: bold;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-align: center;
+}
+
+.filter-btn:hover {
+  background: #0056b3;
+}
+
+/* ✅ 日期筛选框 */
+.date-range-container {
+  display: none; /* 默认隐藏 */
+  position: absolute;
+  width: 90%;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.date-range-container.show {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 1rem;
 }
 
 .date-range-container label {
-  font-weight: bold;
   font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 2px;
 }
 
-.date-range-container span {
+.date-range-container input {
+  padding: 8px;
   font-size: 14px;
-  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 95%;
+  align-items: center;
 }
 
 /* ✅ 高级搜索选项的输入框和下拉框 */
-.advanced-search input,
+/* .advanced-search input,
 .advanced-search select {
   flex: 1;
   min-width: 180px;
@@ -111,25 +162,25 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   background: white;
-}
+} */
 
 /* ✅ 清除筛选按钮 */
 .clear-filters-btn {
-  background-color: #ff5e5e; /* 亮红色 */
+  background-color: #acabab;
   color: white;
   font-weight: bold;
   padding: 10px 15px;
-  border: 1px solid #ff3b3b; /* 添加边框 */
+  border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 30%;
+  text-align: center;
 }
 
 /* ✅ 悬停效果 */
 .clear-filters-btn:hover {
-  background-color: #ff3b3b; /* 深一点的红 */
-  border-color: #d32f2f;
-  box-shadow: 0 2px 4px rgba(211, 47, 47, 0.3); /* 增加轻微阴影 */
+  box-shadow: 0 2px 4px rgba(109, 108, 108, 0.3); /* 增加轻微阴影 */
 }
 
 /* ✅ 响应式优化（适配小屏幕） */
@@ -173,14 +224,5 @@
   .advanced-search input,
   .advanced-search select {
     width: 95%;
-  }
-  .clear-filters-btn {
-    width: 30%;
-    text-align: center;
-  }
-  .date-range-container {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
   }
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../styles/Search.css";
 
 const SearchComponent = ({
@@ -17,9 +17,35 @@ const SearchComponent = ({
     incident_to: "",
   });
 
-  const handleSearch = () => {
-    console.log("🔍 Searching with:", { query, filters: advancedFilters });
+  // 控制 Published Date 和 Incident Date 的显示
+  const [showPublishedFilter, setShowPublishedFilter] = useState(false);
+  const [showIncidentFilter, setShowIncidentFilter] = useState(false);
 
+  // 用 ref 监听 dropdown-filter
+  const publishedRef = useRef(null);
+  const incidentRef = useRef(null);
+
+  // 监听点击事件，自动关闭 dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        publishedRef.current &&
+        !publishedRef.current.contains(event.target)
+      ) {
+        setShowPublishedFilter(false);
+      }
+      if (incidentRef.current && !incidentRef.current.contains(event.target)) {
+        setShowIncidentFilter(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleSearch = () => {
     onSearch(query.trim(), advancedFilters);
   };
 
@@ -62,7 +88,7 @@ const SearchComponent = ({
         </div>
       </div>
 
-      {/* ✅ 确保点击按钮后 `Advanced Search` 显示/隐藏 */}
+      {/* ✅ Advanced Search 面板 */}
       {showAdvancedSearch && (
         <div className="advanced-search show">
           <input
@@ -73,56 +99,78 @@ const SearchComponent = ({
               setAdvancedFilters({ ...advancedFilters, source: e.target.value })
             }
           />
-          {/* 📅 Published Date（起止时间） */}
-          <div className="date-range-container">
-            <label>Published Date:</label>
-            <input
-              type="date"
-              value={advancedFilters.published_from}
-              onChange={(e) =>
-                setAdvancedFilters({
-                  ...advancedFilters,
-                  published_from: e.target.value,
-                })
-              }
-            />
-            <span>to</span>
-            <input
-              type="date"
-              value={advancedFilters.published_to}
-              onChange={(e) =>
-                setAdvancedFilters({
-                  ...advancedFilters,
-                  published_to: e.target.value,
-                })
-              }
-            />
-          </div>
 
-          {/* 📅 Incident Date（起止时间） */}
-          <div className="date-range-container">
-            <label>Incident Date:</label>
-            <input
-              type="date"
-              value={advancedFilters.incident_from}
-              onChange={(e) =>
-                setAdvancedFilters({
-                  ...advancedFilters,
-                  incident_from: e.target.value,
-                })
-              }
-            />
-            <span>to</span>
-            <input
-              type="date"
-              value={advancedFilters.incident_to}
-              onChange={(e) =>
-                setAdvancedFilters({
-                  ...advancedFilters,
-                  incident_to: e.target.value,
-                })
-              }
-            />
+          <div className="date-filters">
+            {/* 📅 Published Date 按钮 + 下拉框 */}
+            <div className="dropdown-filter" ref={publishedRef}>
+              <button
+                className="filter-btn"
+                onClick={() => setShowPublishedFilter((prev) => !prev)}
+              >
+                📅 Published Date
+              </button>
+              {showPublishedFilter && (
+                <div className="date-range-container show">
+                  <label>From Date</label>
+                  <input
+                    type="date"
+                    value={advancedFilters.published_from}
+                    onChange={(e) =>
+                      setAdvancedFilters({
+                        ...advancedFilters,
+                        published_from: e.target.value,
+                      })
+                    }
+                  />
+                  <label>To Date</label>
+                  <input
+                    type="date"
+                    value={advancedFilters.published_to}
+                    onChange={(e) =>
+                      setAdvancedFilters({
+                        ...advancedFilters,
+                        published_to: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              )}
+            </div>
+            {/* 📅 Incident Date 按钮 + 下拉框 */}
+            <div className="dropdown-filter" ref={incidentRef}>
+              <button
+                className="filter-btn"
+                onClick={() => setShowIncidentFilter((prev) => !prev)}
+              >
+                📅 Incident Date
+              </button>
+              {showIncidentFilter && (
+                <div className="date-range-container show">
+                  <label>From Date</label>
+                  <input
+                    type="date"
+                    value={advancedFilters.incident_from}
+                    onChange={(e) =>
+                      setAdvancedFilters({
+                        ...advancedFilters,
+                        incident_from: e.target.value,
+                      })
+                    }
+                  />
+                  <label>To Date</label>
+                  <input
+                    type="date"
+                    value={advancedFilters.incident_to}
+                    onChange={(e) =>
+                      setAdvancedFilters({
+                        ...advancedFilters,
+                        incident_to: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           {/* ✅ 清除筛选按钮 */}
