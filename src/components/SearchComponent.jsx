@@ -29,6 +29,9 @@ const SearchComponent = ({
   const incidentRef = useRef(null);
   const sourceRef = useRef(null);
 
+  const totalCount = sources.reduce((acc, src) => acc + (src.count || 0), 0);
+  const sourcesFiltered = sources.filter((src) => src.domain !== "All Sources");
+
   // ✅ 监听点击事件，自动关闭 dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -64,7 +67,7 @@ const SearchComponent = ({
       incident_to: "",
     });
     setQuery("");
-    setSelectedSource("All Sources"); // ✅ 重置 source
+    setSelectedSource("All Sources");
     onClearFilters();
   };
 
@@ -114,7 +117,20 @@ const SearchComponent = ({
                     onChange={(e) => setSearchText(e.target.value)}
                   />
                   <ul className="source-list">
-                    {sources
+                    <li
+                      className={`source-item ${
+                        selectedSource === "" ? "active" : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedSource("");
+                        setShowSourceFilter(false);
+                      }}
+                    >
+                      All Sources
+                      <span className="source-count">{totalCount}</span>
+                    </li>
+
+                    {sourcesFiltered
                       .filter((src) =>
                         (src.domain || "")
                           .toLowerCase()

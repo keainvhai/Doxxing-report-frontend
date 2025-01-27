@@ -188,6 +188,7 @@
   border-radius: 5px;
   margin-top: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 .date-range-container.show {
@@ -232,7 +233,7 @@
 }
 
 /* ✅ 响应式优化（适配小屏幕） */
-@media (max-width: 768px) {
+@media (max-width: 650px) {
   .search-container {
     width: 95%;
     padding: 10px;
