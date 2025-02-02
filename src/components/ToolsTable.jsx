@@ -26,8 +26,6 @@ const ToolsTable = () => {
         <button className="tool-button">
           <MessageSquarePlus size={18} /> New Response
         </button>
-      </div>
-      <div className="tools-buttons">
         <button className="tool-button" onClick={() => navigate("/search")}>
           <Search size={18} /> Discover
         </button>

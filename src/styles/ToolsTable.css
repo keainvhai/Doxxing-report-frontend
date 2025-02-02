@@ -20,7 +20,7 @@
 .tool-button {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 3px;
   border: 1px solid #ccc;
   padding: 8px 12px;
   border-radius: 6px;
