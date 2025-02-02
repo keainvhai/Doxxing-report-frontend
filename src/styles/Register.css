@@ -31,6 +31,56 @@
   font-size: 16px;
 }
 
+/* 🌟 OTP 输入框容器 */
+.otp-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* ✅ 让 6 个小框之间有间距 */
+  margin-top: 10px;
+}
+
+/* 🌟 OTP 输入框样式 */
+.otp-input {
+  width: 45px; /* ✅ 调整输入框大小 */
+  height: 50px;
+  text-align: center;
+  font-size: 22px; /* ✅ 让字体更大 */
+  border: 2px solid #ccc; /* ✅ 默认边框颜色 */
+  border-radius: 8px; /* ✅ 让输入框有圆角 */
+  outline: none;
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* ✅ 聚焦时边框变蓝色 */
+.otp-input:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+}
+
+/* ❌ 发生错误时边框变红色 */
+.otp-input.error {
+  border-color: red;
+}
+
+/* 🌟 发送 OTP 按钮 */
+.otp-btn {
+  width: 50%;
+  padding: 10px;
+  margin-top: 10px;
+  background: #ff9800;
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.otp-btn:hover {
+  background: #e68900;
+}
+
 .register-btn {
   width: 50%;
   padding: 10px;
