@@ -23,7 +23,7 @@
 }
 
 .registerContainer input {
-  width: 100%;
+  width: 95%;
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ccc;
@@ -31,7 +31,7 @@
   font-size: 16px;
 }
 
-.registerContainer button {
+.register-btn {
   width: 50%;
   padding: 10px;
   margin-top: 10px;
@@ -45,14 +45,63 @@
   transition: background 0.3s;
 }
 
-.registerContainer button:hover {
+.register-btn:hover {
   background: #1e87db;
+}
+
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  width: 95%;
+  padding-right: 20px; /* ✅ 预留右侧空间 */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #555;
+}
+.toggle-password:hover {
+  color: #000;
 }
 
 .error {
   color: red;
   font-size: 14px;
   margin-top: 5px;
+}
+
+.password-strength {
+  font-weight: bold;
+  margin-top: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.strength-0 {
+  color: red;
+}
+.strength-1 {
+  color: orange;
+}
+.strength-2 {
+  color: yellow;
+}
+.strength-3 {
+  color: green;
+}
+.strength-4 {
+  color: darkgreen;
+  font-weight: bold;
 }
 
 /* 🌟 响应式调整 */

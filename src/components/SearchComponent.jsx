@@ -19,6 +19,9 @@ const SearchComponent = ({
     incident_to: "",
   });
 
+  // 调试 sources 是否真的有数据
+  console.log("Received sources:", sources);
+
   // ✅ 控制 Source 显示
   const [showSourceFilter, setShowSourceFilter] = useState(false);
   const [showPublishedFilter, setShowPublishedFilter] = useState(false);
@@ -31,6 +34,12 @@ const SearchComponent = ({
 
   const totalCount = sources.reduce((acc, src) => acc + (src.count || 0), 0);
   const sourcesFiltered = sources.filter((src) => src.domain !== "All Sources");
+
+  useEffect(() => {
+    if (selectedSource) {
+      handleSearch(query, advancedFilters);
+    }
+  }, [selectedSource]);
 
   // ✅ 监听点击事件，自动关闭 dropdown
   useEffect(() => {
@@ -83,12 +92,16 @@ const SearchComponent = ({
         />
 
         <div className="search-btn-container">
-          <button
-            className="toggle-advanced-btn"
-            onClick={() => setShowAdvancedSearch((prev) => !prev)}
-          >
-            {showAdvancedSearch ? "Hide Advanced Search" : "Advanced Search"}
-          </button>
+          {setShowAdvancedSearch !== undefined &&
+            typeof setShowAdvancedSearch === "function" && (
+              <button
+                className="toggle-advanced-btn"
+                onClick={() => setShowAdvancedSearch((prev) => !prev)}
+              >
+                {showAdvancedSearch ? "Hide" : "Advanced Search"}
+              </button>
+            )}
+
           <button className="search-btn" onClick={handleSearch}>
             Search
           </button>
@@ -99,7 +112,6 @@ const SearchComponent = ({
       {showAdvancedSearch && (
         <div className="advanced-search show">
           {/* ✅ Source Filter */}
-
           <div className="filters-row">
             <div className="dropdown-filter" ref={sourceRef}>
               <button
@@ -124,6 +136,7 @@ const SearchComponent = ({
                       onClick={() => {
                         setSelectedSource("");
                         setShowSourceFilter(false);
+                        onSearch(query.trim(), advancedFilters); // ✅ 立即搜索
                       }}
                     >
                       All Sources
@@ -145,6 +158,7 @@ const SearchComponent = ({
                           onClick={() => {
                             setSelectedSource(src.domain);
                             setShowSourceFilter(false);
+                            onSearch(query.trim(), advancedFilters);
                           }}
                         >
                           {src.domain}
@@ -188,7 +202,13 @@ const SearchComponent = ({
                         published_to: e.target.value,
                       })
                     }
-                  />
+                  />{" "}
+                  <button
+                    className="search-btn small"
+                    onClick={() => onSearch(query.trim(), advancedFilters)}
+                  >
+                    Search
+                  </button>
                 </div>
               )}
             </div>
@@ -225,6 +245,12 @@ const SearchComponent = ({
                       })
                     }
                   />
+                  <button
+                    className="search-btn small"
+                    onClick={() => onSearch(query.trim(), advancedFilters)}
+                  >
+                    Search
+                  </button>
                 </div>
               )}
             </div>

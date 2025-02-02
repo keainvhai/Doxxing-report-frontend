@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 import "../styles/Login.css";
 
 function Login() {
@@ -17,6 +19,7 @@ function Login() {
   const [showToast, setShowToast] = useState(false); // ✅ 控制 Toast 状态
   const [toastMessage, setToastMessage] = useState(""); // ✅ 动态设置 Toast 消息
   const [toastType, setToastType] = useState("success"); // ✅ 记录 Toast 类型
+  const [showPassword, setShowPassword] = useState(false); // ✅ 控制密码可见性
 
   // ✅ 表单验证规则（Yup）
   const validationSchema = Yup.object().shape({
@@ -99,14 +102,28 @@ function Login() {
             <ErrorMessage name="email" component="div" className="error" />
 
             <label>Password:</label>
-            <Field
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-            />
+            <div className="password-container">
+              <Field
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+
             <ErrorMessage name="password" component="div" className="error" />
 
-            <button type="submit" disabled={isSubmitting}>
+            <button
+              className="register-btn"
+              type="submit"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? "Logging in..." : "Login"}
             </button>
           </Form>

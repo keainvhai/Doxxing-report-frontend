@@ -3,6 +3,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import zxcvbn from "zxcvbn"; // ✅ 引入密码强度检测库
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 import "../styles/Register.css";
 
 function Register() {
@@ -16,6 +19,9 @@ function Register() {
   const [toastMessage, setToastMessage] = useState(""); // ✅ 动态设置 Toast 消息
   const [toastType, setToastType] = useState("success"); // ✅ 记录 Toast 类型
 
+  const [passwordStrength, setPasswordStrength] = useState(0); // ✅ 密码强度状态
+  const [showPassword, setShowPassword] = useState(false); // ✅ 控制密码可见性
+
   // ✅ Yup 验证规则
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -26,6 +32,7 @@ function Register() {
       .required("Password is required"),
   });
 
+  // 📌 处理注册逻辑
   const register = (values, { setSubmitting, setErrors }) => {
     axios
       .post("http://localhost:3001/users/register", values)
@@ -40,7 +47,7 @@ function Register() {
           setTimeout(() => {
             setShowToast(false);
             navigate("/login"); // ✅ 3 秒后跳转到 Login
-          }, 3000);
+          }, 2000);
         }
       })
       .catch((error) => {
@@ -84,21 +91,52 @@ function Register() {
         validationSchema={validationSchema}
         onSubmit={register}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, values, setFieldValue }) => (
           <Form>
             <label>Email:</label>
             <Field type="email" name="email" placeholder="Enter your email" />
             <ErrorMessage name="email" component="div" className="error" />
 
             <label>Password:</label>
-            <Field
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-            />
+            <div className="password-container">
+              <input
+                type={showPassword ? "text" : "password"} // ✅ 控制密码显示/隐藏
+                name="password"
+                placeholder="Enter your password"
+                value={values.password}
+                onChange={(e) => {
+                  const newPassword = e.target.value;
+                  setFieldValue("password", newPassword);
+                  setPasswordStrength(zxcvbn(newPassword).score);
+                }}
+              />
+              {/* ✅ 眼睛按钮 */}
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+
             <ErrorMessage name="password" component="div" className="error" />
 
-            <button type="submit" disabled={isSubmitting}>
+            {/* ✅ 显示密码强度 */}
+            <div className={`password-strength strength-${passwordStrength}`}>
+              Password Strength:{" "}
+              {
+                ["Very Weak", "Weak", "Medium", "Strong", "Very Strong"][
+                  passwordStrength
+                ]
+              }
+            </div>
+
+            <button
+              className="register-btn"
+              type="submit"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? "Registering..." : "Register"}
             </button>
           </Form>

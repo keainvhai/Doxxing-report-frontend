@@ -10,6 +10,14 @@ const Navbar = () => {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
 
+  // ✅ 读取 localStorage 里的 authState（防止刷新丢失）
+  useEffect(() => {
+    const storedAuth = localStorage.getItem("authState");
+    if (storedAuth) {
+      setAuthState(JSON.parse(storedAuth));
+    }
+  }, []);
+
   // ✅ 监听点击事件，判断是否点击到菜单外部
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -32,7 +40,7 @@ const Navbar = () => {
   }, []);
 
   const logout = () => {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("authState");
     setAuthState({ email: "", role: "", status: false });
     navigate("/login"); // 退出后跳转到登录页
   };

@@ -52,6 +52,22 @@
   transition: background 0.3s ease;
 }
 
+.search-btn.small {
+  margin-top: 10px;
+  width: 100%;
+  padding: 5px 10px;
+  font-size: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.search-btn.small:hover {
+  background-color: #0056b3;
+}
+
 .search-btn:hover,
 .toggle-advanced-btn:hover {
   background-color: #0056b3;
@@ -59,7 +75,7 @@
 
 /* ✅ 高级搜索按钮 */
 .toggle-advanced-btn {
-  min-width: 180px;
+  /* min-width: 80px; */
 }
 
 /* ✅ Advanced Search 默认隐藏 */

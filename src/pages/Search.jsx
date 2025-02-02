@@ -87,8 +87,6 @@ const Search = ({ hideTitle }) => {
     const searchParams = {
       search: query.trim(),
       source: selectedSource === "All Sources" ? "" : selectedSource, // 传递 source 参数
-      // incident_from: advancedFilters.incident_from,
-      // incident_to: advancedFilters.incident_to,
       ...advancedFilters,
     };
 

@@ -2,7 +2,12 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/AdminDashboard.css";
 import SearchComponent from "../components/SearchComponent";
-import { fetchReports, approveReport, deleteReport } from "../api";
+import {
+  fetchReports,
+  fetchSources,
+  approveReport,
+  deleteReport,
+} from "../api";
 import { AuthContext } from "../helpers/AuthContext";
 
 const AdminDashboard = () => {
@@ -10,7 +15,8 @@ const AdminDashboard = () => {
 
   const [reports, setReports] = useState([]); // ✅ 存储所有 reports
   const [filteredReports, setFilteredReports] = useState([]); // ✅ 过滤后的 reports
-  const [loading, setLoading] = useState(true);
+  const [sources, setSources] = useState([]); // ✅ 存储 sources 数据
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
@@ -21,25 +27,31 @@ const AdminDashboard = () => {
     // if (!token) {
     //   navigate("/login");
     // }
+    // ✅ 先检查 localStorage 里的 authState
     if (authState.role !== "admin") {
       navigate("/");
     }
 
-    const getReports = async () => {
+    const getReportsAndSources = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetchReports(); // ✅ 获取所有 reports（`Pending` & `Approved`）
-        setReports(response.data);
-        setFilteredReports(response.data); // ✅ 初始时显示所有 reports
+        const [reportsRes, sourcesRes] = await Promise.all([
+          fetchReports(), // ✅ 获取所有 reports
+          fetchSources(), // ✅ 获取所有 sources
+        ]);
+        setReports(reportsRes.data);
+        setFilteredReports(reportsRes.data); // ✅ 初始时显示所有 reports
+        setSources(sourcesRes.data.sources); // ✅ 设置 sources 数据
       } catch (err) {
-        console.error("❌ Error fetching reports:", err);
-        setError("Failed to load reports.");
+        console.error("❌ Error fetching data:", err);
+        setError("Failed to load reports or sources.");
       } finally {
         setLoading(false);
       }
     };
-    getReports();
+
+    getReportsAndSources();
   }, [authState, navigate]);
 
   const handleApprove = async (id) => {
@@ -98,10 +110,10 @@ const AdminDashboard = () => {
 
       {/* ✅ 搜索组件 */}
       <SearchComponent
-        placeholder="Search admin reports..."
+        placeholder="Search reports..."
         onSearch={handleSearch}
+        sources={sources}
       />
-
       {loading && <p>Loading reports...</p>}
       {error && <p className="error">{error}</p>}
 
