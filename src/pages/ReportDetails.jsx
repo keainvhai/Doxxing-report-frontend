@@ -1,7 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchReportById } from "../api"; // ✅ 创建一个 API 来获取单个 Report
+import { fetchReportById } from "../api"; // 获取单个 Report
 import "../styles/ReportDetails.css";
+import ToolsTable from "../components/ToolsTable";
+
+const IncidentStatsCard = ({ incident }) => {
+  return (
+    <div className="incident-stats-card">
+      <h3>Incident Status</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <strong>Incident ID</strong>
+            </td>
+            <td>{incident.id || "N/A"}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Report Count</strong>
+            </td>
+            <td>{incident.report_count || 1}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Incident Date</strong>
+            </td>
+            <td>
+              {incident.date
+                ? new Date(incident.date).toLocaleDateString()
+                : "Unknown"}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Editors</strong>
+            </td>
+            <td>{incident.editors || "Anonymous"}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 const ReportDetails = () => {
   const { id } = useParams(); // 获取 URL 参数中的 report id
@@ -32,13 +73,26 @@ const ReportDetails = () => {
   return (
     <div className="report-details">
       <h2>{report.title}</h2>
+
+      <ToolsTable />
+
+      {/* ✅ Incident Stats Card */}
+      <IncidentStatsCard
+        incident={{
+          id: report.id,
+          report_count: report.report_count,
+          date: report.incident_date,
+          editors: report.author,
+        }}
+      />
+
       {/* ✅ 报告基本信息 */}
-      <p>
+      {/* <p>
         <strong>Author:</strong> {report.author || "Anonymous"}
-      </p>
-      <p>
+      </p> */}
+      {/* <p>
         <strong>Submitted by:</strong> {report.submitter || "Unknown"}
-      </p>
+      </p> */}
       <p>
         <strong>Date Published:</strong>{" "}
         {new Date(report.date_published).toLocaleDateString()}
@@ -47,12 +101,12 @@ const ReportDetails = () => {
         <strong>Date Downloaded:</strong>{" "}
         {new Date(report.date_downloaded).toLocaleDateString()}
       </p>
-      {report.incident_date && (
+      {/* {report.incident_date && (
         <p>
           <strong>Incident Date:</strong>{" "}
           {new Date(report.incident_date).toLocaleDateString()}
         </p>
-      )}
+      )} */}
       <p>
         <strong>Source:</strong> {report.url}
       </p>

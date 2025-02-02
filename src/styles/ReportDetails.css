@@ -46,3 +46,38 @@
 .source-link:hover {
   background-color: #333;
 }
+
+.incident-stats-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  background-color: #f8f9fa;
+  overflow-x: hidden; /* 禁止滚动条 */
+}
+
+.incident-stats-card h3 {
+  margin-bottom: 10px;
+}
+
+.incident-stats-card table {
+  width: 100%; /* 表格填充整个父容器 */
+  border-collapse: collapse;
+}
+
+.incident-stats-card td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+  white-space: normal; /* 允许换行，避免撑开 */
+}
+
+/* 让第一列（标题部分）有适当的宽度 */
+.incident-stats-card td:first-child {
+  font-weight: bold;
+  width: 30%; /* 让左侧标题栏占比 30% */
+}
+
+.incident-stats-card tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
