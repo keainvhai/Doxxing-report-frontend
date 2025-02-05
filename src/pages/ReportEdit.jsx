@@ -17,6 +17,8 @@ const ReportEdit = () => {
     date_downloaded: "",
     incident_date: "",
     text: "",
+    victim: "",
+    entity: "",
     images: [],
   });
 
@@ -43,6 +45,8 @@ const ReportEdit = () => {
           date_downloaded: formatDate(data.date_downloaded),
           incident_date: formatDate(data.incident_date),
           text: data.text || "",
+          victim: data.victim || "", // ✅ 载入 victim 数据
+          entity: data.entity || "", // ✅ 载入 entity 数据
           images: data.images ? JSON.parse(data.images) : [],
         });
       } catch (err) {
@@ -118,6 +122,24 @@ const ReportEdit = () => {
           value={form.author}
           onChange={(e) => setForm({ ...form, author: e.target.value })}
         />
+        {/* Victim */}
+        <label>👤 Victim</label>
+        <input
+          type="text"
+          value={form.victim}
+          onChange={(e) => setForm({ ...form, victim: e.target.value })}
+          required
+        />
+
+        {/* Entity */}
+        <label>🏢 Entity</label>
+        <input
+          type="text"
+          value={form.entity}
+          onChange={(e) => setForm({ ...form, entity: e.target.value })}
+          required
+        />
+
         <label>📅 Date Published</label>
         <input
           type="date"

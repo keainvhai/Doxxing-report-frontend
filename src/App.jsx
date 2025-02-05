@@ -13,6 +13,7 @@ import { AuthContext } from "./helpers/AuthContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Leaderboard from "./components/Leaderboard";
+import Entities from "./pages/Entities";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -53,6 +54,7 @@ function App() {
           <Route path="/admin/report/:id" element={<ReportEdit />} />
           <Route path="/report/:id" element={<ReportDetails />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/entities" element={<Entities />} />
         </Routes>
       </Router>
     </AuthContext.Provider>

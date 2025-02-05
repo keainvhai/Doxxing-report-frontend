@@ -94,6 +94,14 @@ const ReportDetails = () => {
         <strong>Submitted by:</strong> {report.submitter || "Unknown"}
       </p> */}
       <p>
+        <strong>Victim:</strong> {report.victim || "Unknown"}{" "}
+        {/* ✅ 显示 Victim */}
+      </p>
+      <p>
+        <strong>Entity:</strong> {report.entity || "Unknown"}{" "}
+        {/* ✅ 显示 Entity */}
+      </p>
+      <p>
         <strong>Date Published:</strong>{" "}
         {new Date(report.date_published).toLocaleDateString()}
       </p>

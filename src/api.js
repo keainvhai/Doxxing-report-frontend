@@ -36,3 +36,6 @@ export const fetchApprovedReports = (filters = {}) =>
 
 // 获取所有可用的 source 域名
 export const fetchSources = () => API.get("/reports/sources");
+
+// 获取所有 unique 的 entities 及其 incident 数量
+export const fetchEntities = () => API.get("/reports/entities");

@@ -11,7 +11,7 @@ const SubmitReport = () => {
     date_downloaded: "",
     incident_date: "",
     text: "",
-    images: [],
+    victim: "",
   });
 
   const [showToast, setShowToast] = useState(false);
@@ -53,6 +53,8 @@ const SubmitReport = () => {
       date_downloaded: "",
       incident_date: "",
       text: "",
+      victim: "",
+      entity: "",
       images: [],
     });
   };
@@ -93,6 +95,16 @@ const SubmitReport = () => {
           value={form.author}
           onChange={(e) => setForm({ ...form, author: e.target.value })}
         />
+        {/* Victim */}
+        <label htmlFor="victim">👤 Victim (Optional)</label>
+        <input
+          type="text"
+          placeholder="Victim Name"
+          value={form.victim}
+          onChange={(e) => setForm({ ...form, victim: e.target.value })}
+          required
+        />
+
         {/* Date Published */}
         <label htmlFor="date_published">📅 Date Published *</label>
         <input
@@ -102,19 +114,8 @@ const SubmitReport = () => {
           required
         />
 
-        {/* Date Downloaded */}
-        <label htmlFor="date_downloaded">⬇️ Date Downloaded *</label>
-        <input
-          type="date"
-          value={form.date_downloaded}
-          onChange={(e) =>
-            setForm({ ...form, date_downloaded: e.target.value })
-          }
-          required
-        />
-
         {/* Incident Date */}
-        <label htmlFor="incident_date">⚠️ Incident Date</label>
+        <label htmlFor="incident_date">⚠️ Incident Date (Optional)</label>
         <input
           type="date"
           value={form.incident_date}
@@ -122,7 +123,7 @@ const SubmitReport = () => {
         />
 
         {/* Report Text */}
-        <label htmlFor="text">📝 Description *</label>
+        <label htmlFor="text">📝 Description (Optional)</label>
         <textarea
           placeholder="Description"
           value={form.text}
@@ -131,12 +132,12 @@ const SubmitReport = () => {
         ></textarea>
 
         {/* Image Upload */}
-        <label htmlFor="images">🖼️ Upload Images</label>
+        {/* <label htmlFor="images">🖼️ Upload Images</label>
         <input
           type="file"
           multiple
           onChange={(e) => setForm({ ...form, images: [...e.target.files] })}
-        />
+        /> */}
         <div className="button-container">
           <button type="submit">Submit</button>
         </div>

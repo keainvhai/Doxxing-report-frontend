@@ -61,8 +61,12 @@ const Navbar = () => {
         <Link to="/search" onClick={() => setMenuOpen(false)}>
           Search
         </Link>
+
         <Link to="/leaderboard" onClick={() => setMenuOpen(false)}>
           Leaderboard
+        </Link>
+        <Link to="/entities" onClick={() => setMenuOpen(false)}>
+          Entities
         </Link>
         <Link to="/submit" onClick={() => setMenuOpen(false)}>
           Submit Report

@@ -1,0 +1,130 @@
+/* ✅ 整个页面布局优化 */
+.entities-container {
+  padding: 20px;
+  max-width: 1100px;
+  margin: auto;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+/* ✅ 搜索框优化 */
+.search-box {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.search-box:focus {
+  border-color: #007bff;
+  box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+/* ✅ 表格样式优化 */
+.entities-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.entities-table th,
+.entities-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.entities-table th {
+  background-color: #f8f9fa;
+  color: #333;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.entities-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.entities-table tr:hover {
+  background-color: #f1f1f1;
+  transition: 0.3s;
+}
+
+/* ✅ 按钮优化 */
+.toggle-btn {
+  padding: 8px 12px;
+  border-radius: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+  font-weight: bold;
+}
+
+.toggle-btn:hover {
+  background-color: #0056b3;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-btn:active {
+  transform: scale(0.95);
+}
+
+/* ✅ Report 列表美化 */
+.report-list {
+  list-style-type: none;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.report-list li {
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.report-list li:last-child {
+  border-bottom: none;
+}
+
+.report-list a {
+  text-decoration: none;
+  font-weight: bold;
+  color: #007bff;
+  transition: 0.3s;
+}
+
+.report-list a:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+.report-list .author,
+.report-list .date {
+  margin-left: 10px;
+  color: #6c757d;
+}
+
+/* ✅ 没有数据时的样式 */
+.no-results {
+  text-align: center;
+  font-weight: bold;
+  color: #888;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
