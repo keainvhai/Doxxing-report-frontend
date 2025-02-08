@@ -8,7 +8,6 @@ const SubmitReport = () => {
     title: "",
     author: "",
     date_published: "",
-    date_downloaded: "",
     incident_date: "",
     text: "",
     victim: "",
@@ -21,42 +20,57 @@ const SubmitReport = () => {
 
     const formData = new FormData();
 
-    // 自动设置 author 为 "Anonymous" 如果为空
-    const reportData = {
-      ...form,
-      author: form.author.trim() === "" ? "Anonymous" : form.author,
-    };
+    // ✅ 确保字段值不会是 undefined 或者 null
+    formData.append("url", form.url.trim());
+    formData.append("title", form.title.trim());
+    formData.append(
+      "author",
+      form.author.trim() === "" ? "Anonymous" : form.author
+    );
+    formData.append(
+      "date_published",
+      form.date_published ? new Date(form.date_published).toISOString() : ""
+    );
+    formData.append(
+      "incident_date",
+      form.incident_date ? new Date(form.incident_date).toISOString() : ""
+    );
+    formData.append("text", form.text.trim());
+    formData.append(
+      "victim",
+      form.victim.trim() === "" ? "Unknown" : form.victim
+    );
 
-    // 添加文本字段
-    Object.keys(reportData).forEach((key) => {
-      if (key !== "images") formData.append(key, reportData[key]);
-    });
+    // ✅ 检查 `images` 是否存在，避免 undefined 错误
+    if (form.images && form.images.length > 0) {
+      form.images.forEach((image) => {
+        formData.append("images", image);
+      });
+    }
 
-    // 添加图片
-    form.images.forEach((image) => {
-      formData.append("images", image);
-    });
+    try {
+      const response = await submitReport(formData);
+      console.log("Report Submitted:", response.data);
 
-    await submitReport(formData);
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
 
-    console.log("Report Submitted:", formData);
-
-    // alert("Report submitted!");
-    setShowToast(true); // ✅ 显示 Toast
-    setTimeout(() => setShowToast(false), 3000); // ✅ 3秒后自动关闭
-
-    setForm({
-      url: "",
-      title: "",
-      author: "",
-      date_published: "",
-      date_downloaded: "",
-      incident_date: "",
-      text: "",
-      victim: "",
-      entity: "",
-      images: [],
-    });
+      setForm({
+        url: "",
+        title: "",
+        author: "",
+        date_published: "",
+        incident_date: "",
+        text: "",
+        victim: "",
+        images: [], // ✅ 确保 images 重新初始化
+      });
+    } catch (error) {
+      console.error(
+        "Submission failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
   };
 
   return (
@@ -102,7 +116,6 @@ const SubmitReport = () => {
           placeholder="Victim Name"
           value={form.victim}
           onChange={(e) => setForm({ ...form, victim: e.target.value })}
-          required
         />
 
         {/* Date Published */}
@@ -128,7 +141,6 @@ const SubmitReport = () => {
           placeholder="Description"
           value={form.text}
           onChange={(e) => setForm({ ...form, text: e.target.value })}
-          required
         ></textarea>
 
         {/* Image Upload */}
