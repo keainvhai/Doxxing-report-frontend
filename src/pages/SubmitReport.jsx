@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { submitReport } from "../api";
+import React, { useState, useEffect } from "react";
+import { fetchUserProfile, submitReport } from "../api";
 import "../styles/Form.css";
 
 const SubmitReport = () => {
@@ -13,7 +13,40 @@ const SubmitReport = () => {
     victim: "",
   });
 
+  // ✅ 存储用户信息
+  const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(false);
+
+  // ✅ 获取当前登录用户信息
+  // useEffect(() => {
+  //   const storedUser = JSON.parse(localStorage.getItem("user")); // 假设存储在 localStorage
+  //   if (storedUser) {
+  //     setUser(storedUser);
+  //     setForm((prev) => ({
+  //       ...prev,
+  //       author: storedUser.email.split("@")[0] || "Anonymous", // ✅ 自动填充 author
+  //     }));
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await fetchUserProfile();
+        if (response.data.success) {
+          setUser(response.data.user);
+          setForm((prev) => ({
+            ...prev,
+            author: response.data.user.email.split("@")[0], // ✅ 自动填充 author
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    getUser();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +60,7 @@ const SubmitReport = () => {
       "author",
       form.author.trim() === "" ? "Anonymous" : form.author
     );
+    // formData.append("author", form.author.trim());
     formData.append(
       "date_published",
       form.date_published ? new Date(form.date_published).toISOString() : ""
@@ -41,11 +75,9 @@ const SubmitReport = () => {
       form.victim.trim() === "" ? "Unknown" : form.victim
     );
 
-    // ✅ 检查 `images` 是否存在，避免 undefined 错误
-    if (form.images && form.images.length > 0) {
-      form.images.forEach((image) => {
-        formData.append("images", image);
-      });
+    // ✅ 传递 `userId` 到后端（如果用户已登录）
+    if (user) {
+      formData.append("userId", user.id);
     }
 
     try {
@@ -58,12 +90,14 @@ const SubmitReport = () => {
       setForm({
         url: "",
         title: "",
-        author: "",
+        // author: "",
+        // ✅ 保持 `author` 填充状态
+        author: user?.email ? user.email.split("@")[0] : "Anonymous",
         date_published: "",
         incident_date: "",
         text: "",
         victim: "",
-        images: [], // ✅ 确保 images 重新初始化
+        // images: [],
       });
     } catch (error) {
       console.error(
@@ -108,7 +142,9 @@ const SubmitReport = () => {
           placeholder="Author"
           value={form.author}
           onChange={(e) => setForm({ ...form, author: e.target.value })}
+          readOnly
         />
+
         {/* Victim */}
         <label htmlFor="victim">👤 Victim (Optional)</label>
         <input

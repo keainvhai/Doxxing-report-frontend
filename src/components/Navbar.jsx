@@ -71,6 +71,14 @@ const Navbar = () => {
         <Link to="/submit" onClick={() => setMenuOpen(false)}>
           Submit Report
         </Link>
+
+        {/* ✅ 仅登录用户可见 */}
+        {authState.status && (
+          <Link to="/profile" onClick={() => setMenuOpen(false)}>
+            My Profile
+          </Link>
+        )}
+
         {!authState.status ? (
           <>
             <Link to="/register" onClick={() => setMenuOpen(false)}>

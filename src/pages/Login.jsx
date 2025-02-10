@@ -33,9 +33,11 @@ function Login() {
     axios
       .post("http://localhost:3001/users/login", values)
       .then((response) => {
-        if (response.data.success) {
+        console.log("📌 Login Response:", response.data);
+        if (response.data.success && response.data.token) {
           // 存储 token
           localStorage.setItem("accessToken", response.data.token);
+          console.log("📌 Saved Token:", localStorage.getItem("accessToken"));
           setAuthState({
             email: values.email,
             role: response.data.role,

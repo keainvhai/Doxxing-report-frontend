@@ -1,0 +1,92 @@
+.profile-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+  font-size: 1.2rem;
+}
+
+.profile-username {
+  width: 80%;
+}
+.profile-username input {
+  width: 50%;
+}
+
+/* ✅ Edit & Save 按钮统一样式 */
+.edituser-btn,
+.save-btn {
+  width: auto;
+  padding: 6px 14px;
+  background: #007bff;
+  color: white;
+  border: none;
+  margin: 0;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-left: 10px;
+}
+
+/* ✅ Save 按钮颜色稍深 */
+.save-btn {
+  background: #0056b3;
+}
+
+/* ✅ Hover 效果 */
+.edituser-btn:hover,
+.save-btn:hover {
+  background: #004494;
+  transform: scale(1.05);
+}
+
+/* ✅ 让按钮与输入框对齐 */
+.profile-username {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr); /* 12 列布局 */
+  gap: 1rem;
+}
+
+.report-card {
+  grid-column: span 6;
+  display: flex;
+  flex-direction: column;
+}
+
+.report-list {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+/* ✅ `Edit` 按钮优化 */
+.edit-btn {
+  width: 50%;
+  padding: 8px 14px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin: 10px;
+  align-self: center;
+  text-align: center; /* ✅ 让按钮内文字居中 */
+}
+
+.edit-btn:hover {
+  background: #0056b3;
+}
+
+@media (max-width: 700px) {
+  .report-card {
+    grid-column: span 12;
+  }
+}

@@ -14,6 +14,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Leaderboard from "./components/Leaderboard";
 import Entities from "./pages/Entities";
+import UserProfile from "./pages/UserProfile";
+import UserReportEdit from "./pages/UserReportEdit";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -55,6 +57,8 @@ function App() {
           <Route path="/report/:id" element={<ReportDetails />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/entities" element={<Entities />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/report/user/update/:id" element={<UserReportEdit />} />
         </Routes>
       </Router>
     </AuthContext.Provider>

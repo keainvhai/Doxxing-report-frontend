@@ -2,6 +2,27 @@ import axios from "axios";
 
 const API = axios.create({ baseURL: "http://localhost:3001" });
 
+// ✅ 自动给所有请求加上 Authorization 头
+// API.interceptors.request.use(
+//   (config) => {
+//     const token = localStorage.getItem("accessToken");
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     console.log(
+//       "📌 API Interceptor - Token Added:",
+//       config.headers.Authorization
+//     );
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
+
+// export const fetchUserReports = () => API.get("/users/reports");
+// export const fetchUserProfile = () => API.get("/users/auth");
+
 // Submit a report (now supports images)
 export const submitReport = (formData) =>
   API.post("/reports/submit", formData, {
@@ -11,10 +32,10 @@ export const submitReport = (formData) =>
 // Get all reports
 export const fetchReports = () => API.get("/reports");
 
-// Get reports by id
+// admin Get reports by id
 export const fetchReportById = (id) => API.get(`/reports/${id}`);
-// ✅ 更新 Report API，确保发送 FormData
 
+// ✅admin  更新 Report API，确保发送 FormData
 export const updateReport = (id, formData) =>
   API.put(`/reports/update/${id}`, formData, {
     headers: { "Content-Type": "multipart/form-data" }, // 必须加 multipart 头
@@ -39,3 +60,46 @@ export const fetchSources = () => API.get("/reports/sources");
 
 // 获取所有 unique 的 entities 及其 incident 数量
 export const fetchEntities = () => API.get("/reports/entities");
+
+// ✅ 动态获取 `Authorization` 头
+// const getAuthHeaders = () => {
+//   const token = localStorage.getItem("accessToken");
+//   return token ? { Authorization: `Bearer ${token}` } : {};
+// };
+
+// ✅ 获取当前用户的所有 Reports
+// 🔴 需要 `Authorization` 的 API
+// export const fetchUserReports = () =>
+//   API.get("/users/reports", { headers: getAuthHeaders() });
+
+// export const fetchUserProfile = () =>
+//   API.get("/users/auth", { headers: getAuthHeaders() });
+
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// 获取用户信息（包含所有 reports）
+export const fetchUserProfile = () => API.get("/users/profile");
+
+// 更新 `username`
+export const updateUsername = (username) =>
+  API.put("/users/update-username", { username });
+
+// 用户获取自己提交的单个 Report
+export const fetchUserReportById = (id) => API.get(`/reports/user/${id}`);
+
+// 用户更新自己的 Report
+// export const updateUserReport = (id, formData) =>
+//   API.put(`/reports/user/update/${id}`, formData, {
+//     headers: { "Content-Type": "multipart/form-data" },
+//   });
+export const updateUserReport = (id, formData) =>
+  API.put(`/reports/user/update/${id}`, formData);
