@@ -37,7 +37,9 @@ const SubmitReport = () => {
           setUser(response.data.user);
           setForm((prev) => ({
             ...prev,
-            author: response.data.user.email.split("@")[0], // ✅ 自动填充 author
+            author:
+              response.data.user.username ||
+              response.data.user.email.split("@")[0], // ✅ 自动填充 author
           }));
         }
       } catch (error) {

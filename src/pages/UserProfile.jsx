@@ -8,6 +8,8 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [editing, setEditing] = useState(false);
+  // ✅ 添加username错误提示状态
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,17 +35,25 @@ const UserProfile = () => {
 
   const handleUsernameUpdate = async () => {
     try {
-      await updateUsername(username);
-      setUser((prevUser) => ({ ...prevUser, username }));
-      setEditing(false);
+      const response = await updateUsername(username);
+      if (response.data.success) {
+        setUser((prevUser) => ({ ...prevUser, username }));
+        setEditing(false);
+        setErrorMessage(""); // ✅ 清除错误信息
+      } else {
+        setErrorMessage(response.data.error || "Username update failed");
+      }
     } catch (error) {
-      console.error("❌ Error updating username:", error);
+      setErrorMessage("Username already taken. Please choose another.");
     }
   };
 
   return (
     <div className="profile-container">
       <h2 className="profile-title">My Profile</h2>
+
+      {/* ✅ 错误提示显示 */}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
       {user ? (
         <div className="profile-content">
           <p className="profile-email">
