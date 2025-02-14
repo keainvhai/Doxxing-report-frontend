@@ -23,7 +23,7 @@ const ReportEdit = () => {
   });
 
   const [newImages, setNewImages] = useState([]);
-
+  const [deletedImages, setDeletedImages] = useState([]);
   const [showToast, setShowToast] = useState(false); // ✅ 控制 Toast 状态
   const [toastMessage, setToastMessage] = useState(""); // ✅ 动态设置 Toast 消息
 
@@ -42,7 +42,7 @@ const ReportEdit = () => {
           title: data.title || "",
           author: data.author || "Anonymous",
           date_published: formatDate(data.date_published),
-          date_downloaded: formatDate(data.date_downloaded),
+          // date_downloaded: formatDate(data.date_downloaded),
           incident_date: formatDate(data.incident_date),
           text: data.text || "",
           victim: data.victim || "", // ✅ 载入 victim 数据
@@ -59,6 +59,11 @@ const ReportEdit = () => {
     getReport();
   }, [id]);
 
+  const handleDeleteImage = (img) => {
+    setDeletedImages([...deletedImages, img]);
+    setForm({ ...form, images: form.images.filter((image) => image !== img) });
+  };
+
   const handleUpdate = async () => {
     const formData = new FormData();
 
@@ -70,6 +75,7 @@ const ReportEdit = () => {
     newImages.forEach((image) => {
       formData.append("images", image);
     });
+    formData.append("deletedImages", JSON.stringify(deletedImages));
 
     try {
       await updateReport(id, formData);
@@ -146,14 +152,7 @@ const ReportEdit = () => {
           value={form.date_published}
           onChange={(e) => setForm({ ...form, date_published: e.target.value })}
         />
-        <label>⬇️ Date Downloaded</label>
-        <input
-          type="date"
-          value={form.date_downloaded}
-          onChange={(e) =>
-            setForm({ ...form, date_downloaded: e.target.value })
-          }
-        />
+
         <label>⚠️ Incident Date</label>
         <input
           type="date"
@@ -169,12 +168,15 @@ const ReportEdit = () => {
         <div className="image-preview">
           {form.images.length > 0 ? (
             form.images.map((img, index) => (
-              <img
-                key={index}
-                src={`http://localhost:3001${img}`}
-                alt="Report"
-                className="edit-image"
-              />
+              <div key={index}>
+                <img
+                  key={index}
+                  src={`http://localhost:3001${img}`}
+                  alt="Report"
+                  className="edit-image"
+                />
+                <button onClick={() => handleDeleteImage(img)}>Delete</button>
+              </div>
             ))
           ) : (
             <p>No images uploaded</p>
