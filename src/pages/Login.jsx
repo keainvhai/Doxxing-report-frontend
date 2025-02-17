@@ -35,14 +35,21 @@ function Login() {
       .then((response) => {
         console.log("📌 Login Response:", response.data);
         if (response.data.success && response.data.token) {
-          // 存储 token
-          localStorage.setItem("accessToken", response.data.token);
-          console.log("📌 Saved Token:", localStorage.getItem("accessToken"));
-          setAuthState({
-            email: values.email,
+          const userData = {
+            id: response.data.id,
+            email: response.data.email,
+            username:
+              response.data.username || response.data.email.split("@")[0],
             role: response.data.role,
             status: true,
-          });
+          };
+
+          // ✅ 存入 authState
+          setAuthState(userData);
+          localStorage.setItem("authState", JSON.stringify(userData));
+
+          // ✅ 存入 accessToken
+          localStorage.setItem("accessToken", response.data.token);
 
           // ✅ 先显示 Toast
           setToastMessage("✅ Login successful! Redirecting...");

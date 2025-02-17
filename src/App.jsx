@@ -19,27 +19,95 @@ import UserReportEdit from "./pages/UserReportEdit";
 
 function App() {
   const [authState, setAuthState] = useState({
+    id: null,
     email: "",
+    username: "",
     role: "",
     status: false,
   });
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/users/auth", {
-        headers: { accessToken: localStorage.getItem("accessToken") },
-      })
-      .then((response) => {
-        if (response.data.error) {
-          setAuthState({ email: "", role: "", status: false });
-        } else {
-          setAuthState({
-            email: response.data.email,
-            role: response.data.role,
+    const handleStorageChange = () => {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        console.log("🚨 未找到 accessToken，清空 authState");
+        setAuthState({
+          id: null,
+          email: "",
+          username: "",
+          role: "",
+          status: false,
+        });
+        localStorage.removeItem("user");
+        localStorage.removeItem("authState"); // ✅ 确保 `authState` 也被清除
+        return;
+      }
+
+      axios
+        .get("http://localhost:3001/users/auth", { headers: { accessToken } })
+        .then((response) => {
+          console.log("📌 Auth API 响应:", response.data);
+          if (
+            !response.data ||
+            response.data.success === false ||
+            !response.data.user
+          ) {
+            console.warn("🚨 `Auth API` 失败，清空 authState");
+            setAuthState({
+              id: null,
+              email: "",
+              username: "",
+              role: "",
+              status: false,
+            });
+            localStorage.removeItem("user");
+            localStorage.removeItem("authState"); // ✅ 确保 `authState` 也被清除
+            return;
+          }
+
+          const user = response.data.user || {};
+          console.log("📌 设置 authState:", user);
+
+          // setAuthState({
+          //   id: user.id || null,
+          //   email: user.email || "",
+          //   username:
+          //     user.username || (user.email ? user.email.split("@")[0] : ""),
+          //   role: user.role || "user",
+          //   status: true,
+          // });
+
+          // localStorage.setItem("user", JSON.stringify(user));
+          const newAuthState = {
+            id: user.id || null,
+            email: user.email || "",
+            username:
+              user.username || (user.email ? user.email.split("@")[0] : ""),
+            role: user.role || "user",
             status: true,
+          };
+
+          setAuthState(newAuthState);
+          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("authState", JSON.stringify(newAuthState)); // ✅ 存入 `authState`
+        })
+        .catch((error) => {
+          console.error("🔴 Auth 检查失败:", error);
+          setAuthState({
+            id: null,
+            email: "",
+            username: "",
+            role: "",
+            status: false,
           });
-        }
-      });
+          localStorage.removeItem("user");
+        });
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   return (

@@ -67,10 +67,10 @@ const ReportEdit = () => {
         // ✅ 存储 OpenAI 生成的图片 URL
         console.log("✅ AI Generated Image URL:", data.imageUrl);
         setGeneratedImageUrl(data.imageUrl);
-        setForm((prev) => ({
-          ...prev,
-          images: [...prev.images, data.imageUrl],
-        }));
+        // setForm((prev) => ({
+        //   ...prev,
+        //   images: [...prev.images, data.imageUrl],
+        // }));
       }
     } catch (error) {
       console.error("❌ Error generating image:", error);
@@ -201,6 +201,24 @@ const ReportEdit = () => {
         <button onClick={handleGenerateImage} disabled={generating}>
           {generating ? "Generating..." : "Generate Image with AI"}
         </button>
+        {generatedImageUrl && (
+          <div>
+            <p>✅ AI Generated Image:</p>
+            <img
+              src={generatedImageUrl}
+              alt="AI Generated"
+              style={{ width: "300px" }}
+            />
+            {/* ✅ 提供下载按钮 */}
+            <a
+              href={generatedImageUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button>Open Image in New Tab</button>
+            </a>
+          </div>
+        )}
 
         <label>🖼️ Upload New Images</label>
         <input

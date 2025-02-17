@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { submitReport } from "../api";
+import { AuthContext } from "../helpers/AuthContext"; // ✅ 引入 AuthContext
 import "../styles/Form.css";
 
 const SubmitReport = () => {
@@ -14,48 +15,82 @@ const SubmitReport = () => {
   });
 
   // ✅ 存储用户信息
+  const { authState } = useContext(AuthContext);
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(false);
 
   // ✅ 获取当前登录用户信息
+
+  // ✅ 在 `localStorage` 里查找 `user`
   // useEffect(() => {
-  //   const storedUser = JSON.parse(localStorage.getItem("user")); // 假设存储在 localStorage
+  //   console.log("🔍 localStorage 内容:", localStorage.getItem("user")); // ✅ 调试代码
+
+  //   const storedUser = localStorage.getItem("user");
+
   //   if (storedUser) {
-  //     setUser(storedUser);
+  //     const parsedUser = JSON.parse(storedUser);
+  //     console.log("📌 检测到已登录用户:", parsedUser);
+
+  //     setUser(parsedUser);
   //     setForm((prev) => ({
   //       ...prev,
-  //       author: storedUser.email.split("@")[0] || "Anonymous", // ✅ 自动填充 author
+  //       author: parsedUser.username || parsedUser.email.split("@")[0], // ✅ 自动填充 author
+  //     }));
+  //   } else {
+  //     console.log("📌 未找到登录用户，保持 author 为 Anonymous");
+  //     setUser(null); // ✅ 退出登录后，user 变成 null
+  //     setForm((prev) => ({
+  //       ...prev,
+  //       author: "Anonymous",
   //     }));
   //   }
-  // }, []);
+  // }, [authState]);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+    console.log("🔍 当前 authState:", authState);
 
-    if (!token) {
-      console.log("📌 用户未登录，使用默认匿名提交");
-      return;
+    if (authState.status) {
+      setUser(authState);
+      setForm((prev) => ({
+        ...prev,
+        author: authState.username || authState.email.split("@")[0], // ✅ 自动填充 author
+      }));
+    } else {
+      setUser(null);
+      setForm((prev) => ({
+        ...prev,
+        author: "Anonymous",
+      }));
     }
+  }, [authState]); // ✅ 监听 `authState` 变化
 
-    // const getUser = async () => {
-    //   try {
-    //     const response = await fetchUserProfile();
-    //     if (response.data.success) {
-    //       setUser(response.data.user);
-    //       setForm((prev) => ({
-    //         ...prev,
-    //         author:
-    //           response.data.user.username ||
-    //           response.data.user.email.split("@")[0], // ✅ 自动填充 author
-    //       }));
-    //     }
-    //   } catch (error) {
-    //     console.error("Error fetching user profile:", error);
-    //   }
-    // };
+  // useEffect(() => {
+  //   const token = localStorage.getItem("accessToken");
 
-    // getUser();
-  }, []);
+  //   if (!token) {
+  //     console.log("📌 用户未登录，使用默认匿名提交");
+  //     return;
+  //   }
+
+  //   // const getUser = async () => {
+  //   //   try {
+  //   //     const response = await fetchUserProfile();
+  //   //     if (response.data.success) {
+  //   //       setUser(response.data.user);
+  //   //       setForm((prev) => ({
+  //   //         ...prev,
+  //   //         author:
+  //   //           response.data.user.username ||
+  //   //           response.data.user.email.split("@")[0], // ✅ 自动填充 author
+  //   //       }));
+  //   //     }
+  //   //   } catch (error) {
+  //   //     console.error("Error fetching user profile:", error);
+  //   //   }
+  //   // };
+
+  //   // getUser();
+  // }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

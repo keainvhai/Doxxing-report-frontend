@@ -128,11 +128,7 @@ const ReportDetails = () => {
           {JSON.parse(report.images).map((image, index) => (
             <img
               key={index}
-              src={
-                Array.isArray(report.images)
-                  ? report.images[0]
-                  : JSON.parse(report.images)[0]
-              }
+              src={`http://localhost:3001${JSON.parse(report.images)[0]}`}
               alt={`Report ${index + 1}`}
               className="report-detail-image"
             />

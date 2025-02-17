@@ -14,9 +14,24 @@ const Navbar = () => {
   useEffect(() => {
     const storedAuth = localStorage.getItem("authState");
     if (storedAuth) {
+      console.log("🔄 读取 localStorage.authState:", JSON.parse(storedAuth));
       setAuthState(JSON.parse(storedAuth));
+    } else {
+      console.log("⚠️ 没有找到 authState，设置为未登录");
+
+      setAuthState({
+        id: null,
+        email: "",
+        username: "",
+        role: "",
+        status: false,
+      });
     }
   }, []);
+
+  // useEffect(() => {
+  //   console.log("📌 Navbar - 当前用户权限:", authState);
+  // }, [authState]);
 
   // ✅ 监听点击事件，判断是否点击到菜单外部
   useEffect(() => {
@@ -40,9 +55,20 @@ const Navbar = () => {
   }, []);
 
   const logout = () => {
-    localStorage.removeItem("authState");
-    setAuthState({ email: "", role: "", status: false });
-    navigate("/login"); // 退出后跳转到登录页
+    localStorage.removeItem("authState"); // ✅ 删除 authState
+    localStorage.removeItem("user"); // ✅ 额外删除 user
+    localStorage.removeItem("accessToken"); // ✅ 额外删除 accessToken
+
+    setAuthState({
+      id: null,
+      email: "",
+      username: "",
+      role: "",
+      status: false,
+    });
+
+    console.log("📌 用户已登出，authState 变为:", authState);
+    navigate("/login");
   };
 
   return (

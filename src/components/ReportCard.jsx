@@ -14,12 +14,12 @@ const ReportCard = ({ report }) => {
       {/* ✅ 显示封面图片（如果存在） */}
       {report.images && JSON.parse(report.images).length > 0 && (
         <img
-          // src={`http://localhost:3001${JSON.parse(report.images)[0]}`}
-          src={
-            Array.isArray(report.images)
-              ? report.images[0]
-              : JSON.parse(report.images)[0]
-          }
+          src={`http://localhost:3001${JSON.parse(report.images)[0]}`}
+          // src={
+          //   Array.isArray(report.images)
+          //     ? report.images[0]
+          //     : JSON.parse(report.images)[0]
+          // }
           alt={report.title}
           className="report-image"
         />
