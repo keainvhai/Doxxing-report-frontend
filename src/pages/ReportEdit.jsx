@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchReportById, updateReport } from "../api";
+import { fetchReportById, updateReport, generateReportImage } from "../api";
 import "../styles/ReportEdit.css"; // ✅ 添加新的 CSS
 
 const ReportEdit = () => {
@@ -14,7 +14,6 @@ const ReportEdit = () => {
     title: "",
     author: "",
     date_published: "",
-    date_downloaded: "",
     incident_date: "",
     text: "",
     victim: "",
@@ -26,6 +25,8 @@ const ReportEdit = () => {
   const [deletedImages, setDeletedImages] = useState([]);
   const [showToast, setShowToast] = useState(false); // ✅ 控制 Toast 状态
   const [toastMessage, setToastMessage] = useState(""); // ✅ 动态设置 Toast 消息
+  const [generating, setGenerating] = useState(false);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState(null); // ✅ 存储 AI 生成的图片 URL
 
   // 处理日期格式，确保前端 input[type="date"] 能正确识别
   const formatDate = (dateString) => {
@@ -42,11 +43,10 @@ const ReportEdit = () => {
           title: data.title || "",
           author: data.author || "Anonymous",
           date_published: formatDate(data.date_published),
-          // date_downloaded: formatDate(data.date_downloaded),
           incident_date: formatDate(data.incident_date),
           text: data.text || "",
-          victim: data.victim || "", // ✅ 载入 victim 数据
-          entity: data.entity || "", // ✅ 载入 entity 数据
+          victim: data.victim || "",
+          entity: data.entity || "",
           images: data.images ? JSON.parse(data.images) : [],
         });
       } catch (err) {
@@ -58,6 +58,25 @@ const ReportEdit = () => {
     };
     getReport();
   }, [id]);
+
+  const handleGenerateImage = async () => {
+    setGenerating(true);
+    try {
+      const { data } = await generateReportImage(id);
+      if (data.imageUrl) {
+        // ✅ 存储 OpenAI 生成的图片 URL
+        console.log("✅ AI Generated Image URL:", data.imageUrl);
+        setGeneratedImageUrl(data.imageUrl);
+        setForm((prev) => ({
+          ...prev,
+          images: [...prev.images, data.imageUrl],
+        }));
+      }
+    } catch (error) {
+      console.error("❌ Error generating image:", error);
+    }
+    setGenerating(false);
+  };
 
   const handleDeleteImage = (img) => {
     setDeletedImages([...deletedImages, img]);
@@ -109,7 +128,6 @@ const ReportEdit = () => {
 
       <div className="report-edit">
         <h2>Edit Report</h2>
-
         <label>🔗 Report URL</label>
         <input
           type="text"
@@ -136,7 +154,6 @@ const ReportEdit = () => {
           onChange={(e) => setForm({ ...form, victim: e.target.value })}
           required
         />
-
         {/* Entity */}
         <label>🏢 Entity</label>
         <input
@@ -145,14 +162,12 @@ const ReportEdit = () => {
           onChange={(e) => setForm({ ...form, entity: e.target.value })}
           required
         />
-
         <label>📅 Date Published</label>
         <input
           type="date"
           value={form.date_published}
           onChange={(e) => setForm({ ...form, date_published: e.target.value })}
         />
-
         <label>⚠️ Incident Date</label>
         <input
           type="date"
@@ -171,7 +186,8 @@ const ReportEdit = () => {
               <div key={index}>
                 <img
                   key={index}
-                  src={`http://localhost:3001${img}`}
+                  src={img}
+                  // src={`http://localhost:3001${img}`}
                   alt="Report"
                   className="edit-image"
                 />
@@ -182,6 +198,10 @@ const ReportEdit = () => {
             <p>No images uploaded</p>
           )}
         </div>
+        <button onClick={handleGenerateImage} disabled={generating}>
+          {generating ? "Generating..." : "Generate Image with AI"}
+        </button>
+
         <label>🖼️ Upload New Images</label>
         <input
           type="file"

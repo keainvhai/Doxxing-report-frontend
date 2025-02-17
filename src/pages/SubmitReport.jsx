@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { fetchUserProfile, submitReport } from "../api";
+import { submitReport } from "../api";
 import "../styles/Form.css";
 
 const SubmitReport = () => {
   const [form, setForm] = useState({
     url: "",
     title: "",
-    author: "",
+    author: "Anonymous",
     date_published: "",
     incident_date: "",
     text: "",
@@ -30,24 +30,31 @@ const SubmitReport = () => {
   // }, []);
 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const response = await fetchUserProfile();
-        if (response.data.success) {
-          setUser(response.data.user);
-          setForm((prev) => ({
-            ...prev,
-            author:
-              response.data.user.username ||
-              response.data.user.email.split("@")[0], // ✅ 自动填充 author
-          }));
-        }
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    };
+    const token = localStorage.getItem("accessToken");
 
-    getUser();
+    if (!token) {
+      console.log("📌 用户未登录，使用默认匿名提交");
+      return;
+    }
+
+    // const getUser = async () => {
+    //   try {
+    //     const response = await fetchUserProfile();
+    //     if (response.data.success) {
+    //       setUser(response.data.user);
+    //       setForm((prev) => ({
+    //         ...prev,
+    //         author:
+    //           response.data.user.username ||
+    //           response.data.user.email.split("@")[0], // ✅ 自动填充 author
+    //       }));
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching user profile:", error);
+    //   }
+    // };
+
+    // getUser();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -58,19 +65,31 @@ const SubmitReport = () => {
     // ✅ 确保字段值不会是 undefined 或者 null
     formData.append("url", form.url.trim());
     formData.append("title", form.title.trim());
-    formData.append(
-      "author",
-      form.author.trim() === "" ? "Anonymous" : form.author
-    );
+    // formData.append(
+    //   "author",
+    //   form.author.trim() === "" ? "Anonymous" : form.author
+    // );
+
+    // ✅ 处理 `author`，如果 `user` 为空，则设为 "Anonymous"
+    const author = user?.email ? user.email.split("@")[0] : "Anonymous";
+    formData.append("author", author);
+
     // formData.append("author", form.author.trim());
-    formData.append(
-      "date_published",
-      form.date_published ? new Date(form.date_published).toISOString() : ""
-    );
-    formData.append(
-      "incident_date",
-      form.incident_date ? new Date(form.incident_date).toISOString() : ""
-    );
+
+    // formData.append(
+    //   "date_published",
+    //   form.date_published ? new Date(form.date_published).toISOString() : ""
+    // );
+    // formData.append(
+    //   "incident_date",
+    //   form.incident_date ? new Date(form.incident_date).toISOString() : ""
+    // );
+
+    const formatDate = (date) =>
+      date ? new Date(date).toISOString().split("T")[0] : "";
+    formData.append("date_published", formatDate(form.date_published));
+    formData.append("incident_date", formatDate(form.incident_date));
+
     formData.append("text", form.text.trim());
     formData.append(
       "victim",
@@ -78,9 +97,10 @@ const SubmitReport = () => {
     );
 
     // ✅ 传递 `userId` 到后端（如果用户已登录）
-    if (user) {
-      formData.append("userId", user.id);
-    }
+    // if (user) {
+    //   formData.append("userId", user.id);
+    // }
+    formData.append("userId", user?.id || "");
 
     try {
       const response = await submitReport(formData);

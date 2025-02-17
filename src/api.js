@@ -2,27 +2,6 @@ import axios from "axios";
 
 const API = axios.create({ baseURL: "http://localhost:3001" });
 
-// ✅ 自动给所有请求加上 Authorization 头
-// API.interceptors.request.use(
-//   (config) => {
-//     const token = localStorage.getItem("accessToken");
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     console.log(
-//       "📌 API Interceptor - Token Added:",
-//       config.headers.Authorization
-//     );
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
-// export const fetchUserReports = () => API.get("/users/reports");
-// export const fetchUserProfile = () => API.get("/users/auth");
-
 // Submit a report (now supports images)
 export const submitReport = (formData) =>
   API.post("/reports/submit", formData, {
@@ -46,6 +25,10 @@ export const approveReport = (id) => API.post("/reports/approve", { id });
 
 // Delete a report
 export const deleteReport = (id) => API.post("/reports/delete", { id });
+
+//Gengerate image
+export const generateReportImage = (id) =>
+  API.post(`/reports/generate-image/${id}`);
 
 //Search method
 export const searchReports = (query) =>
