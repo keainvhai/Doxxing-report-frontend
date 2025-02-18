@@ -16,6 +16,8 @@ import Leaderboard from "./components/Leaderboard";
 import Entities from "./pages/Entities";
 import UserProfile from "./pages/UserProfile";
 import UserReportEdit from "./pages/UserReportEdit";
+import AIDigest from "./pages/AIDigest";
+import DigestDetails from "./pages/DigestDetails";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -127,6 +129,8 @@ function App() {
           <Route path="/entities" element={<Entities />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/report/user/update/:id" element={<UserReportEdit />} />
+          <Route path="/ai-digest" element={<AIDigest />} />
+          <Route path="/digest/:week_start" element={<DigestDetails />} />
         </Routes>
       </Router>
     </AuthContext.Provider>

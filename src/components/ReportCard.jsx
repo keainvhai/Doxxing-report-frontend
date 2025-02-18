@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ReportCard.css"; // ✅ 样式文件
+import "../styles/ReportList.css"; // ✅ 引入样式
 
 const ReportCard = ({ report }) => {
   const navigate = useNavigate(); // ✅ 处理页面跳转

@@ -94,6 +94,11 @@ const Navbar = () => {
         <Link to="/entities" onClick={() => setMenuOpen(false)}>
           Entities
         </Link>
+
+        <Link to="/ai-digest" onClick={() => setMenuOpen(false)}>
+          AI Doxing Digest
+        </Link>
+
         <Link to="/submit" onClick={() => setMenuOpen(false)}>
           Submit Report
         </Link>

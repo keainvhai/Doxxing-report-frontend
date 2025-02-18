@@ -1,0 +1,80 @@
+.digest-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+  text-align: center;
+}
+
+.digest-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 15px 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  text-align: left;
+}
+
+.digest-card:hover {
+  transform: translateY(-3px);
+}
+
+.digest-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.3em;
+  color: #2c3e50;
+}
+
+.digest-card p {
+  margin: 8px 0;
+  font-size: 1.1em;
+  color: #555;
+}
+
+.digest-card strong {
+  color: #1d3557;
+}
+
+/* ✅ 让 Keywords 变成单独的小格子 */
+.keywords-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* 关键词之间的间距 */
+  margin-top: 8px;
+}
+
+.keyword-badge {
+  background: #e3f2fd; /* 轻柔的蓝色 */
+  color: #1565c0; /* 深蓝色字体 */
+  padding: 6px 12px;
+  border-radius: 20px; /* 圆角 */
+  font-size: 0.95em;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ✅ 手机端适配 */
+@media (max-width: 768px) {
+  .digest-container {
+    padding: 15px;
+  }
+
+  .digest-card {
+    padding: 15px;
+  }
+
+  .digest-card h3 {
+    font-size: 1.2em;
+  }
+
+  .digest-card p {
+    font-size: 1em;
+  }
+
+  .keyword-badge {
+    font-size: 0.85em;
+    padding: 5px 10px;
+  }
+}
