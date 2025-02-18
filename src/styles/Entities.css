@@ -10,7 +10,7 @@
 }
 
 /* ✅ 搜索框优化 */
-.search-box {
+.entities-container .search-box {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
@@ -22,7 +22,7 @@
   transition: 0.3s;
 }
 
-.search-box:focus {
+.entities-container .search-box:focus {
   border-color: #007bff;
   box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
 }

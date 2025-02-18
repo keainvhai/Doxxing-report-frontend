@@ -18,7 +18,8 @@ const Leaderboard = () => {
     fetchLeaderboard();
   }, []);
 
-  if (!leaderboardData) return <p>Loading leaderboard...</p>;
+  if (!leaderboardData || Object.keys(leaderboardData).length === 0)
+    return <p>Loading leaderboard...</p>;
 
   // 添加奖牌图标
   const getMedal = (index) => {
@@ -64,6 +65,7 @@ const Leaderboard = () => {
                     <div className="medal-container">
                       <span className="medal">{getMedal(index)}</span>
                     </div>
+
                     <span className="rank-content">{entry.author}</span>
                   </span>
                   <span className="count-badge">{entry.count}</span>
@@ -124,7 +126,7 @@ const Leaderboard = () => {
                     <div className="medal-container">
                       <span className="medal">{getMedal(index)}</span>
                     </div>
-                    <span className="rank-content">{entry.domain}</span>
+                    <span className="rank-content">{entry.entity}</span>
                   </span>
                   <span className="count-badge">{entry.count}</span>
                 </li>

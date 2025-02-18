@@ -28,7 +28,7 @@ const AIDigest = () => {
 
   return (
     <div className="digest-container">
-      <h2>📊 AI Doxing Digest</h2>
+      <h2>📊 Weekly Summary</h2>
       {summaries.length === 0 ? (
         <p>No summaries available.</p>
       ) : (
