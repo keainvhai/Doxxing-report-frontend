@@ -10,6 +10,19 @@ const ReportCard = ({ report }) => {
     navigate(`/report/${report.id}`); // ✅ 跳转到 /report/:id
   };
 
+  // ✅ 解析 images，避免 JSON.parse(null) 报错
+  let images = [];
+  try {
+    images = report.images ? JSON.parse(report.images) : [];
+  } catch (error) {
+    console.error("Error parsing images:", error);
+  }
+
+  // ✅ 确保 text 不是 null
+  const textPreview = report.text
+    ? report.text.slice(0, 150)
+    : "No description available.";
+
   return (
     <div className="report-card">
       {/* ✅ 显示封面图片（如果存在） */}
@@ -36,11 +49,12 @@ const ReportCard = ({ report }) => {
         <p>
           Date Published: {new Date(report.date_published).toLocaleDateString()}
         </p>
-        <p className="report-text">{report.text.slice(0, 150)}...</p>{" "}
+        <p className="report-text">{textPreview}...</p>{" "}
+        {/* ✅ 显示前 150 字内容 */}
         {/* ✅ 显示前 150 字内容 */}
         {/* ✅ Show Details 按钮 */}
         <div className="button-group">
-          <button className="open-source-btn">
+          <button className="oppen-source-btn">
             <a href={report.url} target="_blank" rel="noopener noreferrer">
               Open Source
             </a>

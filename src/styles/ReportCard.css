@@ -5,7 +5,8 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
   width: 100%;
-  /* max-width: 400px; */
+  max-width: 400px;
+  min-width: 280px;
   margin: auto;
 }
 
@@ -15,8 +16,9 @@
 
 .report-image {
   width: 100%;
-  height: 40%;
-  object-fit: cover;
+  height: 200px; /* 固定图片高度，推荐200px左右，可自行调整 */
+  object-fit: cover; /* 图片比例不变，自动裁剪超出部分，避免拉伸变形 */
+  object-position: center; /* 图片居中显示 */
 }
 
 .report-content {

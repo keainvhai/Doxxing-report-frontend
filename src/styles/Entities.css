@@ -83,40 +83,55 @@
 }
 
 /* ✅ Report 列表美化 */
-.report-list {
+.entity-report-list {
   list-style-type: none;
-  padding: 10px;
+  padding: 0 10px;
   margin: 5px 0;
   background-color: #f8f9fa;
-  border-radius: 8px;
+  /* border-radius: 8px; */
   box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 300px; /* ✅ 设置最大高度 */
+  overflow-y: auto; /* ✅ 允许垂直滚动 */
 }
 
-.report-list li {
+.entity-report-list li {
   padding: 8px 10px;
   border-bottom: 1px solid #ddd;
 }
 
-.report-list li:last-child {
+.entity-report-list li:last-child {
   border-bottom: none;
 }
 
-.report-list a {
+.entity-report-list a {
   text-decoration: none;
-  font-weight: bold;
-  color: #007bff;
+  /* font-weight: bold; */
+  /* color: #007bff; */
   transition: 0.3s;
 }
 
-.report-list a:hover {
+.entity-report-list a:hover {
   text-decoration: underline;
   color: #0056b3;
 }
 
-.report-list .author,
-.report-list .date {
+.entity-report-list .author,
+.entity-report-list .date {
   margin-left: 10px;
   color: #6c757d;
+}
+
+.entity-report-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.entity-report-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.entity-report-list::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
 }
 
 /* ✅ 没有数据时的样式 */

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { submitReport } from "../api";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { submitReport, generateReportImageByInput } from "../api";
 import { AuthContext } from "../helpers/AuthContext"; // ✅ 引入 AuthContext
 import "../styles/Form.css";
 
@@ -12,39 +12,19 @@ const SubmitReport = () => {
     incident_date: "",
     text: "",
     victim: "",
+    images: [],
   });
+
+  const fileInputRef = useRef(null); // ✅ 创建 ref 绑定文件输入框
 
   // ✅ 存储用户信息
   const { authState } = useContext(AuthContext);
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(false);
-
-  // ✅ 获取当前登录用户信息
-
-  // ✅ 在 `localStorage` 里查找 `user`
-  // useEffect(() => {
-  //   console.log("🔍 localStorage 内容:", localStorage.getItem("user")); // ✅ 调试代码
-
-  //   const storedUser = localStorage.getItem("user");
-
-  //   if (storedUser) {
-  //     const parsedUser = JSON.parse(storedUser);
-  //     console.log("📌 检测到已登录用户:", parsedUser);
-
-  //     setUser(parsedUser);
-  //     setForm((prev) => ({
-  //       ...prev,
-  //       author: parsedUser.username || parsedUser.email.split("@")[0], // ✅ 自动填充 author
-  //     }));
-  //   } else {
-  //     console.log("📌 未找到登录用户，保持 author 为 Anonymous");
-  //     setUser(null); // ✅ 退出登录后，user 变成 null
-  //     setForm((prev) => ({
-  //       ...prev,
-  //       author: "Anonymous",
-  //     }));
-  //   }
-  // }, [authState]);
+  const [toastMessage, setToastMessage] = useState(""); // ✅ 动态 Toast 消息
+  const [newImages, setNewImages] = useState([]); // ✅ 处理上传的新图片
+  const [generating, setGenerating] = useState(false);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState(null); // ✅ 存储 AI 生成的图片 URL
 
   useEffect(() => {
     console.log("🔍 当前 authState:", authState);
@@ -64,33 +44,29 @@ const SubmitReport = () => {
     }
   }, [authState]); // ✅ 监听 `authState` 变化
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("accessToken");
+  const handleGenerateImage = async () => {
+    if (!form.title || !form.url) {
+      console.error("❌ Title or URL is missing, cannot generate image.");
+      return;
+    }
 
-  //   if (!token) {
-  //     console.log("📌 用户未登录，使用默认匿名提交");
-  //     return;
-  //   }
+    setGenerating(true);
+    try {
+      const { data } = await generateReportImageByInput(
+        form.title,
+        form.url,
+        form.text
+      );
 
-  //   // const getUser = async () => {
-  //   //   try {
-  //   //     const response = await fetchUserProfile();
-  //   //     if (response.data.success) {
-  //   //       setUser(response.data.user);
-  //   //       setForm((prev) => ({
-  //   //         ...prev,
-  //   //         author:
-  //   //           response.data.user.username ||
-  //   //           response.data.user.email.split("@")[0], // ✅ 自动填充 author
-  //   //       }));
-  //   //     }
-  //   //   } catch (error) {
-  //   //     console.error("Error fetching user profile:", error);
-  //   //   }
-  //   // };
-
-  //   // getUser();
-  // }, []);
+      if (data.imageUrl) {
+        console.log("✅ AI Generated Image URL:", data.imageUrl);
+        setGeneratedImageUrl(data.imageUrl);
+      }
+    } catch (error) {
+      console.error("❌ Error generating image:", error);
+    }
+    setGenerating(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,25 +76,11 @@ const SubmitReport = () => {
     // ✅ 确保字段值不会是 undefined 或者 null
     formData.append("url", form.url.trim());
     formData.append("title", form.title.trim());
-    // formData.append(
-    //   "author",
-    //   form.author.trim() === "" ? "Anonymous" : form.author
-    // );
 
     // ✅ 处理 `author`，如果 `user` 为空，则设为 "Anonymous"
-    const author = user?.email ? user.email.split("@")[0] : "Anonymous";
+    // const author = user?.email ? user.email.split("@")[0] : "Anonymous";
+    const author = user?.status ? user.username : "Anonymous";
     formData.append("author", author);
-
-    // formData.append("author", form.author.trim());
-
-    // formData.append(
-    //   "date_published",
-    //   form.date_published ? new Date(form.date_published).toISOString() : ""
-    // );
-    // formData.append(
-    //   "incident_date",
-    //   form.incident_date ? new Date(form.incident_date).toISOString() : ""
-    // );
 
     const formatDate = (date) =>
       date ? new Date(date).toISOString().split("T")[0] : "";
@@ -130,17 +92,22 @@ const SubmitReport = () => {
       "victim",
       form.victim.trim() === "" ? "Unknown" : form.victim
     );
-
-    // ✅ 传递 `userId` 到后端（如果用户已登录）
-    // if (user) {
-    //   formData.append("userId", user.id);
-    // }
     formData.append("userId", user?.id || "");
 
+    //确保正确添加 `images`
+    if (newImages.length > 0) {
+      newImages.forEach((image) => {
+        formData.append("images", image);
+      });
+      // console.log("📌 Images added to FormData:", newImages); // ✅ 检查图片是否添加到 FormData
+    } else {
+      console.log("🚨 No images selected.");
+    }
     try {
       const response = await submitReport(formData);
       console.log("Report Submitted:", response.data);
 
+      setToastMessage("✅ Report submitted successfully!");
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
 
@@ -149,18 +116,66 @@ const SubmitReport = () => {
         title: "",
         // author: "",
         // ✅ 保持 `author` 填充状态
-        author: user?.email ? user.email.split("@")[0] : "Anonymous",
+        // author: user?.email ? user.email.split("@")[0] : "Anonymous",
+        author: user?.status ? user.username : "Anonymous", // **保持正确的 author**
         date_published: "",
         incident_date: "",
         text: "",
         victim: "",
-        // images: [],
+        images: [],
       });
+      setGeneratedImageUrl(null); // ✅ 清空 AI 生成的图片
+      setNewImages([]); // ✅ 清空上传的图片
+
+      // ✅ **清空文件输入框**
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (error) {
       console.error(
-        "Submission failed:",
+        "❌ Submission failed:",
         error.response ? error.response.data : error.message
       );
+      setToastMessage("❌ Failed to submit report.");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!generatedImageUrl) {
+      console.error("No image URL available");
+      return;
+    }
+
+    try {
+      // 让后端代理下载 OpenAI 生成的图片
+      const response = await fetch(
+        `http://localhost:3001/api/download-image?imageUrl=${encodeURIComponent(
+          generatedImageUrl
+        )}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      // 📌 获取 Blob 数据
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      // 📌 触发下载
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `AI_Image_${Date.now()}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      // 释放 URL
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("❌ Download failed", error);
     }
   };
 
@@ -169,9 +184,7 @@ const SubmitReport = () => {
       <h2>Submit a Doxxing Report</h2>
 
       {/* ✅ 小窗口 Toast 通知 */}
-      {showToast && (
-        <div className="toast">✅ Report submitted successfully!</div>
-      )}
+      {showToast && <div className="toast">{toastMessage}</div>}
 
       <form onSubmit={handleSubmit}>
         {/* Report URL */}
@@ -237,12 +250,50 @@ const SubmitReport = () => {
         ></textarea>
 
         {/* Image Upload */}
-        {/* <label htmlFor="images">🖼️ Upload Images</label>
+        <label htmlFor="images">🖼️ Upload Images</label>
+
+        {/* AI 生成图片 */}
+        <button
+          className="ai-img-btn"
+          onClick={handleGenerateImage}
+          disabled={generating}
+          type="button"
+        >
+          {generating ? "Generating..." : "Generate Image with AI"}
+        </button>
+        <p style={{ fontSize: "14px", color: "gray" }}>
+          Generating AI image may take up to 1 minute.
+        </p>
+
+        {generatedImageUrl && (
+          <div className="ai-img-container">
+            <p>✅ AI Generated Image:</p>
+
+            <img
+              src={generatedImageUrl}
+              alt="AI Generated"
+              style={{ width: "300px" }}
+            />
+            <button
+              onClick={handleDownload}
+              type="button"
+              className="download-img-btn"
+            >
+              Download Image
+            </button>
+          </div>
+        )}
+
         <input
           type="file"
           multiple
-          onChange={(e) => setForm({ ...form, images: [...e.target.files] })}
-        /> */}
+          ref={fileInputRef}
+          onChange={(e) => {
+            // console.log("📌 Selected Files:", e.target.files);
+            setNewImages([...e.target.files]);
+          }}
+        />
+
         <div className="button-container">
           <button type="submit">Submit</button>
         </div>

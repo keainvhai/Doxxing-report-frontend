@@ -19,6 +19,21 @@
   cursor: pointer;
 }
 
+.ai-img-container {
+  display: flex;
+  flex-direction: column;
+}
+.ai-img-container p {
+  margin-top: 0;
+}
+.ai-img-btn {
+  margin-top: 0.5rem;
+}
+.download-img-btn {
+  margin: 1rem 0;
+  width: 8rem;
+}
+
 .form-container button:hover {
   background-color: #0056b3;
 }

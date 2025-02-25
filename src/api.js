@@ -26,9 +26,14 @@ export const approveReport = (id) => API.post("/reports/approve", { id });
 // Delete a report
 export const deleteReport = (id) => API.post("/reports/delete", { id });
 
-//Gengerate image
+//Gengerate image by id, for ReportEdit.jsx
 export const generateReportImage = (id) =>
   API.post(`/reports/generate-image/${id}`);
+
+// 用于 SubmitReport.jsx，基于用户输入的 title + url + text 生成 AI 图片
+export const generateReportImageByInput = async (title, url, text) => {
+  return await API.post("/reports/generate-image", { title, url, text });
+};
 
 //Search method
 export const searchReports = (query) =>

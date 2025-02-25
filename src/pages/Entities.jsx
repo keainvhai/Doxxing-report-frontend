@@ -94,7 +94,7 @@ const Entities = () => {
                       <tr>
                         <td></td>
                         <td colSpan="1">
-                          <ul className="report-list">
+                          <ul className="entity-report-list">
                             {entity.reports.map((report) => (
                               <li key={report.id}>
                                 <a href={`/report/${report.id}`}>

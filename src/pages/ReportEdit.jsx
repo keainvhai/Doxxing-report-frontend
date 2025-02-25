@@ -90,16 +90,17 @@ const ReportEdit = () => {
       if (key !== "images") formData.append(key, form[key]);
     });
 
+    formData.append("deletedImages", JSON.stringify(deletedImages));
+
     // 添加新图片
     newImages.forEach((image) => {
       formData.append("images", image);
     });
-    formData.append("deletedImages", JSON.stringify(deletedImages));
+
+    console.log("📌 Submitting update request:", formData);
 
     try {
       await updateReport(id, formData);
-      // alert("✅ Report updated successfully!");
-      // navigate("/admin");
       setToastMessage("✅ Report updated successfully!");
       setShowToast(true);
 
@@ -109,12 +110,48 @@ const ReportEdit = () => {
       }, 3000);
     } catch (err) {
       console.error("❌ Error updating report:", err);
-      // alert("Failed to update report.");
       // ✅ 显示错误消息
       setToastMessage("❌ Failed to update report.");
       setShowToast(true);
 
       setTimeout(() => setShowToast(false), 3000);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!generatedImageUrl) {
+      console.error("No image URL available");
+      return;
+    }
+
+    try {
+      // 让后端代理下载 OpenAI 生成的图片
+      const response = await fetch(
+        `http://localhost:3001/api/download-image?imageUrl=${encodeURIComponent(
+          generatedImageUrl
+        )}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      // 📌 获取 Blob 数据
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      // 📌 触发下载
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `AI_Image_${Date.now()}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      // 释放 URL
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("❌ Download failed", error);
     }
   };
 
@@ -209,14 +246,9 @@ const ReportEdit = () => {
               alt="AI Generated"
               style={{ width: "300px" }}
             />
-            {/* ✅ 提供下载按钮 */}
-            <a
-              href={generatedImageUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <button>Open Image in New Tab</button>
-            </a>
+            {/* 直接下载图片 */}
+
+            <button onClick={handleDownload}>Download Image</button>
           </div>
         )}
 
