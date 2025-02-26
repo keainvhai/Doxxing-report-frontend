@@ -9,7 +9,10 @@ export const submitReport = (formData) =>
   });
 
 // Get all reports
-export const fetchReports = () => API.get("/reports");
+// export const fetchReports = () => API.get("/reports");
+export const fetchReports = async (filters = {}, page = 1) => {
+  return API.get("/reports", { params: { ...filters, page } });
+};
 
 // admin Get reports by id
 export const fetchReportById = (id) => API.get(`/reports/${id}`);
@@ -40,8 +43,8 @@ export const searchReports = (query) =>
   API.get("/reports", { params: { search: query.trim() } });
 
 // get all Approved report
-export const fetchApprovedReports = (filters = {}) =>
-  API.get("/reports/approved", { params: filters });
+export const fetchApprovedReports = (filters = {}, page = 1) =>
+  API.get("/reports/approved", { params: { ...filters, page } });
 
 // 获取所有可用的 source 域名
 export const fetchSources = () => API.get("/reports/sources");

@@ -14,8 +14,7 @@ h2 {
   margin-bottom: 10px;
   align-items: center;
   justify-content: center;
-  width: 90%; /* ✅ 让整个搜索框区域占 80% */
-  /* max-width: 900px; */
+  width: 90%;
   margin: 0 auto;
 }
 
@@ -64,7 +63,6 @@ td {
   border: 1px solid #ddd;
   gap: 20px;
   text-align: center;
-  /* white-space: nowrap; */
 }
 
 th {
@@ -74,10 +72,11 @@ th {
 
 .action-buttons {
   display: flex;
-  gap: 10px; /* ✅ 按钮之间增加间隔 */
+  gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .approve-btn {
   background-color: #4caf50;
   color: white;
@@ -86,6 +85,7 @@ th {
   border: none;
   cursor: pointer;
 }
+
 .approve-btn:hover {
   background-color: #218838;
 }
@@ -98,6 +98,7 @@ th {
   border: none;
   cursor: pointer;
 }
+
 .reject-btn:hover {
   background-color: #c82333;
 }
@@ -110,6 +111,7 @@ th {
   width: 70px;
   height: 30px;
 }
+
 .no-results {
   text-align: center;
   font-size: 16px;
@@ -117,15 +119,68 @@ th {
   padding: 10px;
 }
 
-/* ✅ 小屏幕下的表格样式 */
+/* ✅ 分页控件 */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  width: 100px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* ✅ 跳转输入框 */
+.page-input {
+  width: 50px;
+  text-align: center;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* ✅ 小屏幕优化 */
 @media (max-width: 768px) {
   .table-container {
-    overflow-x: auto; /* ✅ 小屏幕时允许滚动 */
+    overflow-x: auto; /* ✅ 允许表格在小屏幕滚动 */
   }
 
   th,
   td {
     padding: 8px;
-    font-size: 14px; /* ✅ 小屏幕上字体稍微变小 */
+    font-size: 14px;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+
+  .pagination button {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+
+  .page-input {
+    font-size: 14px;
+    width: 40px;
   }
 }

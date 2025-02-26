@@ -5,32 +5,38 @@ import { fetchApprovedReports, fetchSources } from "../api";
 import "../styles/Search.css";
 
 const Search = ({ hideTitle }) => {
-  const [reports, setReports] = useState([]); // 所有 Approved reports
-  const [filteredReports, setFilteredReports] = useState([]); // 过滤后的 reports
-  const [sources, setSources] = useState([]); // 站点来源（域名）
-  const [selectedSource, setSelectedSource] = useState("All Sources"); // 选中的 source
+  const [reports, setReports] = useState([]);
+  const [sources, setSources] = useState([]);
+  const [selectedSource, setSelectedSource] = useState("All Sources"); // ✅ 修复 `selectedSource`
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [searchPerformed, setSearchPerformed] = useState(false);
-  const [filters, setFilters] = useState({}); // 存储高级筛选条件
-  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false); // ✅ 控制 Advanced Search 是否显示
+  const [filters, setFilters] = useState({});
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [inputPage, setInputPage] = useState("");
 
+  // ✅ 监听 `filters, page, selectedSource`，确保搜索 & 分页正常
   useEffect(() => {
     getApprovedReports();
+  }, [filters, page, selectedSource]);
+
+  useEffect(() => {
     getSources();
   }, []);
 
-  const getApprovedReports = async (filters = {}) => {
+  const getApprovedReports = async () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await fetchApprovedReports(filters);
-      console.log("📌 Fetched Approved Reports:", data);
+      const queryFilters = {
+        ...filters,
+        source: selectedSource === "All Sources" ? undefined : selectedSource, // ✅ 修复 source 为空时的问题
+      };
 
-      // 确保 data.reports 存在并是数组
-      const reportsArray = Array.isArray(data.reports) ? data.reports : [];
-      setReports(reportsArray);
-      setFilteredReports(reportsArray);
+      const { data } = await fetchApprovedReports(queryFilters, page);
+      setReports(data.reports);
+      setTotalPages(data.totalPages);
     } catch (err) {
       console.error("❌ Error fetching approved reports:", err);
       setError("Failed to load reports.");
@@ -38,82 +44,61 @@ const Search = ({ hideTitle }) => {
       setLoading(false);
     }
   };
-  // 获取所有可用的 source
+
   const getSources = async () => {
     try {
       const { data } = await fetchSources();
-      console.log("🌐 API Response - Available Sources:", data.sources);
-
-      if (!data.sources || !Array.isArray(data.sources)) {
-        console.error("❌ Invalid sources format:", data.sources);
-        setSources([]); // 避免 `undefined`
-        return;
-      }
-
-      // ✅ 确保 sources 是对象数组
-      const formattedSources = data.sources.map((source) =>
-        typeof source === "string" ? { domain: source, count: 0 } : source
-      );
-
-      setSources([{ domain: "All Sources", count: 0 }, ...formattedSources]);
+      setSources([
+        { domain: "All Sources", count: 0 },
+        ...(data.sources || []),
+      ]);
     } catch (err) {
       console.error("❌ Error fetching sources:", err);
       setSources([]);
     }
   };
 
+  // ✅ 处理搜索（含 Advanced Search）
   const handleSearch = (query, advancedFilters) => {
-    setLoading(true);
-    setSearchPerformed(true);
-
-    // ✅ 确保 `From` 日期不比 `To` 晚
-    if (advancedFilters.published_from && advancedFilters.published_to) {
-      if (advancedFilters.published_from > advancedFilters.published_to) {
-        alert("Published 'From' date cannot be later than 'To' date.");
-        setLoading(false);
-        return;
-      }
-    }
-
-    if (advancedFilters.incident_from && advancedFilters.incident_to) {
-      if (advancedFilters.incident_from > advancedFilters.incident_to) {
-        alert("Incident 'From' date cannot be later than 'To' date.");
-        setLoading(false);
-        return;
-      }
-    }
-
-    // ✅ 组合查询参数
-    const searchParams = {
+    setPage(1);
+    setFilters({
       search: query.trim(),
-      source: selectedSource === "All Sources" ? "" : selectedSource, // 传递 source 参数
       ...advancedFilters,
-    };
-
-    console.log("🔎 Searching with params:", searchParams);
-    setFilters(searchParams);
-
-    fetchApprovedReports(searchParams)
-      .then(({ data }) => {
-        console.log("📌 Filtered Reports:", data);
-
-        setFilteredReports(data.reports);
-      })
-      .catch((err) => {
-        console.error("❌ Error searching reports:", err);
-        setError("Failed to search reports.");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    });
   };
 
+  // ✅ 处理 Source 切换
+  const handleSourceChange = (newSource) => {
+    setPage(1);
+    setSelectedSource(newSource);
+  };
+
+  // ✅ 清除筛选
   const handleClearFilters = () => {
-    console.log("🔄 Resetting filters");
-    setSearchPerformed(false);
+    setPage(1);
     setFilters({});
     setSelectedSource("All Sources");
-    getApprovedReports(); // 重新加载所有 `Approved Reports`
+    getApprovedReports();
+  };
+
+  const handlePageChange = (event) => {
+    setInputPage(event.target.value);
+  };
+
+  const handlePageJump = () => {
+    const pageNumber = parseInt(inputPage, 10);
+    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
+      setPage(pageNumber);
+    } else {
+      alert(`请输入 1 到 ${totalPages} 之间的页码！`);
+    }
+    setInputPage("");
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handlePageJump();
+    }
   };
 
   return (
@@ -126,20 +111,42 @@ const Search = ({ hideTitle }) => {
         onClearFilters={handleClearFilters}
         showAdvancedSearch={showAdvancedSearch}
         setShowAdvancedSearch={setShowAdvancedSearch}
-        sources={sources} // ✅ 传递 sources
-        selectedSource={selectedSource} // ✅ 传递选中的 source
-        setSelectedSource={setSelectedSource} // ✅ 允许修改 source
+        sources={sources}
+        selectedSource={selectedSource} // ✅ 传递 `selectedSource`
+        setSelectedSource={handleSourceChange} // ✅ 允许切换 Source
       />
+
       {loading && <p>Loading...</p>}
       {error && <p className="error-message">{error}</p>}
 
-      {!loading && filteredReports.length === 0 && (
+      {!loading && reports.length === 0 && (
         <p className="no-results">No reports found</p>
       )}
+      {!loading && reports.length > 0 && <ReportList reports={reports} />}
 
-      {!loading && (
-        <ReportList reports={searchPerformed ? filteredReports : reports} />
-      )}
+      <div className="pagination">
+        <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+          Previous
+        </button>
+        <span>
+          {page} / {totalPages}
+        </span>
+        <button
+          onClick={() => setPage(page + 1)}
+          disabled={page === totalPages}
+        >
+          Next
+        </button>
+        <input
+          type="number"
+          value={inputPage}
+          onChange={handlePageChange}
+          onKeyPress={handleKeyPress}
+          placeholder="page"
+          className="page-input"
+        />
+        <button onClick={handlePageJump}>To</button>
+      </div>
     </div>
   );
 };

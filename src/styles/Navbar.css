@@ -51,7 +51,7 @@
 }
 
 /* 响应式：小屏幕下的菜单 */
-@media (max-width: 768px) {
+@media (max-width: 880px) {
   .nav-links {
     display: none;
     flex-direction: column;

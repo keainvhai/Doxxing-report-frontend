@@ -8,7 +8,7 @@
   grid-template-columns: repeat(1, 1fr); /* 默认小屏幕占满整行 */
 }
 
-@media screen and (min-width: 530px) {
+@media screen and (min-width: 600px) {
   .report-grid {
     grid-template-columns: repeat(2, 1fr); /* 每行 2 个 */
   }

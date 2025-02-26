@@ -12,57 +12,48 @@ import { AuthContext } from "../helpers/AuthContext";
 
 const AdminDashboard = () => {
   const { authState } = useContext(AuthContext);
-
-  const [reports, setReports] = useState([]); // ✅ 存储所有 reports
-  const [filteredReports, setFilteredReports] = useState([]); // ✅ 过滤后的 reports
-  const [sources, setSources] = useState([]); // ✅ 存储 sources 数据
+  const [reports, setReports] = useState([]);
+  const [sources, setSources] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({}); // ✅ 解决 filters 未定义问题
+
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [inputPage, setInputPage] = useState(""); // ✅ 添加输入框的页码
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 未登录的用户跳转到登录页
-    // const token = localStorage.getItem("token");
-    // if (!token) {
-    //   navigate("/login");
-    // }
-    // ✅ 先检查 localStorage 里的 authState
     if (authState.role !== "admin") {
       navigate("/");
     }
-
-    const getReportsAndSources = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const [reportsRes, sourcesRes] = await Promise.all([
-          fetchReports(), // ✅ 获取所有 reports
-          fetchSources(), // ✅ 获取所有 sources
-        ]);
-        setReports(reportsRes.data);
-        setFilteredReports(reportsRes.data); // ✅ 初始时显示所有 reports
-        setSources(sourcesRes.data.sources); // ✅ 设置 sources 数据
-      } catch (err) {
-        console.error("❌ Error fetching data:", err);
-        setError("Failed to load reports or sources.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getReportsAndSources();
-  }, [authState, navigate]);
+  }, [authState, navigate, page]); // ✅ 监听 `page` 变化
+
+  const getReportsAndSources = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [reportsRes, sourcesRes] = await Promise.all([
+        fetchReports(filters, page), // ✅ 传递 `filters` 和 `page`
+        fetchSources(),
+      ]);
+      setReports(reportsRes.data.reports);
+      setTotalPages(reportsRes.data.totalPages); // ✅ 修正错误
+      setSources(sourcesRes.data.sources);
+    } catch (err) {
+      console.error("❌ Error fetching data:", err);
+      setError("Failed to load reports or sources.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleApprove = async (id) => {
     try {
       await approveReport(id);
       setReports((prevReports) =>
-        prevReports.map((report) =>
-          report.id === id ? { ...report, status: "Approved" } : report
-        )
-      );
-      setFilteredReports((prevReports) =>
         prevReports.map((report) =>
           report.id === id ? { ...report, status: "Approved" } : report
         )
@@ -79,28 +70,35 @@ const AdminDashboard = () => {
       setReports((prevReports) =>
         prevReports.filter((report) => report.id !== id)
       );
-      setFilteredReports((prevReports) =>
-        prevReports.filter((report) => report.id !== id)
-      );
     } catch (err) {
       console.error("❌ Error deleting report:", err);
       alert("Failed to delete the report.");
     }
   };
 
-  // ✅ 处理搜索（不区分 `Approved` 和 `Pending`，都可以搜索）
   const handleSearch = (query) => {
-    if (!query.trim()) {
-      setFilteredReports([...reports]); // ✅ 如果搜索框为空，恢复所有数据
+    setPage(1); // ✅ 搜索时重置 `page`
+    setFilters({ search: query.trim() });
+    getReportsAndSources();
+  };
+
+  const handlePageChange = (event) => {
+    setInputPage(event.target.value);
+  };
+
+  const handlePageJump = () => {
+    const pageNumber = parseInt(inputPage, 10);
+    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
+      setPage(pageNumber);
     } else {
-      setFilteredReports(
-        reports.filter(
-          (report) =>
-            report.title.toLowerCase().includes(query.toLowerCase()) ||
-            (report.author &&
-              report.author.toLowerCase().includes(query.toLowerCase()))
-        )
-      );
+      alert(`请输入 1 到 ${totalPages} 之间的页码！`);
+    }
+    setInputPage(""); // ✅ 清空输入框
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handlePageJump();
     }
   };
 
@@ -108,7 +106,6 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       <h2>Admin Dashboard</h2>
 
-      {/* ✅ 搜索组件 */}
       <SearchComponent
         placeholder="Search reports..."
         onSearch={handleSearch}
@@ -117,7 +114,6 @@ const AdminDashboard = () => {
       {loading && <p>Loading reports...</p>}
       {error && <p className="error">{error}</p>}
 
-      {/* ✅ 显示 reports */}
       {!loading && !error && (
         <div className="table-container">
           <table>
@@ -132,8 +128,8 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredReports.length > 0 ? (
-                filteredReports.map((report) => (
+              {reports.length > 0 ? (
+                reports.map((report) => (
                   <tr key={report.id}>
                     <td>{report.id}</td>
                     <td>{report.title}</td>
@@ -181,6 +177,32 @@ const AdminDashboard = () => {
           </table>
         </div>
       )}
+
+      {/* ✅ 分页控件 */}
+      <div className="pagination">
+        <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+          Previous
+        </button>
+        <span>
+          {page} / {totalPages}
+        </span>
+        <button
+          onClick={() => setPage(page + 1)}
+          disabled={page === totalPages}
+        >
+          Next
+        </button>
+        {/* ✅ 输入框+按钮支持跳转 */}
+        <input
+          type="number"
+          value={inputPage}
+          onChange={handlePageChange}
+          onKeyPress={handleKeyPress}
+          placeholder="page"
+          className="page-input"
+        />
+        <button onClick={handlePageJump}>To</button>
+      </div>
     </div>
   );
 };
