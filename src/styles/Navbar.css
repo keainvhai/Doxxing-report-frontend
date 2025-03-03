@@ -22,21 +22,39 @@
   color: white;
 }
 
+.nav-links {
+  margin-right: 1rem;
+  display: flex;
+}
+
 .navbar a {
-  text-decoration: none;
+  text-decoration: none; /* 移除默认下划线 */
   color: white;
   margin-right: 15px;
   font-size: 16px;
-  transition: color 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+  display: inline-block;
+  position: relative; /* 让 ::after 相对于 a 定位 */
+}
+
+.navbar a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px; /* 控制下划线与文本的距离 */
+  width: 0%;
+  height: 2px; /* 下划线厚度 */
+  background: white; /* 下划线颜色 */
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateX(-50%);
 }
 
 .navbar a:hover {
-  font-weight: bold;
-  transition: color 0.3s ease-in-out;
+  transform: scale(1.1);
 }
 
-.nav-links {
-  margin-right: 1rem;
+.navbar a:hover::after {
+  width: 100%; /* hover 时展开下划线 */
 }
 
 /* 处理小屏幕的菜单 */

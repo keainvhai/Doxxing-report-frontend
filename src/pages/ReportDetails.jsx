@@ -105,22 +105,24 @@ const ReportDetails = () => {
         <strong>Date Published:</strong>{" "}
         {new Date(report.date_published).toLocaleDateString()}
       </p>
-      <p>
-        <strong>Date Downloaded:</strong>{" "}
-        {new Date(report.date_downloaded).toLocaleDateString()}
-      </p>
-      {/* {report.incident_date && (
+
+      {report.incident_date && (
         <p>
           <strong>Incident Date:</strong>{" "}
           {new Date(report.incident_date).toLocaleDateString()}
         </p>
-      )} */}
-      <p>
+      )}
+      {/* <p>
         <strong>Source:</strong> {report.url}
-      </p>
+      </p> */}
 
       {/* ✅ 报告描述 */}
-      <p>{report.text}</p>
+      {report.text && (
+        <p>
+          <strong>Description:</strong> {report.text}
+        </p>
+      )}
+      {/* <p>{report.text}</p> */}
 
       {/* ✅ 图片显示 */}
       {report.images && JSON.parse(report.images).length > 0 && (
