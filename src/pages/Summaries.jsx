@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "../styles/Digest.css"; // 需要创建 CSS 样式
+import "../styles/Summaries.css"; // 需要创建 CSS 样式
 
-const AIDigest = () => {
+const Summaries = () => {
   const [summaries, setSummaries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +11,7 @@ const AIDigest = () => {
   useEffect(() => {
     const fetchSummaries = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3001/digest/all");
+        const { data } = await axios.get("http://localhost:3001/summaries/all");
         setSummaries(data);
       } catch (err) {
         console.error("❌ Error fetching summaries:", err);
@@ -37,7 +37,7 @@ const AIDigest = () => {
             {/* ✅ 点击标题跳转到 DigestDetails 页面 */}
             <h3>
               <Link
-                to={`/digest/${summary.week_start}`}
+                to={`/summaries/${summary.week_start}`}
                 className="digest-link"
               >
                 Week: {new Date(summary.week_start).toLocaleDateString()} -{" "}
@@ -65,4 +65,4 @@ const AIDigest = () => {
   );
 };
 
-export default AIDigest;
+export default Summaries;

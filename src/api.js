@@ -78,7 +78,12 @@ API.interceptors.request.use(
 );
 
 // 获取用户信息（包含所有 reports）
-export const fetchUserProfile = () => API.get("/users/profile");
+export const fetchUserProfile = () =>
+  API.get("/users/profile", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
 
 // 更新 `username`
 export const updateUsername = (username) =>

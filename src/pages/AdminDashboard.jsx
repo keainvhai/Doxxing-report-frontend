@@ -8,6 +8,7 @@ import {
   approveReport,
   deleteReport,
 } from "../api";
+import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
 
 const AdminDashboard = () => {
@@ -21,6 +22,14 @@ const AdminDashboard = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [inputPage, setInputPage] = useState(""); // ✅ 添加输入框的页码
+
+  // crawl report from google news
+  const [crawlLoading, setCrawlLoading] = useState(false);
+  const [crawlMessage, setCrawlMessage] = useState("");
+
+  // generate weekly summary
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [summaryMessage, setSummaryMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -102,9 +111,78 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleCrawlNews = async () => {
+    setCrawlLoading(true);
+    setCrawlMessage("");
+    try {
+      const res = await axios.post(
+        "http://localhost:3001/reports/crawl-news",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setCrawlMessage(res.data.message);
+      // ✅ 爬取完成后刷新 reports 列表
+      getReportsAndSources();
+    } catch (err) {
+      console.error("❌ Error crawling news:", err);
+      setCrawlMessage("❌ Failed to crawl news.");
+    } finally {
+      setCrawlLoading(false);
+    }
+  };
+
+  const handleGenerateSummary = async () => {
+    setSummaryLoading(true);
+    setSummaryMessage("");
+    try {
+      const res = await axios.post(
+        "http://localhost:3001/summaries/generate",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setSummaryMessage(res.data.message || "✅ Summary generated!");
+    } catch (err) {
+      console.error("❌ Error generating summary:", err);
+      setSummaryMessage("❌ Failed to generate summary.");
+    } finally {
+      setSummaryLoading(false);
+    }
+  };
+
   return (
     <div className="admin-dashboard">
       <h2>Admin Dashboard</h2>
+
+      <div className="admin-actions">
+        <button
+          onClick={handleCrawlNews}
+          disabled={crawlLoading}
+          className="crawl-btn action-btn"
+        >
+          {crawlLoading ? "Crawling News..." : "Crawl Latest News"}
+        </button>
+
+        <button
+          onClick={handleGenerateSummary}
+          disabled={summaryLoading}
+          className="summary-btn action-btn"
+        >
+          {summaryLoading ? "Generating Summary..." : "Generate Weekly Summary"}
+        </button>
+      </div>
+
+      <div className="status-messages">
+        {crawlMessage && <p>{crawlMessage}</p>}
+        {summaryMessage && <p>{summaryMessage}</p>}
+      </div>
 
       <SearchComponent
         placeholder="Search reports..."

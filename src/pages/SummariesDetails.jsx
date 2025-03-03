@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import ReportList from "../components/ReportList";
-import "../styles/DigestDetails.css";
+import "../styles/SummariesDetails.css";
 
-const DigestDetails = () => {
+const SummariesDetails = () => {
   const { week_start } = useParams();
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +14,7 @@ const DigestDetails = () => {
     const fetchReports = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:3001/digest/reports/${week_start}`
+          `http://localhost:3001/summaries/reports/${week_start}`
         );
         setReports(data);
       } catch (err) {
@@ -38,4 +38,4 @@ const DigestDetails = () => {
   );
 };
 
-export default DigestDetails;
+export default SummariesDetails;

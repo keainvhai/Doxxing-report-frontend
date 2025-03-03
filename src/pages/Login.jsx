@@ -49,7 +49,7 @@ function Login() {
           localStorage.setItem("authState", JSON.stringify(userData));
 
           // ✅ 存入 accessToken
-          localStorage.setItem("accessToken", response.data.token);
+          localStorage.setItem("token", response.data.token);
 
           // ✅ 先显示 Toast
           setToastMessage("✅ Login successful! Redirecting...");
