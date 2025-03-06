@@ -35,6 +35,9 @@ function Login() {
       .then((response) => {
         console.log("📌 Login Response:", response.data);
         if (response.data.success && response.data.token) {
+          // 记录 token 和过期时间：
+          const expiresAt = Date.now() + 2 * 60 * 60 * 1000; // 2小时有效期
+
           const userData = {
             id: response.data.id,
             email: response.data.email,
@@ -46,10 +49,10 @@ function Login() {
 
           // ✅ 存入 authState
           setAuthState(userData);
-          localStorage.setItem("authState", JSON.stringify(userData));
 
-          // ✅ 存入 accessToken
-          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("authState", JSON.stringify(userData));
+          localStorage.setItem("token", response.data.token); // ✅ 存入 accessToken
+          localStorage.setItem("expiresAt", expiresAt);
 
           // ✅ 先显示 Toast
           setToastMessage("✅ Login successful! Redirecting...");

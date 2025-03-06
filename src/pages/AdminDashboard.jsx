@@ -100,7 +100,7 @@ const AdminDashboard = () => {
     if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
       setPage(pageNumber);
     } else {
-      alert(`请输入 1 到 ${totalPages} 之间的页码！`);
+      alert(`Please enter a page number between 1 and ${totalPages}!`);
     }
     setInputPage(""); // ✅ 清空输入框
   };

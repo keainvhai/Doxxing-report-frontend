@@ -188,7 +188,7 @@ th {
 
 .pagination button {
   padding: 6px 12px;
-  width: 100px;
+  /* width: 100px; */
   border: none;
   background-color: #007bff;
   color: white;

@@ -205,6 +205,16 @@ const SubmitReport = () => {
           onChange={(e) => setForm({ ...form, title: e.target.value })}
           required
         />
+
+        {/* Date Published */}
+        <label htmlFor="date_published">📅 Date Published *</label>
+        <input
+          type="date"
+          value={form.date_published}
+          onChange={(e) => setForm({ ...form, date_published: e.target.value })}
+          required
+        />
+
         {/* Author */}
         <label htmlFor="author">✍️ Author</label>
         <input
@@ -222,15 +232,6 @@ const SubmitReport = () => {
           placeholder="Victim Name"
           value={form.victim}
           onChange={(e) => setForm({ ...form, victim: e.target.value })}
-        />
-
-        {/* Date Published */}
-        <label htmlFor="date_published">📅 Date Published *</label>
-        <input
-          type="date"
-          value={form.date_published}
-          onChange={(e) => setForm({ ...form, date_published: e.target.value })}
-          required
         />
 
         {/* Incident Date */}

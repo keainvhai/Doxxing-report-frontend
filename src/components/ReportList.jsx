@@ -3,7 +3,7 @@ import ReportCard from "./ReportCard";
 import "../styles/ReportList.css"; // ✅ 引入样式
 
 const ReportList = ({ reports }) => {
-  console.log("📌 Reports received by ReportList:", reports); // ✅ Debug: 确保收到数据
+  // console.log("📌 Reports received by ReportList:", reports);
 
   // 保障 reports 一定是数组
   const validReports = Array.isArray(reports) ? reports : [];

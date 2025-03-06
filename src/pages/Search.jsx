@@ -132,6 +132,18 @@ const Search = ({ hideTitle }) => {
     }));
   };
 
+  const handleDownloadSearchCSV = () => {
+    // ✅ 传递搜索 & 分页参数
+    const params = new URLSearchParams({
+      ...filters,
+      source: selectedSource === "All Sources" ? "" : selectedSource,
+      page,
+      limit: 12, // 传递分页参数（和 Search.jsx 里的一致）
+    }).toString();
+
+    window.open(`http://localhost:3001/reports/download/search-csv?${params}`);
+  };
+
   return (
     <div className="search-page">
       {!hideTitle && <h2>🔍 Discover Incidents</h2>}
@@ -163,6 +175,7 @@ const Search = ({ hideTitle }) => {
         sources={sources}
         selectedSource={selectedSource} // ✅ 传递 `selectedSource`
         setSelectedSource={handleSourceChange} // ✅ 允许切换 Source
+        handleDownloadSearchCSV={handleDownloadSearchCSV}
       />
 
       {loading && <p>Loading...</p>}

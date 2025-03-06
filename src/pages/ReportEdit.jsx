@@ -97,7 +97,7 @@ const ReportEdit = () => {
       formData.append("images", image);
     });
 
-    console.log("📌 Submitting update request:", formData);
+    // console.log("📌 Submitting update request:", formData);
 
     try {
       await updateReport(id, formData);

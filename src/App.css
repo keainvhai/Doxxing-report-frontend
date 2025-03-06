@@ -1,7 +1,19 @@
 html,
-body {
+body,
+#root {
   margin: 0;
   padding: 0;
   width: 100%;
   overflow-x: hidden; /* 防止页面横向滚动 */
+  height: 100%;
+}
+
+.page-wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
 }

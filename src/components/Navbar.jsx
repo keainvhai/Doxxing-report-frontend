@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
+import logoImage from "../assets/logo2.png";
 import { AuthContext } from "../helpers/AuthContext";
 
 const Navbar = () => {
-  const { authState, setAuthState } = useContext(AuthContext);
+  const { authState, setAuthState, handleLogout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
@@ -54,27 +55,27 @@ const Navbar = () => {
     };
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem("authState"); // ✅ 删除 authState
-    localStorage.removeItem("user"); // ✅ 额外删除 user
-    localStorage.removeItem("accessToken"); // ✅ 额外删除 accessToken
+  // const logout = () => {
+  //   localStorage.removeItem("authState"); // ✅ 删除 authState
+  //   localStorage.removeItem("user"); // ✅ 额外删除 user
+  //   localStorage.removeItem("accessToken"); // ✅ 额外删除 accessToken
 
-    setAuthState({
-      id: null,
-      email: "",
-      username: "",
-      role: "",
-      status: false,
-    });
+  //   setAuthState({
+  //     id: null,
+  //     email: "",
+  //     username: "",
+  //     role: "",
+  //     status: false,
+  //   });
 
-    console.log("📌 用户已登出，authState 变为:", authState);
-    navigate("/login");
-  };
+  //   console.log("📌 用户已登出，authState 变为:", authState);
+  //   navigate("/login");
+  // };
 
   return (
     <nav className="navbar">
       <Link to="/" className="logo">
-        LOGO
+        <img src={logoImage} alt="Logo" className="logo-image" />
       </Link>
       <button
         ref={buttonRef}
@@ -86,6 +87,10 @@ const Navbar = () => {
       <div ref={menuRef} className={`nav-links ${menuOpen ? "show" : ""}`}>
         <Link to="/search" onClick={() => setMenuOpen(false)}>
           Search
+        </Link>
+
+        <Link to="/data" onClick={() => setMenuOpen(false)}>
+          Data
         </Link>
 
         <Link to="/leaderboard" onClick={() => setMenuOpen(false)}>
@@ -129,7 +134,7 @@ const Navbar = () => {
             )}
             {/* ✅ 显示用户名 + 退出按钮 */}
             {/* <span className="user-email">{authState.email}</span> */}
-            <Link to="#" onClick={logout}>
+            <Link to="#" onClick={handleLogout}>
               Logout
             </Link>
           </>

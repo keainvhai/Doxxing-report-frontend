@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "../styles/Search.css";
+import { FaFileCsv } from "react-icons/fa";
 
 const SearchComponent = ({
   placeholder,
@@ -10,6 +11,7 @@ const SearchComponent = ({
   sources, // ✅ 从 `Search.jsx` 传入 sources
   selectedSource,
   setSelectedSource,
+  handleDownloadSearchCSV,
 }) => {
   const [query, setQuery] = useState("");
   const [advancedFilters, setAdvancedFilters] = useState({
@@ -20,7 +22,7 @@ const SearchComponent = ({
   });
 
   // 调试 sources 是否真的有数据
-  console.log("Received sources:", sources);
+  // console.log("Received sources:", sources);
 
   // ✅ 控制 Source 显示
   const [showSourceFilter, setShowSourceFilter] = useState(false);
@@ -98,13 +100,23 @@ const SearchComponent = ({
                 className="toggle-advanced-btn"
                 onClick={() => setShowAdvancedSearch((prev) => !prev)}
               >
-                {showAdvancedSearch ? "Hide" : "Advanced Search"}
+                {showAdvancedSearch ? "Hide" : "More filters"}
               </button>
             )}
 
           <button className="search-btn" onClick={handleSearch}>
             Search
           </button>
+
+          <div className="flex justify-end mt-4">
+            <button onClick={handleDownloadSearchCSV} className="export-btn">
+              <FaFileCsv style={{ marginRight: "6px" }} />
+              Export
+              <div className="export-btn-tooltip">
+                Export current page or search results as a CSV file
+              </div>
+            </button>
+          </div>
         </div>
       </div>
 

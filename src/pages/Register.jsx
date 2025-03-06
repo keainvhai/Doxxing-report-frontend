@@ -173,6 +173,7 @@ function Register() {
                   setPasswordStrength(zxcvbn(e.target.value).score);
                 }}
               />
+
               <button
                 type="button"
                 className="toggle-password"
@@ -181,6 +182,25 @@ function Register() {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
+
+            {/* ✅ 密码强度进度条 */}
+            {values.password && (
+              <>
+                <div className="password-strength-bar">
+                  <div
+                    className={`strength-level strength-${passwordStrength}`}
+                    style={{ width: `${(passwordStrength + 1) * 20}%` }}
+                  ></div>
+                </div>
+                <div className="password-strength-text">
+                  {
+                    ["Very Weak", "Weak", "Fair", "Strong", "Very Strong"][
+                      passwordStrength
+                    ]
+                  }
+                </div>
+              </>
+            )}
 
             <ErrorMessage name="password" component="div" className="error" />
 

@@ -33,7 +33,7 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* ✅ 搜索按钮和高级搜索按钮的容器 */
@@ -45,8 +45,8 @@
 /* ✅ 搜索按钮和高级搜索按钮 */
 .search-btn,
 .toggle-advanced-btn {
-  padding: 10px 15px;
-  font-size: 16px;
+  padding: 8px 12px;
+  font-size: 14px;
   font-weight: bold;
   color: white;
   background-color: #007bff;
@@ -58,14 +58,14 @@
 
 .search-btn.small {
   margin-top: 10px;
-  width: 100%;
+  /* width: 20%; */
   padding: 5px 10px;
-  font-size: 14px;
-  background-color: #007bff;
+  font-size: 13px;
+  /* background-color: #007bff;
   color: white;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 5px; */
 }
 
 .search-btn.small:hover {
@@ -125,7 +125,8 @@
 
 .source-search input {
   width: 100%;
-  padding: 8px;
+  padding: 6px;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 8px;
@@ -159,9 +160,9 @@
 
 .source-count {
   background: #ddd;
-  padding: 3px 6px;
+  padding: 2px 5px;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
 }
 
@@ -238,7 +239,7 @@
   background-color: #acabab;
   color: white;
   font-weight: bold;
-  padding: 10px 15px;
+  padding: 8px 12px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -318,8 +319,8 @@
 
 .entity-card {
   background-color: #f5f5f5;
-  padding: 12px 16px;
-  border-radius: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -334,7 +335,7 @@
 
 .entity-name {
   font-weight: bold;
-  font-size: 1.1rem;
+  /* font-size: 1rem; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -345,16 +346,16 @@
   display: inline-block;
   background-color: #007bff;
   color: #fff;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: bold;
-  padding: 4px;
+  padding: 3px;
   border-radius: 999px;
   min-width: 20px;
   text-align: center;
 }
 
 .entity-count {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #555;
 }
 /* ✅ 平板：显示 4 列 */
@@ -376,4 +377,51 @@
   .entity-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* 导出 CSV 按钮 */
+.export-btn {
+  display: flex;
+  align-items: center;
+  background-color: #f3f4f6; /* 灰色背景 */
+  color: #1f2937; /* 深灰文字 */
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db; /* 边框 */
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.export-btn:hover {
+  background-color: #e5e7eb; /* hover 更浅灰 */
+}
+
+/* hover 提示框 */
+.export-btn-tooltip {
+  display: none;
+  position: absolute;
+  /* 改到按钮上方 */
+  bottom: 120%;
+  left: auto;
+  right: 0;
+  transform: none;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #ffffff;
+  padding: 8px 12px;
+  font-size: 13px;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none;
+  /* margin-top: 8px; */
+}
+
+.export-btn:hover .export-btn-tooltip {
+  display: block;
+  opacity: 1;
 }

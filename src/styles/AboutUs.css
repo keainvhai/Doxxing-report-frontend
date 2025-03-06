@@ -1,0 +1,54 @@
+.about-us-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  line-height: 1.8;
+  font-family: "Arial", sans-serif;
+}
+
+.about-us-container h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  /* text-align: center; */
+  color: #222;
+}
+
+.about-us-container h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: left; /* ✅ 强制左对齐 */
+}
+
+.about-us-container p {
+  /* font-size: 1.1rem; */
+  color: #555;
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.about-us-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.about-us-container li {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-left: 4px solid #858687;
+  border-radius: 8px;
+}
+
+.about-us-container a {
+  color: #023a77;
+  text-decoration: none;
+}
+
+.about-us-container a:hover {
+  text-decoration: underline;
+}
