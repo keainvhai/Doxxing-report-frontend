@@ -37,7 +37,7 @@ function Register() {
     setIsSendingOtp(true);
     try {
       const response = await axios.post(
-        "http://localhost:3001/users/send-otp",
+        `${import.meta.env.VITE_API_URL}/users/send-otp`,
         { email: values.email }
       );
       setToastMessage(response.data.message);
@@ -58,10 +58,13 @@ function Register() {
     const otpString = otpValues.join(""); // ✅ 解决 OTP 变数组的问题
 
     axios
-      .post("http://localhost:3001/users/register", {
-        ...values,
-        otp: otpString,
-      })
+      .post(
+        `${import.meta.env.VITE_API_URL}/users/register`, // ✅ 动态 URL
+        { ...values, otp: otpString },
+        {
+          withCredentials: true, // ✅ 只有你后端用 Cookie 就加
+        }
+      )
       .then((response) => {
         if (response.data.success) {
           setToastMessage("✅ Registration successful! Please login.");

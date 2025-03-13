@@ -31,7 +31,13 @@ function Login() {
 
   const login = (values, { setSubmitting, setErrors }) => {
     axios
-      .post("http://localhost:3001/users/login", values)
+      .post(
+        `${import.meta.env.VITE_API_URL}/users/login`, // ✅ 动态环境变量
+        values,
+        {
+          withCredentials: true, // ✅ 如果后端有 JWT 验证或 Cookie
+        }
+      )
       .then((response) => {
         console.log("📌 Login Response:", response.data);
         if (response.data.success && response.data.token) {

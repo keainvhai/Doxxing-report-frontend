@@ -14,7 +14,10 @@ const SummariesDetails = () => {
     const fetchReports = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:3001/summaries/reports/${week_start}`
+          `${import.meta.env.VITE_API_URL}/summaries/reports/${week_start}`,
+          {
+            withCredentials: true, // ✅ 如果后端有 JWT / Cookie 认证 ➜ 建议加上
+          }
         );
         setReports(data);
       } catch (err) {

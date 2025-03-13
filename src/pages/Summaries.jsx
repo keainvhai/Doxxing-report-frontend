@@ -11,7 +11,12 @@ const Summaries = () => {
   useEffect(() => {
     const fetchSummaries = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3001/summaries/all");
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_API_URL}/summaries/all`, // ✅ 动态 URL
+          {
+            withCredentials: true, // ✅ 如果后端有 Cookie 认证，推荐加
+          }
+        );
         setSummaries(data);
       } catch (err) {
         console.error("❌ Error fetching summaries:", err);

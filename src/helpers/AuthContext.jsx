@@ -25,8 +25,9 @@ export const AuthProvider = ({ children }) => {
         handleLogout();
       } else {
         axios
-          .get("http://localhost:3001/users/auth", {
+          .get(`${import.meta.env.VITE_API_URL}/users/auth`, {
             headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true, // ✅ 如果后端有 JWT 验证
           })
           .then((response) => {
             if (response.data.success) {

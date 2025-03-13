@@ -116,7 +116,7 @@ const AdminDashboard = () => {
     setCrawlMessage("");
     try {
       const res = await axios.post(
-        "http://localhost:3001/reports/crawl-news",
+        `${import.meta.env.VITE_API_URL}/reports/crawl-news`,
         {},
         {
           headers: {
@@ -140,7 +140,7 @@ const AdminDashboard = () => {
     setSummaryMessage("");
     try {
       const res = await axios.post(
-        "http://localhost:3001/summaries/generate",
+        `${import.meta.env.VITE_API_URL}/summaries/generate`,
         {},
         {
           headers: {

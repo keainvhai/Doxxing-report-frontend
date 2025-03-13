@@ -8,7 +8,12 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/leaderboard");
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/leaderboard`,
+          {
+            withCredentials: true, // ✅ 如果后端有 JWT 鉴权（你有的话）
+          }
+        );
         setLeaderboardData(response.data);
       } catch (error) {
         console.error("Error fetching leaderboard data:", error);
