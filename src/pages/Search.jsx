@@ -141,7 +141,9 @@ const Search = ({ hideTitle }) => {
       limit: 12, // 传递分页参数（和 Search.jsx 里的一致）
     }).toString();
 
-    window.open(`http://localhost:3001/reports/download/search-csv?${params}`);
+    window.open(
+      `${import.meta.env.VITE_API_URL}/reports/download/search-csv?${params}`
+    );
   };
 
   return (

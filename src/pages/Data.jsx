@@ -7,7 +7,7 @@ const Data = () => {
   const [lastUpdate, setLastUpdate] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3001/reports/stats")
+    fetch(`${import.meta.env.VITE_API_URL}/reports/stats`)
       .then((res) => res.json())
       .then((data) => {
         setTotalReports(data.totalReports);
@@ -17,7 +17,7 @@ const Data = () => {
   }, []);
 
   const handleDownloadCSV = () => {
-    window.open("http://localhost:3001/reports/download/reports-csv");
+    window.open(`${import.meta.env.VITE_API_URL}/reports/download/reports-csv`);
   };
 
   return (
