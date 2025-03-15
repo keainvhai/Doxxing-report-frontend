@@ -34,11 +34,60 @@ const ReportEdit = () => {
     return dateString ? dateString.split("T")[0] : "";
   };
 
+  // useEffect(() => {
+  //   const getReport = async () => {
+  //     try {
+  //       const { data } = await fetchReportById(id);
+  //       setReport(data);
+  //       setForm({
+  //         url: data.url || "",
+  //         title: data.title || "",
+  //         author: data.author || "Anonymous",
+  //         date_published: formatDate(data.date_published),
+  //         incident_date: formatDate(data.incident_date),
+  //         text: data.text || "",
+  //         victim: data.victim || "",
+  //         entity: data.entity || "",
+  //         images: data.images ? JSON.parse(data.images) : [],
+  //       });
+  //     } catch (err) {
+  //       console.error("❌ Error fetching report:", err);
+  //       setError("Failed to load report.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   getReport();
+  // }, [id]);
+
   useEffect(() => {
     const getReport = async () => {
       try {
         const { data } = await fetchReportById(id);
+
+        console.log("✅ raw data.images:", data.images);
+
+        // 判断 images 是字符串还是数组
+        let parsedImages = [];
+
+        if (typeof data.images === "string") {
+          try {
+            parsedImages = JSON.parse(data.images);
+            console.log("✅ images 解析为数组:", parsedImages);
+          } catch (error) {
+            console.error("❌ JSON.parse(images) 失败:", error);
+            parsedImages = []; // 如果解析失败，设为空数组
+          }
+        } else if (Array.isArray(data.images)) {
+          parsedImages = data.images;
+          console.log("✅ images 已经是数组:", parsedImages);
+        } else {
+          console.warn("⚠️ images 不是字符串也不是数组:", data.images);
+          parsedImages = [];
+        }
+
         setReport(data);
+
         setForm({
           url: data.url || "",
           title: data.title || "",
@@ -48,7 +97,7 @@ const ReportEdit = () => {
           text: data.text || "",
           victim: data.victim || "",
           entity: data.entity || "",
-          images: data.images ? JSON.parse(data.images) : [],
+          images: parsedImages, // ✅ 放入处理好的数组
         });
       } catch (err) {
         console.error("❌ Error fetching report:", err);
@@ -57,6 +106,7 @@ const ReportEdit = () => {
         setLoading(false);
       }
     };
+
     getReport();
   }, [id]);
 
