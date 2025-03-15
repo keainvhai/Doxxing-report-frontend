@@ -225,7 +225,8 @@ const ReportEdit = () => {
                 <img
                   key={index}
                   // src={img}
-                  src={`${API_URL}${img}`}
+                  // src={`${API_URL}${img}`}
+                  src={img.startsWith("http") ? img : `${API_URL}${img}`}
                   alt="Report"
                   className="edit-image"
                 />
