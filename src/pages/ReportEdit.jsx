@@ -218,36 +218,33 @@ const ReportEdit = () => {
           onChange={(e) => setForm({ ...form, text: e.target.value })}
         />
         <label>🖼️ Current Images</label>
-        {/* <div className="image-preview">
-          {form.images.length > 0 ? (
-            form.images.map((img, index) => (
-              <div key={index}>
-                <img
-                  key={index}
-                  // src={img}
-                  // src={`${API_URL}${img}`}
-                  src={img.startsWith("http") ? img : `${API_URL}${img}`}
-                  alt="Report"
-                  className="edit-image"
-                />
-                <button onClick={() => handleDeleteImage(img)}>Delete</button>
-              </div>
-            ))
-          ) : (
-            <p>No images uploaded</p>
-          )}
-        </div> */}
         <div className="image-preview">
-          {form.images && form.images.length > 0 ? (
+          {form.images.length > 0 ? (
+            //   form.images.map((img, index) => (
+            //     <div key={index}>
+            //       <img
+            //         key={index}
+            //         // src={img}
+            //         // src={`${API_URL}${img}`}
+            //         src={img.startsWith("http") ? img : `${API_URL}${img}`}
+            //         alt="Report"
+            //         className="edit-image"
+            //       />
+            //       <button onClick={() => handleDeleteImage(img)}>Delete</button>
+            //     </div>
+            //   ))
+            // ) : (
+            //   <p>No images uploaded</p>
+            // )}
             form.images.map((img, index) => {
-              console.log("🖼️ 当前图片:", img);
+              const cleanImg = typeof img === "string" ? img.trim() : "";
+              const isCloudinary = cleanImg.startsWith("http");
 
-              const imageSrc =
-                typeof img === "string" && img.startsWith("http")
-                  ? img
-                  : `${API_URL}${img}`;
+              const imageSrc = isCloudinary
+                ? cleanImg
+                : `${API_URL}${cleanImg}`;
 
-              console.log(`✅ 图片 ${index} 最终地址:`, imageSrc);
+              console.log(`✅ 渲染图片 #${index}:`, imageSrc);
 
               return (
                 <div key={index}>
@@ -261,10 +258,9 @@ const ReportEdit = () => {
               );
             })
           ) : (
-            <p>No image</p>
+            <p>No images uploaded</p>
           )}
         </div>
-
         <button onClick={handleGenerateImage} disabled={generating}>
           {generating ? "Generating..." : "Generate Image with AI"}
         </button>
