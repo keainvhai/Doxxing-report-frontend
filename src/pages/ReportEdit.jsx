@@ -38,6 +38,8 @@ const ReportEdit = () => {
     const getReport = async () => {
       try {
         const { data } = await fetchReportById(id);
+        // ✅ 打印后端返回的数据！
+        console.log("🔥 API Response data:", data);
         setReport(data);
         setForm({
           url: data.url || "",
