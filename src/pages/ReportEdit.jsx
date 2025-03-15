@@ -228,9 +228,9 @@ const ReportEdit = () => {
                   // src={img}
                   // src={`${API_URL}${img}`}
                   src={
-                    typeof img === "string" && img.startsWith("http")
-                      ? img
-                      : `${API_URL}${img}`
+                    JSON.parse(report.images)[0].startsWith("http")
+                      ? JSON.parse(report.images)[0] // ✅ 完整 URL，直接用
+                      : `${API_URL}${JSON.parse(report.images)[0]}` // ✅ 本地路径，加前缀
                   }
                   // src={img.startsWith("http") ? img : `${API_URL}${img}`}
                   alt="Report"
