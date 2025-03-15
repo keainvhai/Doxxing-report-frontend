@@ -227,19 +227,26 @@ const ReportEdit = () => {
         <label>🖼️ Current Images</label>
         <div className="image-preview">
           {form.images.length > 0 ? (
-            form.images.map((img, index) => (
-              <div key={index}>
-                <img
-                  key={index}
-                  src={img}
-                  // src={`${API_URL}${img}`}
-                  // src={img.startsWith("http") ? img : `${API_URL}${img}`}
-                  alt="Report"
-                  className="edit-image"
-                />
-                <button onClick={() => handleDeleteImage(img)}>Delete</button>
-              </div>
-            ))
+            form.images.map((img, index) => {
+              // ✅ 手动清除 localhost 前缀
+              const cleanedImg = img
+                .replace("http://localhost:3001", "")
+                .replace("https://localhost:3001", "");
+              return (
+                <div key={index}>
+                  <img
+                    key={index}
+                    // src={img}
+                    src={cleanedImg}
+                    // src={`${API_URL}${img}`}
+                    // src={img.startsWith("http") ? img : `${API_URL}${img}`}
+                    alt="Report"
+                    className="edit-image"
+                  />
+                  <button onClick={() => handleDeleteImage(img)}>Delete</button>
+                </div>
+              );
+            })
           ) : (
             <p>No images uploaded</p>
           )}
