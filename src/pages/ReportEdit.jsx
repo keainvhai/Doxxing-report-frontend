@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchReportById, updateReport, generateReportImage } from "../api";
 import "../styles/ReportEdit.css"; // ✅ 添加新的 CSS
-
 const API_URL = import.meta.env.VITE_API_URL;
-console.log("🌐 API_URL:", API_URL);
 
 const ReportEdit = () => {
   const { id } = useParams();
@@ -220,34 +218,15 @@ const ReportEdit = () => {
           onChange={(e) => setForm({ ...form, text: e.target.value })}
         />
         <label>🖼️ Current Images</label>
-        <div className="image-preview">
-          {form.images.map((img, index) => {
-            console.log("🔍 当前图片 img:", img);
-
-            return (
-              <div key={index}>
-                <img
-                  src={
-                    typeof img === "string" && img.startsWith("http")
-                      ? img
-                      : `${API_URL}${img}`
-                  }
-                  alt="Report"
-                  className="edit-image"
-                />
-                <button onClick={() => handleDeleteImage(img)}>Delete</button>
-              </div>
-            );
-          })}
-
-          {/* {form.images.length > 0 ? (
+        {/* <div className="image-preview">
+          {form.images.length > 0 ? (
             form.images.map((img, index) => (
               <div key={index}>
                 <img
                   key={index}
-                  src={img}
+                  // src={img}
                   // src={`${API_URL}${img}`}
-                  // src={img.startsWith("http") ? img : `${API_URL}${img}`}
+                  src={img.startsWith("http") ? img : `${API_URL}${img}`}
                   alt="Report"
                   className="edit-image"
                 />
@@ -256,8 +235,36 @@ const ReportEdit = () => {
             ))
           ) : (
             <p>No images uploaded</p>
-          )} */}
+          )}
+        </div> */}
+        <div className="image-preview">
+          {form.images && form.images.length > 0 ? (
+            form.images.map((img, index) => {
+              console.log("🖼️ 当前图片:", img);
+
+              const imageSrc =
+                typeof img === "string" && img.startsWith("http")
+                  ? img
+                  : `${API_URL}${img}`;
+
+              console.log(`✅ 图片 ${index} 最终地址:`, imageSrc);
+
+              return (
+                <div key={index}>
+                  <img
+                    src={imageSrc}
+                    alt={`Report ${index}`}
+                    className="edit-image"
+                  />
+                  <button onClick={() => handleDeleteImage(img)}>Delete</button>
+                </div>
+              );
+            })
+          ) : (
+            <p>No image</p>
+          )}
         </div>
+
         <button onClick={handleGenerateImage} disabled={generating}>
           {generating ? "Generating..." : "Generate Image with AI"}
         </button>
