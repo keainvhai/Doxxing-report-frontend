@@ -48,7 +48,12 @@ const ReportEdit = () => {
           text: data.text || "",
           victim: data.victim || "",
           entity: data.entity || "",
-          images: data.images ? JSON.parse(data.images) : [],
+          // images: data.images ? JSON.parse(data.images) : [],
+          images: data.images
+            ? typeof data.images === "string"
+              ? JSON.parse(data.images)
+              : data.images
+            : [],
         });
       } catch (err) {
         console.error("❌ Error fetching report:", err);
