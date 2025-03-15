@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchReportById, updateReport, generateReportImage } from "../api";
 import "../styles/ReportEdit.css"; // ✅ 添加新的 CSS
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ReportEdit = () => {
   const { id } = useParams();
@@ -127,7 +128,7 @@ const ReportEdit = () => {
     try {
       // 让后端代理下载 OpenAI 生成的图片
       const response = await fetch(
-        `http://localhost:3001/api/download-image?imageUrl=${encodeURIComponent(
+        `${API_URL}/api/download-image?imageUrl=${encodeURIComponent(
           generatedImageUrl
         )}`
       );
@@ -224,7 +225,7 @@ const ReportEdit = () => {
                 <img
                   key={index}
                   // src={img}
-                  src={`http://localhost:3001${img}`}
+                  src={`${API_URL}${img}`}
                   alt="Report"
                   className="edit-image"
                 />

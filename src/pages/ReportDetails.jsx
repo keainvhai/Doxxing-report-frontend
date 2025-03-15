@@ -4,6 +4,8 @@ import { fetchReportById } from "../api"; // 获取单个 Report
 import "../styles/ReportDetails.css";
 import ToolsTable from "../components/ToolsTable";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const IncidentStatsCard = ({ incident }) => {
   return (
     <div className="incident-stats-card">
@@ -131,7 +133,7 @@ const ReportDetails = () => {
             <img
               key={index}
               // src={`http://localhost:3001${JSON.parse(report.images)[0]}`}
-              src={`http://localhost:3001${image}`}
+              src={`${API_URL}${image}`}
               alt={`Report ${index + 1}`}
               className="report-detail-image"
             />

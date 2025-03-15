@@ -3,6 +3,8 @@ import { submitReport, generateReportImageByInput } from "../api";
 import { AuthContext } from "../helpers/AuthContext"; // ✅ 引入 AuthContext
 import "../styles/Form.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const SubmitReport = () => {
   const [form, setForm] = useState({
     url: "",
@@ -151,7 +153,7 @@ const SubmitReport = () => {
     try {
       // 让后端代理下载 OpenAI 生成的图片
       const response = await fetch(
-        `http://localhost:3001/api/download-image?imageUrl=${encodeURIComponent(
+        `${API_URL}/api/download-image?imageUrl=${encodeURIComponent(
           generatedImageUrl
         )}`
       );
