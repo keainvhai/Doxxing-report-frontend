@@ -35,55 +35,10 @@ const ReportEdit = () => {
   };
 
   useEffect(() => {
-    // const getReport = async () => {
-    //   try {
-    //     const { data } = await fetchReportById(id);
-    //     setReport(data);
-    //     setForm({
-    //       url: data.url || "",
-    //       title: data.title || "",
-    //       author: data.author || "Anonymous",
-    //       date_published: formatDate(data.date_published),
-    //       incident_date: formatDate(data.incident_date),
-    //       text: data.text || "",
-    //       victim: data.victim || "",
-    //       entity: data.entity || "",
-    //       images: data.images ? JSON.parse(data.images) : [],
-    //     });
-    //   } catch (err) {
-    //     console.error("❌ Error fetching report:", err);
-    //     setError("Failed to load report.");
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
-
     const getReport = async () => {
       try {
         const { data } = await fetchReportById(id);
-        console.log("📦 获取 Report 数据:", data);
-
-        let imagesArray = [];
-
-        try {
-          // 第一层 JSON.parse
-          const parsed = JSON.parse(data.images);
-
-          // 判断 parsed 是数组 or 字符串
-          if (Array.isArray(parsed)) {
-            imagesArray = parsed;
-          } else if (typeof parsed === "string") {
-            // 说明是双层字符串，再 parse 一次
-            imagesArray = JSON.parse(parsed);
-          } else {
-            imagesArray = [];
-          }
-        } catch (e) {
-          console.error("❌ images JSON 解析错误", e);
-        }
-
         setReport(data);
-
         setForm({
           url: data.url || "",
           title: data.title || "",
@@ -93,7 +48,7 @@ const ReportEdit = () => {
           text: data.text || "",
           victim: data.victim || "",
           entity: data.entity || "",
-          images: imagesArray, // ✅ 最终解析的 images 数组
+          images: data.images ? JSON.parse(data.images) : [],
         });
       } catch (err) {
         console.error("❌ Error fetching report:", err);
@@ -102,7 +57,6 @@ const ReportEdit = () => {
         setLoading(false);
       }
     };
-
     getReport();
   }, [id]);
 
@@ -265,12 +219,12 @@ const ReportEdit = () => {
         />
         <label>🖼️ Current Images</label>
         <div className="image-preview">
-          {/* {form.images.length > 0 ? (
+          {form.images.length > 0 ? (
             form.images.map((img, index) => (
               <div key={index}>
                 <img
                   key={index}
-                  // src={img}
+                  src={img}
                   // src={`${API_URL}${img}`}
                   // src={img.startsWith("http") ? img : `${API_URL}${img}`}
                   alt="Report"
@@ -279,30 +233,6 @@ const ReportEdit = () => {
                 <button onClick={() => handleDeleteImage(img)}>Delete</button>
               </div>
             ))
-          ) : (
-            <p>No images uploaded</p>
-          )} */}
-          {form.images.length > 0 ? (
-            form.images.map((img, index) => {
-              const cleanImg = typeof img === "string" ? img.trim() : "";
-              const isUrl =
-                cleanImg.startsWith("http://") ||
-                cleanImg.startsWith("https://");
-              const imageSrc = isUrl ? cleanImg : `${API_URL}${cleanImg}`;
-
-              console.log(`✅ 渲染图片 #${index}:`, imageSrc);
-
-              return (
-                <div key={index}>
-                  <img
-                    src={imageSrc}
-                    alt={`Report ${index}`}
-                    className="edit-image"
-                  />
-                  <button onClick={() => handleDeleteImage(img)}>Delete</button>
-                </div>
-              );
-            })
           ) : (
             <p>No images uploaded</p>
           )}
