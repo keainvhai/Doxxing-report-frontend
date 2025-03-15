@@ -29,13 +29,18 @@ const ReportCard = ({ report }) => {
       {report.images && JSON.parse(report.images).length > 0 && (
         <img
           // src={JSON.parse(report.images)[0]}
-          src={JSON.parse(report.images)[0]}
+          // src={JSON.parse(report.images)[0]}
           // src={`http://localhost:3001${JSON.parse(report.images)[0]}`}
           // src={
           //   Array.isArray(report.images)
           //     ? report.images[0]
           //     : JSON.parse(report.images)[0]
           // }
+          src={
+            JSON.parse(report.images)[0].startsWith("http")
+              ? JSON.parse(report.images)[0] // ✅ 完整 URL，直接用
+              : `${API_URL}${JSON.parse(report.images)[0]}` // ✅ 本地路径，加前缀
+          }
           alt={report.title}
           className="report-image"
         />
