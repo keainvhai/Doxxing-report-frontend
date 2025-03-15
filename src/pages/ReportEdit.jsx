@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchReportById, updateReport, generateReportImage } from "../api";
 import "../styles/ReportEdit.css"; // ✅ 添加新的 CSS
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ReportEdit = () => {
@@ -224,9 +225,9 @@ const ReportEdit = () => {
               <div key={index}>
                 <img
                   key={index}
-                  // src={img}
+                  src={img}
                   // src={`${API_URL}${img}`}
-                  src={img.startsWith("http") ? img : `${API_URL}${img}`}
+                  // src={img.startsWith("http") ? img : `${API_URL}${img}`}
                   alt="Report"
                   className="edit-image"
                 />
