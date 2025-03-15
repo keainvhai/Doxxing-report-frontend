@@ -229,9 +229,13 @@ const ReportEdit = () => {
           {form.images.length > 0 ? (
             form.images.map((img, index) => {
               // ✅ 手动清除 localhost 前缀
-              const cleanedImg = img
-                .replace("http://localhost:3001", "")
-                .replace("https://localhost:3001", "");
+              const cleanedImg = img.replace(
+                /http(s)?:\/\/localhost:3001/g,
+                ""
+              );
+
+              console.log(`清理后 cleanedImg [${index}]:`, cleanedImg);
+
               return (
                 <div key={index}>
                   <img
