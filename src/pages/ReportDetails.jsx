@@ -133,7 +133,8 @@ const ReportDetails = () => {
             <img
               key={index}
               // src={`http://localhost:3001${JSON.parse(report.images)[0]}`}
-              src={`${API_URL}${image}`}
+              // src={`${API_URL}${image}`}
+              src={`${JSON.parse(report.images)[0]}`}
               alt={`Report ${index + 1}`}
               className="report-detail-image"
             />

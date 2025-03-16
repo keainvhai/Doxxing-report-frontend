@@ -228,20 +228,22 @@ const ReportEdit = () => {
         <div className="image-preview">
           {form.images.length > 0 ? (
             form.images.map((img, index) => {
-              // ✅ 手动清除 localhost 前缀
-              const cleanedImg = img.replace(
-                /http(s)?:\/\/localhost:3001/g,
-                ""
-              );
+              // // ✅ 手动清除 localhost 前缀
+              // const cleanedImg = img.replace(
+              //   /http(s)?:\/\/localhost:3001/g,
+              //   ""
+              // );
 
-              console.log(`清理后 cleanedImg [${index}]:`, cleanedImg);
+              // console.log(`清理后 cleanedImg [${index}]:`, cleanedImg);
 
               return (
                 <div key={index}>
                   <img
                     key={index}
                     // src={img}
-                    src={cleanedImg}
+                    // src={cleanedImg}
+
+                    src={`${JSON.parse(report.images)[0]}`}
                     // src={`${API_URL}${img}`}
                     // src={img.startsWith("http") ? img : `${API_URL}${img}`}
                     alt="Report"
