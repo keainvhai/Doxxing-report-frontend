@@ -77,25 +77,12 @@ function AboutUs() {
         </li>
       </ol>
 
-      <ul>
-        {/* <li>Personal addresses leaked on social media</li>
-        <li>Phone numbers shared without consent in online forums</li>
-        <li>Private photographs exposed in public channels</li> */}
-      </ul>
-      <p>
-        We encourage you to explore our database, review existing cases, and
-        contribute new reports to support a safer internet.
-      </p>
-
       <h2>Current and Future Users</h2>
       <p>
-        {/* Our platform is used by researchers, privacy advocates, legal scholars,
-        journalists, and developers aiming to understand and mitigate the
-        real-world impacts of doxxing.
-      </p>
-      <p>
-        Future development will expand through open-source contributions,
-        including improved classifications and analysis of reported incidents. */}
+        We encourage you to explore our database, review existing cases, and
+        contribute new reports to support a safer internet. For researchers,
+        please feel free to use our data. If you use our data, please cite our
+        paper.
       </p>
 
       <h2>When Should You Report an Incident?</h2>
