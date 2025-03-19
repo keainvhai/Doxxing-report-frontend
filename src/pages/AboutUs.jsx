@@ -80,9 +80,9 @@ function AboutUs() {
       <h2>Current and Future Users</h2>
       <p>
         We encourage you to explore our database, review existing cases, and
-        contribute new reports to support a safer internet. For researchers,
-        please feel free to use our data. If you use our data, please cite our
-        paper.
+        contribute new reports to support a safer internet. <br />
+        For researchers, please feel free to use our data. If you use our data,
+        please cite our paper.
       </p>
 
       <h2>When Should You Report an Incident?</h2>
