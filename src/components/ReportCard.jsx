@@ -45,6 +45,7 @@ const ReportCard = ({ report }) => {
           }
           alt={report.title}
           className="report-image"
+          onClick={handleViewDetails}
         />
       )}
 
