@@ -20,6 +20,9 @@
   object-fit: cover; /* 图片比例不变，自动裁剪超出部分，避免拉伸变形 */
   object-position: center; /* 图片居中显示 */
 }
+.report-image:hover {
+  cursor: pointer;
+}
 
 .report-content {
   padding: 15px;
