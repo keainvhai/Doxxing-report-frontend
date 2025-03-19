@@ -6,20 +6,48 @@ function AboutUs() {
     <div className="about-us-container">
       <h1>About Doxxing Report</h1>
 
-      <h2>Why "Doxxing Report"?</h2>
-      <p>
-        {/* Online privacy is under constant threat, with personal information often
-        exposed maliciously in what is known as doxxing attacks. Doxxing Report
-        is built to provide a public platform where incidents of doxxing can be
-        reported, documented, and analyzed to help researchers, developers, and
-        policymakers prevent similar harms in the future. */}
-      </p>
-
       <h2>What is a Doxxing Incident?</h2>
       <p>
-        {/* We define a doxxing incident as the intentional or unintentional
-        exposure of sensitive personal information, leading to risks such as
-        harassment, stalking, or identity theft. Example incidents may include: */}
+        Doxxing (also called "Doxing") is the practice of the malicious, public
+        online posting of private information about others without their
+        consent. A doxing incident is an incident involving doxing
+      </p>
+
+      <h2>Why Doxing Report?</h2>
+      <p>
+        Doxing has gradually become a serious cybersecurity threat, causing harm
+        to over 43 million Americans (Bleih, 2023), where the doxed can be
+        affected in finding a job (Roth et al., 2024), lose their job, and feel
+        mentally stressed, be discriminated against in the workplace, and get
+        stigmatized in cyberspace (Shan et al., 2024). Also, doxing can be a
+        serious cybersecurity issue for companies. Doxing companies and their
+        employees occupying key positions (e.g., CEO) can increase
+        cybercriminals, such as business e-mail compromise attacks, email and
+        phone phishing, and identity theft, causing harm to both employees and
+        companies (Larkina & Dedenok, 2021). To mitigate the harms of doxing by
+        increasing its awareness, we built a doxing incident reporting platform,
+        which generates a doxing incident database as public research
+        infrastructure. Through the platform, we will offer future doxing
+        victims or bystanders a platform to report doxing incidents and a
+        channel for people to search for doxing incidents. Also, our research
+        provides doxing incident data and a proof-of-concept for future studies
+        on doxing and its impact.
+      </p>
+      <p>
+        Reference Bleih, A. (2023). Executive doxing details are flooding the
+        dark web. Cybersixgill.
+        https://cybersixgill.com/news/articles/doxing-details-are-flooding-the-dark-web.
+        Larkina, A., & Dedenok, R. (2021). Doxing in the corporate sector.
+        Securelist. https://securelist.com/corporate-doxing/101513/. Roth, P.
+        L., Bobko, P., Shan, G., Roth, R. W., Ferrise, E., & Thatcher, J. B.
+        (2024). Doxing, political affiliation, and type of information: Effects
+        on suspicion, perceived similarity, and hiring-related judgments.
+        Journal of Applied Psychology, 109(5), 730-754. Shan, G., Pu, W.,
+        Thatcher, J. B., & Roth, P. (2024). How does doxing on social media lead
+        to social stigma and perceived dignity? Hawaii International Conference
+        on System Sciences. Current and Future Users We encourage you to explore
+        our database, review existing cases, and contribute new reports to
+        support a safer internet.
       </p>
       <ul>
         {/* <li>Personal addresses leaked on social media</li>
@@ -85,9 +113,9 @@ function AboutUs() {
 
       <h2>Join Us</h2>
       <p>
-        Doxxing Report is an open, collaborative project. If you are interested
-        in contributing reports, research, or technical improvements, please
-        contact us!
+        Doxing incident platform is an open, collaborative project. If you are
+        interested in contributing reports, research, or technical improvements,
+        please contact us!
       </p>
     </div>
   );
