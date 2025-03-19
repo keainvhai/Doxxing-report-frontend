@@ -33,22 +33,50 @@ function AboutUs() {
         provides doxing incident data and a proof-of-concept for future studies
         on doxing and its impact.
       </p>
-      <p>
-        Reference Bleih, A. (2023). Executive doxing details are flooding the
-        dark web. Cybersixgill.
-        https://cybersixgill.com/news/articles/doxing-details-are-flooding-the-dark-web.
-        Larkina, A., & Dedenok, R. (2021). Doxing in the corporate sector.
-        Securelist. https://securelist.com/corporate-doxing/101513/. Roth, P.
-        L., Bobko, P., Shan, G., Roth, R. W., Ferrise, E., & Thatcher, J. B.
-        (2024). Doxing, political affiliation, and type of information: Effects
-        on suspicion, perceived similarity, and hiring-related judgments.
-        Journal of Applied Psychology, 109(5), 730-754. Shan, G., Pu, W.,
-        Thatcher, J. B., & Roth, P. (2024). How does doxing on social media lead
-        to social stigma and perceived dignity? Hawaii International Conference
-        on System Sciences. Current and Future Users We encourage you to explore
-        our database, review existing cases, and contribute new reports to
-        support a safer internet.
-      </p>
+      <h3>References</h3>
+      <ol className="reference-list">
+        <li>
+          Bleih, A. (2023).{" "}
+          <i>Executive doxing details are flooding the dark web</i>.
+          Cybersixgill.
+          <a
+            href="https://cybersixgill.com/news/articles/doxing-details-are-flooding-the-dark-web"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            [Link]
+          </a>
+        </li>
+        <li>
+          Larkina, A., & Dedenok, R. (2021).{" "}
+          <i>Doxing in the corporate sector</i>. Securelist.
+          <a
+            href="https://securelist.com/corporate-doxing/101513/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            [Link]
+          </a>
+        </li>
+        <li>
+          Roth, P. L., Bobko, P., Shan, G., Roth, R. W., Ferrise, E., &
+          Thatcher, J. B. (2024).
+          <i>
+            Doxing, political affiliation, and type of information: Effects on
+            suspicion, perceived similarity, and hiring-related judgments
+          </i>
+          . Journal of Applied Psychology, 109(5), 730-754.
+        </li>
+        <li>
+          Shan, G., Pu, W., Thatcher, J. B., & Roth, P. (2024).
+          <i>
+            How does doxing on social media lead to social stigma and perceived
+            dignity?
+          </i>
+          Hawaii International Conference on System Sciences.
+        </li>
+      </ol>
+
       <ul>
         {/* <li>Personal addresses leaked on social media</li>
         <li>Phone numbers shared without consent in online forums</li>

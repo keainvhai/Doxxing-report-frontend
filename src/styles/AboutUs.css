@@ -52,3 +52,37 @@
 .about-us-container a:hover {
   text-decoration: underline;
 }
+
+/* Reference 专区 */
+.reference-list {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  list-style-position: inside;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reference-list li {
+  margin-bottom: 15px;
+  padding-left: 10px;
+  position: relative;
+  font-size: 1rem;
+  color: #444;
+}
+
+.reference-list li::marker {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* 引用中的链接样式 */
+.reference-list a {
+  color: #007bff;
+  text-decoration: none;
+  margin-left: 5px;
+  font-size: 0.95rem;
+}
+
+.reference-list a:hover {
+  text-decoration: underline;
+}
