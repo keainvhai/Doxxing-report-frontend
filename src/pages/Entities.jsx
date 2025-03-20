@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchEntities } from "../api";
+import { useNavigate } from "react-router-dom";
 import "../styles/Entities.css"; // ✅ 样式文件
 
 const Entities = () => {
@@ -8,6 +9,8 @@ const Entities = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedEntity, setExpandedEntity] = useState(null); // ✅ 控制展开状态
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getEntities = async () => {
@@ -96,10 +99,12 @@ const Entities = () => {
                         <td colSpan="1">
                           <ul className="entity-report-list">
                             {entity.reports.map((report) => (
-                              <li key={report.id}>
-                                <a href={`/report/${report.id}`}>
-                                  {report.title}
-                                </a>
+                              <li
+                                key={report.id}
+                                onClick={() => navigate(`/report/${report.id}`)}
+                                style={{ cursor: "pointer" }}
+                              >
+                                {report.title}
                               </li>
                             ))}
                           </ul>

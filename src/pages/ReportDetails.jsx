@@ -36,7 +36,7 @@ const IncidentStatsCard = ({ incident }) => {
           </tr>
           <tr>
             <td>
-              <strong>Editors</strong>
+              <strong>submittor</strong>
             </td>
             <td>{incident.editors || "Anonymous"}</td>
           </tr>
