@@ -40,11 +40,11 @@ const Leaderboard = () => {
 
       <div className="leaderboard-grid">
         {/* 新事件贡献榜 */}
-        {leaderboardData.newIncidents.length > 0 && (
+        {leaderboardData.lastWeekContributions.length > 0 && (
           <div className="leaderboard-section">
-            <h2>🏆 New Incidents Contributed</h2>
+            <h2>🏆 Incidents Contributed Last Week</h2>
             <ul className="leaderboard-list">
-              {leaderboardData.newIncidents.map((entry, index) => (
+              {leaderboardData.lastWeekContributions.map((entry, index) => (
                 <li key={index}>
                   <span className="rank-badge">
                     <div className="medal-container">
