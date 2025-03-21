@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import SearchComponent from "../components/SearchComponent";
 import ReportList from "../components/ReportList";
-import { fetchApprovedReports, fetchSources, fetchEntities } from "../api";
+import {
+  fetchApprovedReports,
+  fetchSources,
+  fetchAuthors,
+  fetchEntities,
+} from "../api";
 import "../styles/Search.css";
 
 const Search = ({ hideTitle }) => {
   const [reports, setReports] = useState([]);
   const [sources, setSources] = useState([]);
   const [selectedSource, setSelectedSource] = useState("All Sources"); // ✅ 修复 `selectedSource`
+  const [authors, setAuthors] = useState([]);
+  const [selectedAuthor, setSelectedAuthor] = useState("All Authors");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({});
@@ -41,6 +48,10 @@ const Search = ({ hideTitle }) => {
 
   useEffect(() => {
     getSources();
+  }, []);
+
+  useEffect(() => {
+    getAuthors();
   }, []);
 
   const getApprovedReports = async () => {
@@ -81,12 +92,27 @@ const Search = ({ hideTitle }) => {
     }
   };
 
+  const getAuthors = async () => {
+    try {
+      const { data } = await fetchAuthors();
+      const sortedAuthors = (data.authors || []).sort(
+        (a, b) => b.count - a.count
+      );
+      // setAuthors([{ author: "All Authors", count: 0 }, ...sortedAuthors]);
+      setAuthors(sortedAuthors);
+    } catch (err) {
+      console.error("❌ Error fetching authors:", err);
+      setAuthors([]);
+    }
+  };
+
   // ✅ 处理搜索（含 Advanced Search）
   const handleSearch = (query, advancedFilters) => {
     setPage(1);
     setFilters({
       search: query.trim(),
       ...advancedFilters,
+      author: selectedAuthor === "All Authors" ? undefined : selectedAuthor,
     });
   };
 
@@ -177,6 +203,9 @@ const Search = ({ hideTitle }) => {
         sources={sources}
         selectedSource={selectedSource} // ✅ 传递 `selectedSource`
         setSelectedSource={handleSourceChange} // ✅ 允许切换 Source
+        authors={authors}
+        selectedAuthor={selectedAuthor}
+        setSelectedAuthor={setSelectedAuthor}
         handleDownloadSearchCSV={handleDownloadSearchCSV}
       />
 

@@ -8,42 +8,58 @@ const SearchComponent = ({
   onClearFilters,
   showAdvancedSearch,
   setShowAdvancedSearch,
-  sources, // ✅ 从 `Search.jsx` 传入 sources
+  sources,
   selectedSource,
   setSelectedSource,
+  authors,
+  selectedAuthor,
+  setSelectedAuthor,
   handleDownloadSearchCSV,
 }) => {
   const [query, setQuery] = useState("");
-  const [advancedFilters, setAdvancedFilters] = useState({
+
+  // ✅ 统一所有筛选项到 filters
+  const [filters, setFilters] = useState({
     published_from: "",
     published_to: "",
     incident_from: "",
     incident_to: "",
+    author: undefined,
+    source: undefined,
   });
 
-  // 调试 sources 是否真的有数据
-  // console.log("Received sources:", sources);
-
-  // ✅ 控制 Source 显示
   const [showSourceFilter, setShowSourceFilter] = useState(false);
   const [showPublishedFilter, setShowPublishedFilter] = useState(false);
   const [showIncidentFilter, setShowIncidentFilter] = useState(false);
-  const [searchText, setSearchText] = useState(""); // ✅ 搜索 source
+  const [showAuthorFilter, setShowAuthorFilter] = useState(false);
+
+  const [searchText, setSearchText] = useState("");
+  const [searchAuthorText, setSearchAuthorText] = useState("");
 
   const publishedRef = useRef(null);
   const incidentRef = useRef(null);
   const sourceRef = useRef(null);
+  const authorRef = useRef(null);
 
   const totalCount = sources.reduce((acc, src) => acc + (src.count || 0), 0);
   const sourcesFiltered = sources.filter((src) => src.domain !== "All Sources");
 
   useEffect(() => {
     if (selectedSource) {
-      handleSearch(query, advancedFilters);
+      const updatedFilters = { ...filters, source: selectedSource };
+      setFilters(updatedFilters);
+      handleSearch(updatedFilters);
     }
   }, [selectedSource]);
 
-  // ✅ 监听点击事件，自动关闭 dropdown
+  useEffect(() => {
+    if (selectedAuthor !== undefined) {
+      const updatedFilters = { ...filters, author: selectedAuthor };
+      setFilters(updatedFilters);
+      handleSearch(updatedFilters);
+    }
+  }, [selectedAuthor]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -58,27 +74,31 @@ const SearchComponent = ({
       if (sourceRef.current && !sourceRef.current.contains(event.target)) {
         setShowSourceFilter(false);
       }
+      if (authorRef.current && !authorRef.current.contains(event.target)) {
+        setShowAuthorFilter(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSearch = () => {
-    onSearch(query.trim(), advancedFilters);
+  const handleSearch = (updatedFilters = filters) => {
+    onSearch(query.trim(), updatedFilters);
   };
 
   const handleClearFilters = () => {
-    setAdvancedFilters({
+    setFilters({
       published_from: "",
       published_to: "",
       incident_from: "",
       incident_to: "",
+      author: undefined,
+      source: undefined,
     });
     setQuery("");
     setSelectedSource("All Sources");
+    setSelectedAuthor(undefined);
     onClearFilters();
   };
 
@@ -94,17 +114,16 @@ const SearchComponent = ({
         />
 
         <div className="search-btn-container">
-          {setShowAdvancedSearch !== undefined &&
-            typeof setShowAdvancedSearch === "function" && (
-              <button
-                className="toggle-advanced-btn"
-                onClick={() => setShowAdvancedSearch((prev) => !prev)}
-              >
-                {showAdvancedSearch ? "Hide" : "More filters"}
-              </button>
-            )}
+          {setShowAdvancedSearch !== undefined && (
+            <button
+              className="toggle-advanced-btn"
+              onClick={() => setShowAdvancedSearch((prev) => !prev)}
+            >
+              {showAdvancedSearch ? "Hide" : "More filters"}
+            </button>
+          )}
 
-          <button className="search-btn" onClick={handleSearch}>
+          <button className="search-btn" onClick={() => handleSearch()}>
             Search
           </button>
 
@@ -120,10 +139,8 @@ const SearchComponent = ({
         </div>
       </div>
 
-      {/* ✅ Advanced Search 面板 */}
       {showAdvancedSearch && (
         <div className="advanced-search show">
-          {/* ✅ Source Filter */}
           <div className="filters-row">
             <div className="dropdown-filter" ref={sourceRef}>
               <button
@@ -148,7 +165,6 @@ const SearchComponent = ({
                       onClick={() => {
                         setSelectedSource("");
                         setShowSourceFilter(false);
-                        onSearch(query.trim(), advancedFilters); // ✅ 立即搜索
                       }}
                     >
                       All Sources
@@ -170,7 +186,6 @@ const SearchComponent = ({
                           onClick={() => {
                             setSelectedSource(src.domain);
                             setShowSourceFilter(false);
-                            onSearch(query.trim(), advancedFilters);
                           }}
                         >
                           {src.domain}
@@ -182,8 +197,67 @@ const SearchComponent = ({
               )}
             </div>
 
-            {/* ✅ Date Filters */}
-            {/* <div className="date-filters"> */}
+            <div className="dropdown-filter" ref={authorRef}>
+              <button
+                className="filter-btn"
+                onClick={() => setShowAuthorFilter((prev) => !prev)}
+              >
+                🧑 Author
+              </button>
+              {showAuthorFilter && (
+                <div className="dropdown-container show">
+                  <input
+                    type="text"
+                    placeholder="Search author"
+                    value={searchAuthorText}
+                    onChange={(e) => setSearchAuthorText(e.target.value)}
+                  />
+
+                  <ul className="source-list">
+                    <li
+                      className={`source-item ${
+                        selectedAuthor === "" ? "active" : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedAuthor("");
+                        setShowAuthorFilter(false);
+                      }}
+                    >
+                      All Authors
+                      <span className="source-count">
+                        {authors.reduce(
+                          (sum, item) => sum + (item.count || 0),
+                          0
+                        )}
+                      </span>
+                    </li>
+
+                    {authors
+                      .filter((author) =>
+                        (author.author || "")
+                          .toLowerCase()
+                          .includes(searchAuthorText.toLowerCase())
+                      )
+                      .map((author, index) => (
+                        <li
+                          key={index}
+                          className={`source-item ${
+                            selectedAuthor === author.author ? "active" : ""
+                          }`}
+                          onClick={() => {
+                            setSelectedAuthor(author.author);
+                            setShowAuthorFilter(false);
+                          }}
+                        >
+                          {author.author}
+                          <span className="source-count">{author.count}</span>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
             <div className="dropdown-filter" ref={publishedRef}>
               <button
                 className="filter-btn"
@@ -196,28 +270,28 @@ const SearchComponent = ({
                   <label>From Date</label>
                   <input
                     type="date"
-                    value={advancedFilters.published_from}
+                    value={filters.published_from}
                     onChange={(e) =>
-                      setAdvancedFilters({
-                        ...advancedFilters,
+                      setFilters((prev) => ({
+                        ...prev,
                         published_from: e.target.value,
-                      })
+                      }))
                     }
                   />
                   <label>To Date</label>
                   <input
                     type="date"
-                    value={advancedFilters.published_to}
+                    value={filters.published_to}
                     onChange={(e) =>
-                      setAdvancedFilters({
-                        ...advancedFilters,
+                      setFilters((prev) => ({
+                        ...prev,
                         published_to: e.target.value,
-                      })
+                      }))
                     }
-                  />{" "}
+                  />
                   <button
                     className="search-btn small"
-                    onClick={() => onSearch(query.trim(), advancedFilters)}
+                    onClick={() => handleSearch()}
                   >
                     Search
                   </button>
@@ -225,7 +299,6 @@ const SearchComponent = ({
               )}
             </div>
 
-            {/* 📅 Incident Date */}
             <div className="dropdown-filter" ref={incidentRef}>
               <button
                 className="filter-btn"
@@ -238,35 +311,34 @@ const SearchComponent = ({
                   <label>From Date</label>
                   <input
                     type="date"
-                    value={advancedFilters.incident_from}
+                    value={filters.incident_from}
                     onChange={(e) =>
-                      setAdvancedFilters({
-                        ...advancedFilters,
+                      setFilters((prev) => ({
+                        ...prev,
                         incident_from: e.target.value,
-                      })
+                      }))
                     }
                   />
                   <label>To Date</label>
                   <input
                     type="date"
-                    value={advancedFilters.incident_to}
+                    value={filters.incident_to}
                     onChange={(e) =>
-                      setAdvancedFilters({
-                        ...advancedFilters,
+                      setFilters((prev) => ({
+                        ...prev,
                         incident_to: e.target.value,
-                      })
+                      }))
                     }
                   />
                   <button
                     className="search-btn small"
-                    onClick={() => onSearch(query.trim(), advancedFilters)}
+                    onClick={() => handleSearch()}
                   >
                     Search
                   </button>
                 </div>
               )}
             </div>
-            {/* </div> */}
           </div>
 
           <button className="clear-filters-btn" onClick={handleClearFilters}>

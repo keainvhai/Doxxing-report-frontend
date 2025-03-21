@@ -105,7 +105,7 @@
 
 .filters-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 列等宽 */
+  grid-template-columns: repeat(4, 1fr); /* 3 列等宽 */
   gap: 10px;
   width: 100%;
   align-items: center;
@@ -253,8 +253,15 @@
   box-shadow: 0 2px 4px rgba(109, 108, 108, 0.3); /* 增加轻微阴影 */
 }
 
+@media (max-width: 735px) {
+  .filters-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /* ✅ 响应式优化（适配小屏幕） */
-@media (max-width: 650px) {
+@media (max-width: 500px) {
   .search-container {
     width: 95%;
     padding: 10px;
