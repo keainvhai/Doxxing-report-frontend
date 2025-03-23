@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "../styles/Leaderboard.css";
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -11,7 +13,7 @@ const Leaderboard = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/leaderboard`,
           {
-            withCredentials: true, // ✅ 如果后端有 JWT 鉴权（你有的话）
+            withCredentials: true, // ✅ 如果后端有 JWT 鉴权
           }
         );
         setLeaderboardData(response.data);
@@ -25,6 +27,16 @@ const Leaderboard = () => {
 
   if (!leaderboardData || Object.keys(leaderboardData).length === 0)
     return <p>Loading leaderboard...</p>;
+
+  // 点击后跳转 Search 页，并传递 query 参数
+  // encodeURIComponent 防止有特殊字符
+  const handleAuthorClick = (authorName) => {
+    navigate(`/search?author=${encodeURIComponent(authorName)}`);
+  };
+
+  const handleSourceClick = (sourceDomain) => {
+    navigate(`/search?source=${encodeURIComponent(sourceDomain)}`);
+  };
 
   // 添加奖牌图标
   const getMedal = (index) => {
@@ -45,7 +57,11 @@ const Leaderboard = () => {
             <h2>🏆 Incidents Contributed Last Week</h2>
             <ul className="leaderboard-list">
               {leaderboardData.lastWeekContributions.map((entry, index) => (
-                <li key={index}>
+                <li
+                  key={index}
+                  onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
+                  style={{ cursor: "pointer" }}
+                >
                   <span className="rank-badge">
                     <div className="medal-container">
                       <span className="medal">{getMedal(index)}</span>
@@ -60,12 +76,16 @@ const Leaderboard = () => {
         )}
 
         {/* 现有事件补充榜 */}
-        {leaderboardData.existingIncidentReports.length > 0 && (
+        {/* {leaderboardData.existingIncidentReports.length > 0 && (
           <div className="leaderboard-section">
             <h2>📌 Reports added to Existing Incidents</h2>
             <ul className="leaderboard-list">
               {leaderboardData.existingIncidentReports.map((entry, index) => (
-                <li key={index}>
+                <li
+                  key={index}
+                  onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
+                  style={{ cursor: "pointer" }}
+                >
                   <span className="rank-badge">
                     <div className="medal-container">
                       <span className="medal">{getMedal(index)}</span>
@@ -78,7 +98,7 @@ const Leaderboard = () => {
               ))}
             </ul>
           </div>
-        )}
+        )} */}
 
         {/* 总贡献榜 */}
         {leaderboardData.totalContributions.length > 0 && (
@@ -86,7 +106,11 @@ const Leaderboard = () => {
             <h2>📈 Total Report Contributions</h2>
             <ul className="leaderboard-list">
               {leaderboardData.totalContributions.map((entry, index) => (
-                <li key={index}>
+                <li
+                  key={index}
+                  onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
+                  style={{ cursor: "pointer" }}
+                >
                   <span className="rank-badge">
                     <div className="medal-container">
                       <span className="medal">{getMedal(index)}</span>
@@ -106,7 +130,11 @@ const Leaderboard = () => {
             <h2>📝 Report Authorship</h2>
             <ul className="leaderboard-list">
               {leaderboardData.reportAuthorship.map((entry, index) => (
-                <li key={index}>
+                <li
+                  key={index}
+                  onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
+                  style={{ cursor: "pointer" }}
+                >
                   <span className="rank-badge">
                     <div className="medal-container">
                       <span className="medal">{getMedal(index)}</span>
@@ -126,7 +154,11 @@ const Leaderboard = () => {
             <h2>🌐 Report Domains</h2>
             <ul className="leaderboard-list">
               {leaderboardData.reportDomains.map((entry, index) => (
-                <li key={index}>
+                <li
+                  key={index}
+                  onClick={() => handleSourceClick(entry.entity)} // ✅ 加点击
+                  style={{ cursor: "pointer" }}
+                >
                   <span className="rank-badge">
                     <div className="medal-container">
                       <span className="medal">{getMedal(index)}</span>

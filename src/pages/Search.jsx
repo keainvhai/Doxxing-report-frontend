@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import SearchComponent from "../components/SearchComponent";
 import ReportList from "../components/ReportList";
 import {
@@ -12,58 +13,86 @@ import "../styles/Search.css";
 const Search = ({ hideTitle }) => {
   const [reports, setReports] = useState([]);
   const [sources, setSources] = useState([]);
-  const [selectedSource, setSelectedSource] = useState("All Sources"); // ✅ 修复 `selectedSource`
   const [authors, setAuthors] = useState([]);
+  const [entities, setEntities] = useState([]);
+  const [selectedSource, setSelectedSource] = useState("All Sources");
   const [selectedAuthor, setSelectedAuthor] = useState("All Authors");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({});
-  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [inputPage, setInputPage] = useState("");
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
-  const [entities, setEntities] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  // ✅ 监听 location.search 和 page 变化，直接请求
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+
+    const authorParam = params.get("author") || "All Authors";
+    const sourceParam = params.get("source") || "All Sources";
+
+    // 👉 保持 UI 一致
+    setSelectedAuthor(authorParam);
+    setSelectedSource(sourceParam);
+
+    // 请求数据
+    getApprovedReports(params);
+  }, [location.search, page]);
+
+  // ✅ 初始化获取 sources / authors / entities
   useEffect(() => {
     getEntities();
+    getSources();
+    getAuthors();
   }, []);
 
   const getEntities = async () => {
     try {
       const { data } = await fetchEntities();
-      const topEntities = data
-        .sort((a, b) => b.count - a.count) // ✅ 按 incident 数量降序排序
-        .slice(0, 6); // ✅ 取前 6 个
+      const topEntities = data.sort((a, b) => b.count - a.count).slice(0, 6);
       setEntities(topEntities);
     } catch (err) {
       console.error("❌ Error fetching entities:", err);
     }
   };
 
-  // ✅ 监听 `filters, page, selectedSource`，确保搜索 & 分页正常
-  useEffect(() => {
-    getApprovedReports();
-  }, [filters, page, selectedSource]);
+  const getSources = async () => {
+    try {
+      const { data } = await fetchSources();
+      const sortedSources = data.sources.sort((a, b) => b.count - a.count);
+      setSources([{ domain: "All Sources", count: 0 }, ...sortedSources]);
+    } catch (err) {
+      console.error("❌ Error fetching sources:", err);
+    }
+  };
 
-  useEffect(() => {
-    getSources();
-  }, []);
+  const getAuthors = async () => {
+    try {
+      const { data } = await fetchAuthors();
+      const sortedAuthors = data.authors.sort((a, b) => b.count - a.count);
+      setAuthors(sortedAuthors);
+    } catch (err) {
+      console.error("❌ Error fetching authors:", err);
+    }
+  };
 
-  useEffect(() => {
-    getAuthors();
-  }, []);
-
-  const getApprovedReports = async () => {
+  const getApprovedReports = async (params) => {
     setLoading(true);
     setError(null);
+
     try {
       const queryFilters = {
-        ...filters,
-        source: selectedSource === "All Sources" ? undefined : selectedSource, // ✅ 修复 source 为空时的问题
+        author: params.get("author") || undefined,
+        source: params.get("source") || undefined,
+        search: params.get("search") || undefined,
       };
 
       const { data } = await fetchApprovedReports(queryFilters, page);
+
       setReports(data.reports);
       setTotalPages(data.totalPages);
     } catch (err) {
@@ -74,60 +103,63 @@ const Search = ({ hideTitle }) => {
     }
   };
 
-  const getSources = async () => {
-    try {
-      const { data } = await fetchSources();
+  // ✅ 搜索时更新 URL 参数，自动触发 useEffect
+  const handleSearch = (query, advancedFilters = {}) => {
+    const searchParams = new URLSearchParams(location.search);
 
-      // setSources([
-      //   { domain: "All Sources", count: 0 },
-      //   ...(data.sources || []),
-      // ]);
-      const sortedSources = (data.sources || []).sort(
-        (a, b) => b.count - a.count
-      );
-      setSources([{ domain: "All Sources", count: 0 }, ...sortedSources]);
-    } catch (err) {
-      console.error("❌ Error fetching sources:", err);
-      setSources([]);
+    if (selectedAuthor !== "All Authors") {
+      searchParams.set("author", selectedAuthor);
+    } else {
+      searchParams.delete("author");
     }
-  };
 
-  const getAuthors = async () => {
-    try {
-      const { data } = await fetchAuthors();
-      const sortedAuthors = (data.authors || []).sort(
-        (a, b) => b.count - a.count
-      );
-      // setAuthors([{ author: "All Authors", count: 0 }, ...sortedAuthors]);
-      setAuthors(sortedAuthors);
-    } catch (err) {
-      console.error("❌ Error fetching authors:", err);
-      setAuthors([]);
+    if (selectedSource !== "All Sources") {
+      searchParams.set("source", selectedSource);
+    } else {
+      searchParams.delete("source");
     }
-  };
 
-  // ✅ 处理搜索（含 Advanced Search）
-  const handleSearch = (query, advancedFilters) => {
+    if (query) {
+      searchParams.set("search", query.trim());
+    } else {
+      searchParams.delete("search");
+    }
+
+    // TODO: 如果有 advancedFilters，继续加
+
+    navigate(`/search?${searchParams.toString()}`);
     setPage(1);
-    setFilters({
-      search: query.trim(),
-      ...advancedFilters,
-      author: selectedAuthor === "All Authors" ? undefined : selectedAuthor,
-    });
   };
 
-  // ✅ 处理 Source 切换
   const handleSourceChange = (newSource) => {
+    const searchParams = new URLSearchParams(location.search);
+
+    if (newSource !== "All Sources") {
+      searchParams.set("source", newSource);
+    } else {
+      searchParams.delete("source");
+    }
+
+    navigate(`/search?${searchParams.toString()}`);
     setPage(1);
-    setSelectedSource(newSource);
   };
 
-  // ✅ 清除筛选
-  const handleClearFilters = () => {
+  const handleAuthorChange = (newAuthor) => {
+    const searchParams = new URLSearchParams(location.search);
+
+    if (newAuthor !== "All Authors") {
+      searchParams.set("author", newAuthor);
+    } else {
+      searchParams.delete("author");
+    }
+
+    navigate(`/search?${searchParams.toString()}`);
     setPage(1);
-    setFilters({});
-    setSelectedSource("All Sources");
-    getApprovedReports();
+  };
+
+  const handleClearFilters = () => {
+    navigate(`/search`);
+    setPage(1);
   };
 
   const handlePageChange = (event) => {
@@ -151,21 +183,16 @@ const Search = ({ hideTitle }) => {
   };
 
   const handleEntitySearch = (entityName) => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("entity", entityName);
+    navigate(`/search?${searchParams.toString()}`);
     setPage(1);
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      entity: entityName,
-    }));
   };
 
   const handleDownloadSearchCSV = () => {
-    // ✅ 传递搜索 & 分页参数
-    const params = new URLSearchParams({
-      ...filters,
-      source: selectedSource === "All Sources" ? "" : selectedSource,
-      page,
-      limit: 12, // 传递分页参数（和 Search.jsx 里的一致）
-    }).toString();
+    const params = new URLSearchParams(location.search);
+    params.set("page", page);
+    params.set("limit", 12);
 
     window.open(
       `${import.meta.env.VITE_API_URL}/reports/download/search-csv?${params}`
@@ -201,11 +228,11 @@ const Search = ({ hideTitle }) => {
         showAdvancedSearch={showAdvancedSearch}
         setShowAdvancedSearch={setShowAdvancedSearch}
         sources={sources}
-        selectedSource={selectedSource} // ✅ 传递 `selectedSource`
-        setSelectedSource={handleSourceChange} // ✅ 允许切换 Source
+        selectedSource={selectedSource}
+        setSelectedSource={handleSourceChange}
         authors={authors}
         selectedAuthor={selectedAuthor}
-        setSelectedAuthor={setSelectedAuthor}
+        setSelectedAuthor={handleAuthorChange}
         handleDownloadSearchCSV={handleDownloadSearchCSV}
       />
 
