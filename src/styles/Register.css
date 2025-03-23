@@ -113,6 +113,7 @@
 .toggle-password {
   position: absolute;
   right: 10px;
+  margin-top: 13px;
   background: none;
   border: none;
   font-size: 20px;

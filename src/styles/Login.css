@@ -23,28 +23,51 @@
   font-size: 16px;
 }
 
-.register-btn {
-  width: 50%;
-  padding: 10px;
-  background: #2196f3;
-  color: white;
+.login-btn,
+.forgot-btn {
+  display: inline-block;
+  width: 40%;
+  padding: 12px 0;
+  background-color: #2196f3; /* login 默认蓝色 */
+  color: #fff;
   border: none;
   margin-top: 10px;
+  margin-right: 10px; /* ✅ 两个按钮有间距！ */
   font-size: 16px;
   font-weight: bold;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-.register-btn:hover {
-  background: #1e87db;
+/* ✅ 登录按钮悬浮 */
+.login-btn:hover {
+  background-color: #1e87db;
+  transform: translateY(-2px);
+}
+
+/* ✅ 忘记密码按钮的颜色和悬浮 */
+.forgot-btn {
+  background-color: #f44336; /* 红色！ */
+  margin-right: 0; /* ✅ 最后一个按钮不加右边距 */
+}
+
+.forgot-btn:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
 }
 
 /* 🌟 响应式调整 */
-@media (max-width: 500px) {
+@media (max-width: 450px) {
   .loginContainer {
     width: 90%;
+  }
+  .login-btn,
+  .forgot-btn {
+    width: 100%;
+    margin-right: 0;
   }
 }
 

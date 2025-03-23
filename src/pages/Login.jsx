@@ -137,12 +137,14 @@ function Login() {
 
             <ErrorMessage name="password" component="div" className="error" />
 
-            <button
-              className="register-btn"
-              type="submit"
-              disabled={isSubmitting}
-            >
+            <button className="login-btn" type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Logging in..." : "Login"}
+            </button>
+            <button
+              className="forgot-btn"
+              onClick={() => navigate("/reset-password")}
+            >
+              Forgot Password
             </button>
           </Form>
         )}

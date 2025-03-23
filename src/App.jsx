@@ -19,6 +19,7 @@ import SummariesDetails from "./pages/SummariesDetails";
 import AboutUs from "./pages/AboutUs";
 import Footer from "./components/Footer";
 import Data from "./pages/Data";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               <Route path="/search" element={<Search />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/report/:id" element={<ReportEdit />} />
               <Route path="/report/:id" element={<ReportDetails />} />

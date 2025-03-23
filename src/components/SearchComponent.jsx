@@ -61,6 +61,7 @@ const SearchComponent = ({
   }, [selectedAuthor]);
 
   useEffect(() => {
+    // 判断是否点到了筛选框外面
     const handleClickOutside = (event) => {
       if (
         publishedRef.current &&

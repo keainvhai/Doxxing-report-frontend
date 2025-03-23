@@ -44,7 +44,13 @@ function Register() {
       setToastType("success");
       setOtpSent(true);
     } catch (error) {
-      setToastMessage("❌ Failed to send OTP. Please try again.");
+      // ✅ 详细处理 error.response 的错误信息
+      let errorMsg = " Failed to send OTP. Please try again.";
+      if (error.response && error.response.data && error.response.data.error) {
+        errorMsg = ` ${error.response.data.error}`;
+      }
+
+      setToastMessage(errorMsg);
       setToastType("error");
     } finally {
       setShowToast(true);
