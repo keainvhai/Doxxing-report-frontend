@@ -26,7 +26,10 @@ const UserReportEdit = () => {
 
   // 处理日期格式，确保前端 input[type="date"] 能正确识别
   const formatDate = (dateString) => {
-    return dateString ? dateString.split("T")[0] : "";
+    if (!dateString || dateString === "Invalid date") {
+      return ""; // ✅ 或 null，根据需求
+    }
+    return dateString.split("T")[0];
   };
 
   useEffect(() => {
@@ -68,8 +71,13 @@ const UserReportEdit = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
+    const updateForm = {
+      ...form,
+      incident_date: form.incident_date || null, // ✅ 兜底处理
+    };
     try {
-      await updateUserReport(id, form);
+      await updateUserReport(id, updateForm);
       setToastMessage("✅ Report updated successfully!");
       setShowToast(true);
 
