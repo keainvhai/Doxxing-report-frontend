@@ -128,7 +128,6 @@ const UserReportEdit = () => {
             value={form.text}
             onChange={handleChange}
             rows="5"
-            required
           />
 
           <label>👤 Victim</label>
