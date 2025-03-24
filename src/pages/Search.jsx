@@ -89,6 +89,7 @@ const Search = ({ hideTitle }) => {
         author: params.get("author") || undefined,
         source: params.get("source") || undefined,
         search: params.get("search") || undefined,
+        entity: params.get("entity") || undefined,
       };
 
       const { data } = await fetchApprovedReports(queryFilters, page);
