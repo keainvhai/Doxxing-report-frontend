@@ -76,7 +76,7 @@ const ReportDetails = () => {
     <div className="report-details">
       <h2>{report.title}</h2>
 
-      <ToolsTable />
+      <ToolsTable report={report} />
 
       {/* ✅ Incident Stats Card */}
       <IncidentStatsCard
