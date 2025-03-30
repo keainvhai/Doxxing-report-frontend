@@ -22,7 +22,7 @@ const IncidentStatsCard = ({ incident }) => {
             <td>
               <strong>Report Count</strong>
             </td>
-            <td>{incident.report_count || 1}</td>
+            <td>{incident.report_count ?? 1}</td>
           </tr>
           <tr>
             <td>
@@ -82,7 +82,7 @@ const ReportDetails = () => {
       <IncidentStatsCard
         incident={{
           id: report.id,
-          report_count: report.report_count,
+          report_count: report.count,
           date: report.incident_date,
           editors: report.author,
         }}

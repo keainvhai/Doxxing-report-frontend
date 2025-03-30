@@ -5,12 +5,14 @@ import "../styles/Data.css";
 const Data = () => {
   const [totalReports, setTotalReports] = useState(0);
   const [lastUpdate, setLastUpdate] = useState("");
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/reports/stats`)
       .then((res) => res.json())
       .then((data) => {
         setTotalReports(data.totalReports);
+        setTotalCount(data.totalCount);
         setLastUpdate(data.lastUpdate);
       })
       .catch((err) => console.error("❌ Error fetching stats:", err));
@@ -32,6 +34,10 @@ const Data = () => {
         <p>
           Total Reports: <span>{totalReports}</span>
         </p>
+        <p>
+          Total Submissions: <span>{totalCount}</span>
+        </p>
+
         <p>
           Last Updated: <span>{lastUpdate}</span>
         </p>

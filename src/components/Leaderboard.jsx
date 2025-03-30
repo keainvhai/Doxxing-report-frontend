@@ -76,9 +76,14 @@ const Leaderboard = () => {
         )}
 
         {/* 现有事件补充榜 */}
-        {/* {leaderboardData.existingIncidentReports.length > 0 && (
+        {leaderboardData.existingIncidentReports.length > 0 && (
           <div className="leaderboard-section">
-            <h2>📌 Reports added to Existing Incidents</h2>
+            <div className="tooltip-wrapper">
+              <h2>📌 Reports added to Existing Incidents</h2>
+              <div className="tooltip-box">
+                Submissions that supplement already existing incidents
+              </div>
+            </div>
             <ul className="leaderboard-list">
               {leaderboardData.existingIncidentReports.map((entry, index) => (
                 <li
@@ -98,7 +103,7 @@ const Leaderboard = () => {
               ))}
             </ul>
           </div>
-        )} */}
+        )}
 
         {/* 总贡献榜 */}
         {leaderboardData.totalContributions.length > 0 && (

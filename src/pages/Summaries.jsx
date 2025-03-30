@@ -45,8 +45,9 @@ const Summaries = () => {
                 to={`/summaries/${summary.week_start}`}
                 className="digest-link"
               >
-                Week: {new Date(summary.week_start).toLocaleDateString()} -{" "}
-                {new Date(summary.week_end).toLocaleDateString()}
+                {/* Week: {new Date(summary.week_start).toLocaleDateString()} -{" "}
+                {new Date(summary.week_end).toLocaleDateString()} */}
+                Week of: {new Date(summary.week_start).toLocaleDateString()}
               </Link>
             </h3>
             <p>

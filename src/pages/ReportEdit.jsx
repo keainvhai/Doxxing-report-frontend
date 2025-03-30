@@ -92,6 +92,7 @@ const ReportEdit = () => {
   };
 
   const handleUpdate = async () => {
+    console.log("🧨 Deleted Images:", deletedImages);
     const formData = new FormData();
 
     Object.keys(form).forEach((key) => {
@@ -240,13 +241,14 @@ const ReportEdit = () => {
                 <div key={index}>
                   <img
                     key={index}
-                    // src={img}
+                    src={img}
                     // src={cleanedImg}
 
-                    src={`${JSON.parse(report.images)[0]}`}
+                    // src={`${JSON.parse(report.images)[0]}`}
                     // src={`${API_URL}${img}`}
                     // src={img.startsWith("http") ? img : `${API_URL}${img}`}
-                    alt="Report"
+                    // alt="Report"
+                    alt={`Report-${index}`}
                     className="edit-image"
                   />
                   <button onClick={() => handleDeleteImage(img)}>Delete</button>
