@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { fetchReportById } from "../api"; // 获取单个 Report
 import "../styles/ReportDetails.css";
 import ToolsTable from "../components/ToolsTable";
+import CommentsSection from "../components/CommentsSection";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -52,6 +53,8 @@ const ReportDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const commentRef = useRef(null); // 创建 ref
+
   useEffect(() => {
     const getReport = async () => {
       try {
@@ -75,9 +78,12 @@ const ReportDetails = () => {
   return (
     <div className="report-details">
       <h2>{report.title}</h2>
-
-      <ToolsTable report={report} />
-
+      <ToolsTable
+        report={report}
+        onJumpToComments={() =>
+          commentRef.current?.scrollIntoView({ behavior: "smooth" })
+        }
+      />
       {/* ✅ Incident Stats Card */}
       <IncidentStatsCard
         incident={{
@@ -87,7 +93,6 @@ const ReportDetails = () => {
           editors: report.author,
         }}
       />
-
       {/* ✅ 报告基本信息 */}
       {/* <p>
         <strong>Author:</strong> {report.author || "Anonymous"}
@@ -107,7 +112,6 @@ const ReportDetails = () => {
         <strong>Date Published:</strong>{" "}
         {new Date(report.date_published).toLocaleDateString()}
       </p>
-
       {report.incident_date && (
         <p>
           <strong>Incident Date:</strong>{" "}
@@ -117,7 +121,6 @@ const ReportDetails = () => {
       {/* <p>
         <strong>Source:</strong> {report.url}
       </p> */}
-
       {/* ✅ 报告描述 */}
       {report.text && (
         <p>
@@ -125,7 +128,6 @@ const ReportDetails = () => {
         </p>
       )}
       {/* <p>{report.text}</p> */}
-
       {/* ✅ 图片显示 */}
       {report.images && JSON.parse(report.images).length > 0 && (
         <div className="report-images">
@@ -141,7 +143,6 @@ const ReportDetails = () => {
           ))}
         </div>
       )}
-
       {/* ✅ 原始链接 */}
       <a
         href={report.url}
@@ -151,6 +152,11 @@ const ReportDetails = () => {
       >
         🔗 View Original Source
       </a>
+
+      {/* ref 默认只能加在原生 HTML 元素（如 div、input、button） */}
+      <div ref={commentRef}>
+        <CommentsSection reportId={report.id} />
+      </div>
     </div>
   );
 };

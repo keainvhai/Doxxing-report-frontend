@@ -10,6 +10,8 @@ const ReportEdit = () => {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [form, setForm] = useState({
     url: "",
     title: "",
@@ -92,6 +94,9 @@ const ReportEdit = () => {
   };
 
   const handleUpdate = async () => {
+    if (isSubmitting) return; // 🛑 避免重复点击
+    setIsSubmitting(true); // ✅ 设置正在提交
+
     console.log("🧨 Deleted Images:", deletedImages);
     const formData = new FormData();
 
@@ -124,6 +129,8 @@ const ReportEdit = () => {
       setShowToast(true);
 
       setTimeout(() => setShowToast(false), 3000);
+    } finally {
+      setIsSubmitting(false); // ✅ 提交完毕后解除锁定
     }
   };
 
@@ -283,8 +290,12 @@ const ReportEdit = () => {
           onChange={(e) => setNewImages([...e.target.files])}
         />
         <div className="button-container">
-          <button className="save-btn" onClick={handleUpdate}>
-            Save Changes
+          <button
+            className="save-btn"
+            onClick={handleUpdate}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>

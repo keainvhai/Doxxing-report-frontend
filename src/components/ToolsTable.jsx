@@ -10,7 +10,7 @@ import {
 } from "lucide-react"; // 导入图标
 import "../styles/ToolsTable.css";
 
-const ToolsTable = ({ report }) => {
+const ToolsTable = ({ report, onJumpToComments }) => {
   const navigate = useNavigate();
 
   const [showCitations, setShowCitations] = useState(false);
@@ -40,7 +40,7 @@ const ToolsTable = ({ report }) => {
         <button className="tool-button" onClick={() => navigate("/submit")}>
           <FilePlus size={18} /> New Report
         </button>
-        <button className="tool-button">
+        <button className="tool-button" onClick={onJumpToComments}>
           <MessageSquarePlus size={18} /> New Response
         </button>
         <button className="tool-button" onClick={() => navigate("/search")}>

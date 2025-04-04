@@ -1,0 +1,182 @@
+/* ===== 评论区容器 ===== */
+.comments-container {
+  margin-top: 40px;
+  padding: 20px;
+  border-top: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+}
+
+.comments-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.no-comments {
+  color: #888;
+  font-style: italic;
+}
+
+.comment-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ===== 一级评论 + 子评论通用 ===== */
+.comment-item {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+}
+
+/* 评论内容文本 */
+.comment-content {
+  margin: 5px 0 8px 0;
+  color: #444;
+}
+
+/* 用户名 + 时间 */
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #888;
+}
+
+/* mention 样式，如 @admin */
+.mention {
+  color: #888;
+  /* font-weight: bold; */
+  margin-right: 0.25rem;
+}
+
+/* ===== 回复列表：二级回复缩进 + 竖线（如 YouTube） ===== */
+.replies-list {
+  list-style: none;
+  padding-left: 1.5rem;
+  border-left: 2px solid #eee;
+  margin-top: 0.5rem;
+}
+
+/* ===== 三级及以后：不再缩进，仅平铺显示 ===== */
+.nested-replies {
+  list-style: none;
+  padding-left: 0;
+  border-left: none;
+  /* margin-top: 0.5rem; */
+}
+
+/* ===== 回复按钮 + 输入框区域 ===== */
+.reply-btn {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: #007bff;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.reply-btn:hover {
+  text-decoration: underline;
+}
+
+.reply-form form {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+}
+
+.cancel-btn {
+  margin-left: 0.5rem;
+  background: none;
+  color: gray;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===== 表单区域 ===== */
+.comment-form {
+  margin-top: 20px;
+}
+
+.comment-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 10px 12px;
+  min-height: 42px;
+  max-height: 100px;
+  font-size: 14px;
+  resize: vertical;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+  box-sizing: border-box;
+  line-height: 1.4;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comment-input:focus {
+  border-color: #2d7ff9;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 127, 249, 0.1);
+}
+
+.comment-submit {
+  padding: 0 16px;
+  height: 42px;
+  background-color: #2d7ff9;
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.comment-submit:hover {
+  background-color: #1e63c7;
+}
+
+.login-tip {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.login-tip a {
+  color: #2d7ff9;
+  text-decoration: underline;
+}
+
+/* ===== 加载更多按钮later ===== */
+.load-more-btn {
+  margin: 16px 0;
+  padding: 8px 14px;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.load-more-btn:hover {
+  background-color: #d5d5d5;
+}
+.flat-replies {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+}
+
+.reply-flat {
+  padding: 8px 0;
+  border-top: 1px solid #eee;
+}
