@@ -3,7 +3,8 @@ import axios from "axios";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import "../styles/ResetPassword.css"; // 你也可以自己写样式
+import "../styles/ResetPassword.css";
+import { useNavigate } from "react-router-dom";
 
 function ResetPassword() {
   const [showToast, setShowToast] = useState(false);
@@ -11,6 +12,8 @@ function ResetPassword() {
   const [toastType, setToastType] = useState("success");
   const [otpSent, setOtpSent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Required"),
@@ -55,7 +58,8 @@ function ResetPassword() {
 
       setTimeout(() => {
         setShowToast(false);
-        window.location.href = "/login"; // 成功重置跳转到登录
+        // window.location.href = "/login"; // 成功重置跳转到登录
+        navigate("/login");
       }, 3000);
     } catch (err) {
       setToastMessage(err.response?.data?.error || "Reset failed");

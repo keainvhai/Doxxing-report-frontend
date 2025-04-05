@@ -58,9 +58,9 @@ const ToolsTable = ({ report, onJumpToComments }) => {
           )}
           {copySuccess && <span className="copy-success">{copySuccess}</span>}
         </div>
-        {/* <button className="tool-button">
+        <button className="tool-button">
           <History size={18} /> View History
-        </button> */}
+        </button>
       </div>
     </div>
   );
