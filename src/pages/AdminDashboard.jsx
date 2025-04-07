@@ -42,6 +42,10 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("🌍 VITE_API_URL:", import.meta.env.VITE_API_URL);
+  }, []);
+
+  useEffect(() => {
     if (authState.role !== "admin") {
       navigate("/");
     }
