@@ -316,6 +316,9 @@ const AdminDashboard = () => {
 
           {/* ✅ 分页控件也只在 reports 页面展示 */}
           <div className="pagination">
+            <button onClick={() => setPage(1)} disabled={page === 1}>
+              First
+            </button>
             <button onClick={() => setPage(page - 1)} disabled={page === 1}>
               Previous
             </button>
@@ -337,6 +340,12 @@ const AdminDashboard = () => {
               className="page-input"
             />
             <button onClick={handlePageJump}>To</button>
+            <button
+              onClick={() => setPage(totalPages)}
+              disabled={page === totalPages}
+            >
+              Last
+            </button>
           </div>
         </>
       )}
@@ -383,6 +392,17 @@ const AdminDashboard = () => {
             </tbody>
           </table>
           <div className="pagination">
+            <button
+              onClick={() => {
+                if (userPage !== 1) {
+                  setUserPage(1);
+                  fetchUsers(1);
+                }
+              }}
+              disabled={userPage === 1}
+            >
+              First
+            </button>
             <button
               onClick={() => {
                 const newPage = userPage - 1;
@@ -446,6 +466,17 @@ const AdminDashboard = () => {
               }}
             >
               To
+            </button>
+            <button
+              onClick={() => {
+                if (userPage !== userTotalPages) {
+                  setUserPage(userTotalPages);
+                  fetchUsers(userTotalPages);
+                }
+              }}
+              disabled={userPage === userTotalPages}
+            >
+              Last
             </button>
           </div>
         </div>

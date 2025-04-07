@@ -246,6 +246,9 @@ const Search = ({ hideTitle }) => {
       {!loading && reports.length > 0 && <ReportList reports={reports} />}
 
       <div className="pagination">
+        <button onClick={() => setPage(1)} disabled={page === 1}>
+          First
+        </button>
         <button onClick={() => setPage(page - 1)} disabled={page === 1}>
           Previous
         </button>
@@ -267,6 +270,12 @@ const Search = ({ hideTitle }) => {
           className="page-input"
         />
         <button onClick={handlePageJump}>To</button>
+        <button
+          onClick={() => setPage(totalPages)}
+          disabled={page === totalPages}
+        >
+          Last
+        </button>
       </div>
     </div>
   );

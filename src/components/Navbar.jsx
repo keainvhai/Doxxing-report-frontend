@@ -15,10 +15,10 @@ const Navbar = () => {
   useEffect(() => {
     const storedAuth = localStorage.getItem("authState");
     if (storedAuth) {
-      console.log("🔄 读取 localStorage.authState:", JSON.parse(storedAuth));
+      // console.log("🔄 读取 localStorage.authState:", JSON.parse(storedAuth));
       setAuthState(JSON.parse(storedAuth));
     } else {
-      console.log("⚠️ 没有找到 authState，设置为未登录");
+      console.log("⚠️ no authState");
 
       setAuthState({
         id: null,
