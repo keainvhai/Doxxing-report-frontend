@@ -28,6 +28,8 @@ const SubmitReport = () => {
   const [generating, setGenerating] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState(null); // ✅ 存储 AI 生成的图片 URL
 
+  const [urlError, setUrlError] = useState("");
+
   useEffect(() => {
     console.log("🔍 当前 authState:", authState);
 
@@ -72,6 +74,17 @@ const SubmitReport = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 🚫 检查是否是本站链接
+    const isSelfUrl = form.url.startsWith("https://doxxing-report");
+    if (isSelfUrl) {
+      setToastMessage(
+        "⚠️ This URL is from our own platform. Thank you, but please report new doxxing incidents."
+      );
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 4000);
+      return; // 阻止继续提交
+    }
 
     const formData = new FormData();
 
@@ -195,9 +208,27 @@ const SubmitReport = () => {
           type="text"
           placeholder="Report URL"
           value={form.url}
-          onChange={(e) => setForm({ ...form, url: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value;
+            setForm({ ...form, url: value });
+
+            // 🚫 实时检测 URL 是否为本站链接
+            if (value.startsWith("https://doxxing-report")) {
+              setUrlError(
+                "⚠️ This URL is from our own platform. Please report a new incident."
+              );
+            } else {
+              setUrlError("");
+            }
+          }}
           required
         />
+        {/* 🚫 显示错误信息 */}
+        {urlError && (
+          <p style={{ color: "red", fontSize: "14px", marginTop: "4px" }}>
+            {urlError}
+          </p>
+        )}
         {/* Title */}
         <label htmlFor="title">📝 Title *</label>
         <input
