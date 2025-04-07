@@ -112,6 +112,11 @@ const SearchComponent = ({
           className="search-box"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch(); // 🔍 触发搜索
+            }
+          }}
         />
 
         <div className="search-btn-container">

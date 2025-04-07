@@ -242,3 +242,56 @@ th {
     width: 40px;
   }
 }
+
+/* ✅ 顶部 Tab 切换按钮 */
+.admin-tabs {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.admin-tabs button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.admin-tabs button:hover {
+  background-color: #e0e0e0;
+}
+
+.admin-tabs .active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* ✅ 表格内的 action 按钮（Send message / Send email） */
+.user-action-btn {
+  margin: 2px 5px;
+  padding: 6px 12px;
+  width: 120px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  color: white;
+}
+
+.user-action-btn:hover {
+  opacity: 0.9;
+}
+
+.user-action-btn.message-btn {
+  background-color: #28a745; /* 绿色 */
+}
+
+.user-action-btn.email-btn {
+  background-color: #17a2b8; /* 蓝色 */
+}
