@@ -149,7 +149,7 @@ th {
 }
 
 .reject-btn {
-  background-color: #f44336;
+  background-color: orange;
   color: white;
   width: 70px;
   height: 30px;
@@ -158,7 +158,20 @@ th {
 }
 
 .reject-btn:hover {
-  background-color: #c82333;
+  background-color: rgb(218, 142, 1);
+}
+
+.delete-btn {
+  background-color: red;
+  color: white;
+  width: 70px;
+  height: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: rgb(223, 4, 4);
 }
 
 .view-btn {

@@ -30,6 +30,9 @@ export const updateReport = (id, formData) =>
 // Approve a report
 export const approveReport = (id) => API.post("/reports/approve", { id });
 
+// Reject a report (软删除）
+export const rejectReport = (id) => API.post("/reports/reject", { id });
+
 // Delete a report
 export const deleteReport = (id) => API.post("/reports/delete", { id });
 

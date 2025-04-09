@@ -6,6 +6,7 @@ import {
   fetchReports,
   fetchSources,
   approveReport,
+  rejectReport,
   deleteReport,
 } from "../api";
 import axios from "axios";
@@ -84,8 +85,21 @@ const AdminDashboard = () => {
       alert("Failed to approve the report.");
     }
   };
-
   const handleReject = async (id) => {
+    try {
+      await rejectReport(id);
+      setReports((prevReports) =>
+        prevReports.map((report) =>
+          report.id === id ? { ...report, status: "Rejected" } : report
+        )
+      );
+    } catch (err) {
+      console.error("❌ Error rejecting report:", err);
+      alert("Failed to reject the report.");
+    }
+  };
+
+  const handleDelete = async (id) => {
     try {
       await deleteReport(id);
       setReports((prevReports) =>
@@ -97,11 +111,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // const handleSearch = (query) => {
-  //   setPage(1); // ✅ 搜索时重置 `page`
-  //   setFilters({ search: query.trim() });
-  //   getReportsAndSources();
-  // };
   const handleSearch = (query, extraFilters = {}) => {
     setPage(1); // 重置页码
     setFilters({ search: query.trim(), ...extraFilters });
@@ -295,6 +304,12 @@ const AdminDashboard = () => {
                                   onClick={() => handleReject(report.id)}
                                 >
                                   Reject
+                                </button>
+                                <button
+                                  className="delete-btn"
+                                  onClick={() => handleDelete(report.id)}
+                                >
+                                  Delete
                                 </button>
                               </>
                             )}
