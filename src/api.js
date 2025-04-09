@@ -27,11 +27,15 @@ export const updateReport = (id, formData) =>
     headers: { "Content-Type": "multipart/form-data" }, // 必须加 multipart 头
   });
 
-// Approve a report
-export const approveReport = (id) => API.post("/reports/approve", { id });
+// // Approve a report
+// export const approveReport = (id) => API.post("/reports/approve", { id });
 
-// Reject a report (软删除）
-export const rejectReport = (id) => API.post("/reports/reject", { id });
+// // Reject a report (软删除）
+// export const rejectReport = (id) => API.post("/reports/reject", { id });
+
+// 修改 report 状态（可用于恢复 Rejected → Approved）
+export const updateReportStatus = (id, status) =>
+  API.post("/reports/update-status", { id, status });
 
 // Delete a report
 export const deleteReport = (id) => API.post("/reports/delete", { id });

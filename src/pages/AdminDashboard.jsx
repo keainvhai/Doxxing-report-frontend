@@ -5,8 +5,9 @@ import SearchComponent from "../components/SearchComponent";
 import {
   fetchReports,
   fetchSources,
-  approveReport,
-  rejectReport,
+  // approveReport,
+  // rejectReport,
+  updateReportStatus,
   deleteReport,
 } from "../api";
 import axios from "axios";
@@ -72,30 +73,43 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleApprove = async (id) => {
+  // const handleApprove = async (id) => {
+  //   try {
+  //     await approveReport(id);
+  //     setReports((prevReports) =>
+  //       prevReports.map((report) =>
+  //         report.id === id ? { ...report, status: "Approved" } : report
+  //       )
+  //     );
+  //   } catch (err) {
+  //     console.error("❌ Error approving report:", err);
+  //     alert("Failed to approve the report.");
+  //   }
+  // };
+  // const handleReject = async (id) => {
+  //   try {
+  //     await rejectReport(id);
+  //     setReports((prevReports) =>
+  //       prevReports.map((report) =>
+  //         report.id === id ? { ...report, status: "Rejected" } : report
+  //       )
+  //     );
+  //   } catch (err) {
+  //     console.error("❌ Error rejecting report:", err);
+  //     alert("Failed to reject the report.");
+  //   }
+  // };
+  const handleStatusUpdate = async (id, status) => {
     try {
-      await approveReport(id);
+      await updateReportStatus(id, status);
       setReports((prevReports) =>
         prevReports.map((report) =>
-          report.id === id ? { ...report, status: "Approved" } : report
+          report.id === id ? { ...report, status } : report
         )
       );
     } catch (err) {
-      console.error("❌ Error approving report:", err);
-      alert("Failed to approve the report.");
-    }
-  };
-  const handleReject = async (id) => {
-    try {
-      await rejectReport(id);
-      setReports((prevReports) =>
-        prevReports.map((report) =>
-          report.id === id ? { ...report, status: "Rejected" } : report
-        )
-      );
-    } catch (err) {
-      console.error("❌ Error rejecting report:", err);
-      alert("Failed to reject the report.");
+      console.error("❌ Error updating report status:", err);
+      alert("Failed to update report status.");
     }
   };
 
@@ -291,20 +305,29 @@ const AdminDashboard = () => {
                             >
                               View/Edit
                             </button>
-                            {report.status === "Pending" && (
+                            {(report.status === "Pending" ||
+                              report.status === "Rejected") && (
                               <>
-                                <button
-                                  className="approve-btn"
-                                  onClick={() => handleApprove(report.id)}
-                                >
-                                  Approve
-                                </button>
-                                <button
-                                  className="reject-btn"
-                                  onClick={() => handleReject(report.id)}
-                                >
-                                  Reject
-                                </button>
+                                {report.status !== "Approved" && (
+                                  <button
+                                    className="approve-btn"
+                                    onClick={() =>
+                                      handleStatusUpdate(report.id, "Approved")
+                                    }
+                                  >
+                                    Approve
+                                  </button>
+                                )}
+                                {report.status !== "Rejected" && (
+                                  <button
+                                    className="reject-btn"
+                                    onClick={() =>
+                                      handleStatusUpdate(report.id, "Rejected")
+                                    }
+                                  >
+                                    Reject
+                                  </button>
+                                )}
                                 <button
                                   className="delete-btn"
                                   onClick={() => handleDelete(report.id)}
