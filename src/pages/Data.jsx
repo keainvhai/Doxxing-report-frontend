@@ -41,10 +41,6 @@ const Data = () => {
       {/* ✅ 复制按钮 + citation 弹窗容器 */}
       <div className="cite-copy-container">
         <div className="copy-wrapper">
-          <button className="copy-btn" onClick={handleCopy}>
-            {copied ? "✅ Copied!" : "Copy Citation"}
-          </button>
-
           {/* ✅ 浮动引用内容，仅在 hover 时显示 */}
           <div className="citation-popup">
             Shan, G., Riedl, C., & Fei, X. (2025).{" "}
@@ -54,6 +50,9 @@ const Data = () => {
             </em>{" "}
             <em>Available at SSRN 5196388.</em>
           </div>
+          <button className="copy-btn" onClick={handleCopy}>
+            {copied ? "✅ Copied!" : "Copy Citation"}
+          </button>
         </div>
       </div>
 
