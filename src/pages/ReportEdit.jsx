@@ -97,7 +97,7 @@ const ReportEdit = () => {
     if (isSubmitting) return; // 🛑 避免重复点击
     setIsSubmitting(true); // ✅ 设置正在提交
 
-    console.log("🧨 Deleted Images:", deletedImages);
+    // console.log("🧨 Deleted Images:", deletedImages);
     const formData = new FormData();
 
     Object.keys(form).forEach((key) => {

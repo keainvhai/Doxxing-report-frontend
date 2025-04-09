@@ -47,7 +47,10 @@ const Summaries = () => {
               >
                 {/* Week: {new Date(summary.week_start).toLocaleDateString()} -{" "}
                 {new Date(summary.week_end).toLocaleDateString()} */}
-                Week of: {new Date(summary.week_start).toLocaleDateString()}
+                Week of:{" "}
+                {new Date(summary.week_start).toLocaleDateString("en-US", {
+                  timeZone: "UTC",
+                })}
               </Link>
             </h3>
             <p>
