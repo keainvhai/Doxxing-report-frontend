@@ -47,23 +47,41 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   // useEffect(() => {
-  //   console.log("🌍 VITE_API_URL:", import.meta.env.VITE_API_URL);
-  // }, []);
+  //   // 🚨 等待 authState 加载完成
+  //   if (authState.role === undefined) return;
 
+  //   const urlPage = parseInt(searchParams.get("page"));
+  //   const resolvedPage = !isNaN(urlPage) ? urlPage : 1;
+
+  //   if (authState.role !== "admin") {
+  //     navigate("/");
+  //     return;
+  //   }
+
+  //   if (resolvedPage !== page) {
+  //     setPage(resolvedPage); // ✅ 触发更新页面后，第二个 useEffect 会执行
+  //     return;
+  //   }
+  //   getReportsAndSources();
+  // }, [authState, filters, navigate, page, searchParams]); // ✅ 监听 `page` 变化
   useEffect(() => {
     const urlPage = parseInt(searchParams.get("page"));
     const resolvedPage = !isNaN(urlPage) ? urlPage : 1;
+    if (resolvedPage !== page) {
+      setPage(resolvedPage);
+    }
+  }, [searchParams]); // 🔁 每当 URL 参数变化时触发
+  useEffect(() => {
+    // ✅ 确保登录完成再加载
+    if (!authState.status || authState.role !== "admin") return;
 
-    if (authState.role !== "admin") {
+    getReportsAndSources();
+  }, [authState, page, filters]);
+  useEffect(() => {
+    if (authState.status && authState.role !== "admin") {
       navigate("/");
     }
-
-    if (resolvedPage !== page) {
-      setPage(resolvedPage); // ✅ 触发更新页面后，第二个 useEffect 会执行
-      return;
-    }
-    getReportsAndSources();
-  }, [authState, filters, navigate, page, searchParams]); // ✅ 监听 `page` 变化
+  }, [authState]);
 
   const getReportsAndSources = async () => {
     setLoading(true);
@@ -236,8 +254,10 @@ const AdminDashboard = () => {
   };
 
   const goToPage = (targetPage) => {
-    setPage(targetPage);
-    navigate(`/admin?page=${targetPage}`);
+    if (targetPage !== page) {
+      setPage(targetPage);
+      navigate(`/admin?page=${targetPage}`);
+    }
   };
 
   return (
