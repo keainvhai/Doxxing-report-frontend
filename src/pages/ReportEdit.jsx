@@ -82,10 +82,10 @@ const ReportEdit = () => {
         // ✅ 存储 OpenAI 生成的图片 URL
         console.log("✅ AI Generated Image URL:", data.imageUrl);
         setGeneratedImageUrl(data.imageUrl);
-        // setForm((prev) => ({
-        //   ...prev,
-        //   images: [...prev.images, data.imageUrl],
-        // }));
+        setForm((prev) => ({
+          ...prev,
+          images: [...prev.images, data.imageUrl],
+        }));
       }
     } catch (error) {
       console.error("❌ Error generating image:", error);
