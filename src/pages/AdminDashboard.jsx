@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/AdminDashboard.css";
+import { useSearchParams } from "react-router-dom";
 import SearchComponent from "../components/SearchComponent";
 import {
   fetchReports,
@@ -22,7 +23,9 @@ const AdminDashboard = () => {
   const [filters, setFilters] = useState({}); // ✅ 解决 filters 未定义问题
 
   // report page
-  const [page, setPage] = useState(1);
+  const [searchParams] = useSearchParams();
+  const initialPage = parseInt(searchParams.get("page")) || 1;
+  const [page, setPage] = useState(initialPage);
   const [totalPages, setTotalPages] = useState(1);
   const [inputPage, setInputPage] = useState("");
   // User page
@@ -43,16 +46,24 @@ const AdminDashboard = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("🌍 VITE_API_URL:", import.meta.env.VITE_API_URL);
-  }, []);
+  // useEffect(() => {
+  //   console.log("🌍 VITE_API_URL:", import.meta.env.VITE_API_URL);
+  // }, []);
 
   useEffect(() => {
+    const urlPage = parseInt(searchParams.get("page"));
+    const resolvedPage = !isNaN(urlPage) ? urlPage : 1;
+
     if (authState.role !== "admin") {
       navigate("/");
     }
+
+    if (resolvedPage !== page) {
+      setPage(resolvedPage); // ✅ 触发更新页面后，第二个 useEffect 会执行
+      return;
+    }
     getReportsAndSources();
-  }, [authState, filters, navigate, page]); // ✅ 监听 `page` 变化
+  }, [authState, filters, navigate, page, searchParams]); // ✅ 监听 `page` 变化
 
   const getReportsAndSources = async () => {
     setLoading(true);
@@ -126,7 +137,7 @@ const AdminDashboard = () => {
   };
 
   const handleSearch = (query, extraFilters = {}) => {
-    setPage(1); // 重置页码
+    goToPage(1); // 重置页码
     setFilters({ search: query.trim(), ...extraFilters });
   };
 
@@ -134,14 +145,24 @@ const AdminDashboard = () => {
     setInputPage(event.target.value);
   };
 
+  // const handlePageJump = () => {
+  //   const pageNumber = parseInt(inputPage, 10);
+  //   if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
+  //     setPage(pageNumber);
+  //   } else {
+  //     alert(`Please enter a page number between 1 and ${totalPages}!`);
+  //   }
+  //   setInputPage(""); // ✅ 清空输入框
+  // };
+
   const handlePageJump = () => {
     const pageNumber = parseInt(inputPage, 10);
     if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
-      setPage(pageNumber);
+      goToPage(pageNumber);
     } else {
       alert(`Please enter a page number between 1 and ${totalPages}!`);
     }
-    setInputPage(""); // ✅ 清空输入框
+    setInputPage("");
   };
 
   const handleKeyPress = (event) => {
@@ -212,6 +233,11 @@ const AdminDashboard = () => {
       alert("Failed to load users");
       console.error(err);
     }
+  };
+
+  const goToPage = (targetPage) => {
+    setPage(targetPage);
+    navigate(`/admin?page=${targetPage}`);
   };
 
   return (
@@ -300,7 +326,9 @@ const AdminDashboard = () => {
                             <button
                               className="view-btn"
                               onClick={() =>
-                                navigate(`/admin/report/${report.id}`)
+                                navigate(`/admin/report/${report.id}`, {
+                                  state: { fromPage: page }, // ✅ 添加当前页码
+                                })
                               }
                             >
                               View/Edit
@@ -354,17 +382,17 @@ const AdminDashboard = () => {
 
           {/* ✅ 分页控件也只在 reports 页面展示 */}
           <div className="pagination">
-            <button onClick={() => setPage(1)} disabled={page === 1}>
+            <button onClick={() => goToPage(1)} disabled={page === 1}>
               First
             </button>
-            <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+            <button onClick={() => goToPage(page - 1)} disabled={page === 1}>
               Previous
             </button>
             <span>
               {page} / {totalPages}
             </span>
             <button
-              onClick={() => setPage(page + 1)}
+              onClick={() => goToPage(page + 1)}
               disabled={page === totalPages}
             >
               Next
@@ -379,7 +407,7 @@ const AdminDashboard = () => {
             />
             <button onClick={handlePageJump}>To</button>
             <button
-              onClick={() => setPage(totalPages)}
+              onClick={() => goToPage(totalPages)}
               disabled={page === totalPages}
             >
               Last

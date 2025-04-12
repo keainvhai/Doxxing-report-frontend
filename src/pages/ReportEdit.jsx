@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchReportById, updateReport, generateReportImage } from "../api";
-import "../styles/ReportEdit.css"; // ✅ 添加新的 CSS
+import { useLocation } from "react-router-dom";
+
+import "../styles/ReportEdit.css";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ReportEdit = () => {
@@ -30,6 +32,9 @@ const ReportEdit = () => {
   const [toastMessage, setToastMessage] = useState(""); // ✅ 动态设置 Toast 消息
   const [generating, setGenerating] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState(null); // ✅ 存储 AI 生成的图片 URL
+
+  const location = useLocation();
+  const fromPage = location.state?.fromPage || 1; // 默认为第一页
 
   // 处理日期格式，确保前端 input[type="date"] 能正确识别
   const formatDate = (dateString) => {
@@ -120,7 +125,7 @@ const ReportEdit = () => {
 
       setTimeout(() => {
         setShowToast(false);
-        navigate("/admin"); // ✅ 3 秒后跳转到 Admin
+        navigate(`/admin?page=${fromPage}`); // ✅ 返回之前所在页
       }, 3000);
     } catch (err) {
       console.error("❌ Error updating report:", err);

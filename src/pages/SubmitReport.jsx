@@ -79,7 +79,7 @@ const SubmitReport = () => {
     const isSelfUrl = form.url.startsWith("https://doxxing-report");
     if (isSelfUrl) {
       setToastMessage(
-        "⚠️ This URL is from our own platform. Thank you, but please report new doxxing incidents."
+        "⚠️ This URL is from our own platform. Thank you, but please report new doxxing incidents from other resources."
       );
       setShowToast(true);
       setTimeout(() => setShowToast(false), 4000);
