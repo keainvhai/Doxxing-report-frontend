@@ -46,7 +46,7 @@ const ReportEdit = () => {
       try {
         const { data } = await fetchReportById(id);
         // ✅ 打印后端返回的数据！
-        console.log("🔥 API Response data:", data);
+        // console.log("🔥 API Response data:", data);
         setReport(data);
         setForm({
           url: data.url || "",
@@ -82,10 +82,12 @@ const ReportEdit = () => {
         // ✅ 存储 OpenAI 生成的图片 URL
         console.log("✅ AI Generated Image URL:", data.imageUrl);
         setGeneratedImageUrl(data.imageUrl);
-        setForm((prev) => ({
-          ...prev,
-          images: [...prev.images, data.imageUrl],
-        }));
+        if (!form.images.includes(data.imageUrl)) {
+          setForm((prev) => ({
+            ...prev,
+            images: [...prev.images, data.imageUrl],
+          }));
+        }
       }
     } catch (error) {
       console.error("❌ Error generating image:", error);
@@ -99,10 +101,9 @@ const ReportEdit = () => {
   };
 
   const handleUpdate = async () => {
-    if (isSubmitting) return; // 🛑 避免重复点击
-    setIsSubmitting(true); // ✅ 设置正在提交
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-    // console.log("🧨 Deleted Images:", deletedImages);
     const formData = new FormData();
 
     Object.keys(form).forEach((key) => {
@@ -111,12 +112,19 @@ const ReportEdit = () => {
 
     formData.append("deletedImages", JSON.stringify(deletedImages));
 
-    // 添加新图片
-    newImages.forEach((image) => {
-      formData.append("images", image);
+    // ✅ 先添加 Cloudinary 链接（从 form.images 里来）
+    form.images.forEach((img) => {
+      if (typeof img === "string") {
+        formData.append("images", img);
+      }
     });
 
-    // console.log("📌 Submitting update request:", formData);
+    // ✅ 再添加用户新上传的文件（File 对象）
+    newImages.forEach((file) => {
+      if (typeof file !== "string") {
+        formData.append("images", file);
+      }
+    });
 
     try {
       await updateReport(id, formData);
@@ -125,17 +133,15 @@ const ReportEdit = () => {
 
       setTimeout(() => {
         setShowToast(false);
-        navigate(`/admin?page=${fromPage}`); // ✅ 返回之前所在页
+        navigate(`/admin?page=${fromPage}`);
       }, 3000);
     } catch (err) {
       console.error("❌ Error updating report:", err);
-      // ✅ 显示错误消息
       setToastMessage("❌ Failed to update report.");
       setShowToast(true);
-
       setTimeout(() => setShowToast(false), 3000);
     } finally {
-      setIsSubmitting(false); // ✅ 提交完毕后解除锁定
+      setIsSubmitting(false);
     }
   };
 
