@@ -59,6 +59,13 @@
   flex-direction: column;
 }
 
+.profile-content .report-list .report-card,
+.profile-content .report-grid .report-card {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
 .report-list {
   margin: 0;
   border: none;
@@ -95,6 +102,33 @@
   border: 1px solid #ff9999;
   border-radius: 4px;
   text-align: center;
+}
+
+.comment-history {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #ddd;
+}
+
+.comment-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.comment-content {
+  font-size: 14px;
+  margin: 0;
+}
+
+.comment-link {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.comment-link:hover {
+  color: #0056b3;
 }
 
 @media (max-width: 700px) {

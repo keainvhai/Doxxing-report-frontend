@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchUserProfile, updateUsername } from "../api";
+import { fetchUserProfile, updateUsername, fetchUserComments } from "../api";
 import { useNavigate } from "react-router-dom";
 import ReportList from "../components/ReportList";
 import "../styles/UserProfile.css";
@@ -8,6 +8,9 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [editing, setEditing] = useState(false);
+
+  const [comments, setComments] = useState([]);
+
   // ✅ 添加username错误提示状态
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -15,14 +18,21 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetchUserProfile();
+        const profileRes = await fetchUserProfile();
         // console.log("📌 API Response:", response.data);
 
-        if (response.data.success) {
-          setUser(response.data.user);
-          setUsername(response.data.user.username || ""); // 预填充 username
+        if (profileRes.data.success) {
+          setUser(profileRes.data.user);
+          setUsername(profileRes.data.user.username || ""); // 预填充 username
         } else {
           navigate("/login");
+        }
+
+        // 👇 加载评论数据
+        const commentRes = await fetchUserComments();
+        console.log("📌 Comments API Response:", commentRes.data);
+        if (commentRes.data.success) {
+          setComments(commentRes.data.comments);
         }
       } catch (error) {
         console.error("❌ Error fetching user profile:", error);
@@ -102,6 +112,29 @@ const UserProfile = () => {
         </div>
       ) : (
         <p>Loading user info...</p>
+      )}
+
+      <h3 className="comments-title">My Comments</h3>
+      {comments.length > 0 ? (
+        <ul className="comment-history">
+          {comments.map((comment) => (
+            <li key={comment.id} className="comment-item">
+              <p className="comment-content">💬 {comment.content}</p>
+              <small>
+                On Report ID:{" "}
+                <span
+                  className="comment-link"
+                  onClick={() => navigate(`/report/${comment.reportId}`)}
+                >
+                  {comment.reportId}
+                </span>{" "}
+                — {new Date(comment.createdAt).toLocaleString()}
+              </small>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No comments yet.</p>
       )}
     </div>
   );
