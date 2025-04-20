@@ -336,7 +336,14 @@ const AdminDashboard = () => {
                       <tr key={report.id}>
                         <td>{report.id}</td>
                         <td>{report.title}</td>
-                        <td>{report.author || "Anonymous"}</td>
+                        <td>
+                          <span
+                            className="username-link"
+                            onClick={() => navigate(`/user/${report.userId}`)}
+                          >
+                            {report.author || "Anonymous"}
+                          </span>
+                        </td>
                         <td>
                           {new Date(report.date_published).toLocaleDateString()}
                         </td>

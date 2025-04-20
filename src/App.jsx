@@ -20,6 +20,7 @@ import AboutUs from "./pages/AboutUs";
 import Footer from "./components/Footer";
 import Data from "./pages/Data";
 import ResetPassword from "./pages/ResetPassword";
+import PublicUserProfile from "./pages/PublicUserProfile";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
               />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/data" element={<Data />} />
+              <Route path="/user/:id" element={<PublicUserProfile />} />
             </Routes>
           </div>
           <Footer />

@@ -41,8 +41,13 @@ const SearchComponent = ({
   const sourceRef = useRef(null);
   const authorRef = useRef(null);
 
-  const totalCount = sources.reduce((acc, src) => acc + (src.count || 0), 0);
-  const sourcesFiltered = sources.filter((src) => src.domain !== "All Sources");
+  const totalCount = (sources || []).reduce(
+    (acc, src) => acc + (src.count || 0),
+    0
+  );
+  const sourcesFiltered = (sources || []).filter(
+    (src) => src.domain !== "All Sources"
+  );
 
   useEffect(() => {
     if (selectedSource) {

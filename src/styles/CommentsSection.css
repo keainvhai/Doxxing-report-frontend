@@ -29,7 +29,8 @@
 /* ===== 一级评论 + 子评论通用 ===== */
 .comment-item {
   margin-bottom: 1rem;
-  padding: 1rem;
+  /* border: 2px dashed red; */
+  padding-left: 1rem !important;
   background-color: #f9f9f9;
   border-radius: 6px;
 }

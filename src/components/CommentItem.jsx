@@ -1,10 +1,12 @@
 import React from "react";
 import ReplyForm from "./ReplyForm";
+import { useNavigate } from "react-router-dom";
 import "../styles/CommentsSection.css";
 
 const renderFlatReplies = (replies = [], reportId, fetchComments) => {
   // 展平所有子评论（递归）
   const flat = [];
+  const navigate = useNavigate();
 
   const dfs = (node) => {
     flat.push(node);
@@ -21,12 +23,22 @@ const renderFlatReplies = (replies = [], reportId, fetchComments) => {
         <div key={reply.id} className="reply-flat">
           <p className="comment-content">
             {reply.parent?.user?.username && (
-              <span className="mention">@{reply.parent.user.username} </span>
+              <span
+                className="mention username-link"
+                onClick={() => navigate(`/user/${reply.parent.user.id}`)}
+              >
+                @{reply.parent.user.username}{" "}
+              </span>
             )}
             {reply.content}
           </p>
           <div className="comment-meta">
-            <span>{reply.user?.username ?? "Anonymous"}</span>
+            <span
+              className="username-link"
+              onClick={() => navigate(`/user/${reply.user?.id}`)}
+            >
+              {reply.user?.username ?? "Anonymous"}
+            </span>
             <span>{new Date(reply.createdAt).toLocaleString()}</span>
           </div>
           <ReplyForm
@@ -41,11 +53,17 @@ const renderFlatReplies = (replies = [], reportId, fetchComments) => {
 };
 
 const CommentItem = ({ comment, reportId, fetchComments }) => {
+  const navigate = useNavigate();
   return (
     <li className="comment-item">
       <p className="comment-content">{comment.content}</p>
       <div className="comment-meta">
-        <span>{comment.user?.username ?? "Anonymous"}</span>
+        <span
+          className="username-link"
+          onClick={() => navigate(`/user/${comment.user.id}`)}
+        >
+          {comment.user?.username ?? "Anonymous"}
+        </span>
         <span>{new Date(comment.createdAt).toLocaleString()}</span>
       </div>
 

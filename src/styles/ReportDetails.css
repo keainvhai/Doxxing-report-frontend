@@ -81,3 +81,12 @@
 .incident-stats-card tr:nth-child(even) {
   background-color: #f2f2f2;
 }
+
+.username-link {
+  /* color: #007bff; */
+  cursor: pointer;
+}
+.username-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}

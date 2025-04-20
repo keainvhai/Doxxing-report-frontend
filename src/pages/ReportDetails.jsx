@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { fetchReportById } from "../api"; // 获取单个 Report
 import "../styles/ReportDetails.css";
 import ToolsTable from "../components/ToolsTable";
@@ -8,6 +9,7 @@ import CommentsSection from "../components/CommentsSection";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const IncidentStatsCard = ({ incident }) => {
+  const navigate = useNavigate();
   return (
     <div className="incident-stats-card">
       <h3>Incident Status</h3>
@@ -39,7 +41,14 @@ const IncidentStatsCard = ({ incident }) => {
             <td>
               <strong>submittor</strong>
             </td>
-            <td>{incident.editors || "Anonymous"}</td>
+            <td>
+              <span
+                className="username-link"
+                onClick={() => navigate(`/user/${report.userId}`)}
+              >
+                {incident.editors || "Anonymous"}
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>

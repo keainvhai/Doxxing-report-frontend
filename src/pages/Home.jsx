@@ -1,4 +1,4 @@
-import Search from "../pages/Search";
+import SearchWithResults from "../components/SearchWithResults";
 import "../styles/Home.css";
 
 const Home = () => {
@@ -10,7 +10,8 @@ const Home = () => {
       </div>
 
       <div className="search-section">
-        <Search hideTitle={true} />
+        {/* ✅ 不改变 URL，不跳转，只渲染数据 */}
+        <SearchWithResults hideTitle={true} syncURL={false} />
       </div>
     </div>
   );

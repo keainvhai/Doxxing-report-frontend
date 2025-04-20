@@ -308,3 +308,11 @@ th {
 .user-action-btn.email-btn {
   background-color: #17a2b8; /* 蓝色 */
 }
+.username-link {
+  /* color: #007bff; */
+  cursor: pointer;
+}
+.username-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
