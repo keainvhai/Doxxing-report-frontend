@@ -10,6 +10,12 @@ import {
   Book,
   History,
 } from "lucide-react"; // 导入图标
+import {
+  FaXTwitter,
+  FaLinkedin,
+  FaEnvelope,
+  FaFacebook,
+} from "react-icons/fa6"; // FontAwesome 6
 import "../styles/ToolsTable.css";
 
 // Modal 必须设定根节点
@@ -72,9 +78,10 @@ const ToolsTable = ({ report, onJumpToComments }) => {
         <button className="tool-button" onClick={onJumpToComments}>
           <MessageSquarePlus size={18} /> New Response
         </button>
-        <button className="tool-button" onClick={() => navigate("/search")}>
+        {/* <button className="tool-button" onClick={() => navigate("/search")}>
           <Search size={18} /> Discover
-        </button>
+        </button> */}
+
         <div
           className="tool-button citation-container"
           onMouseEnter={() => setShowCitations(true)}
@@ -90,6 +97,55 @@ const ToolsTable = ({ report, onJumpToComments }) => {
         <button className="tool-button" onClick={handleViewHistory}>
           <History size={18} /> View History
         </button>
+      </div>
+      <div className="share-icons">
+        <FaXTwitter
+          className="share-icon"
+          title="Share on X"
+          onClick={() =>
+            window.open(
+              `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                window.location.href
+              )}&text=${encodeURIComponent(report.title)}`,
+              "_blank"
+            )
+          }
+        />
+        <FaLinkedin
+          className="share-icon"
+          title="Share on LinkedIn"
+          onClick={() =>
+            window.open(
+              `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                window.location.href
+              )}`,
+              "_blank"
+            )
+          }
+        />
+        <FaEnvelope
+          className="share-icon"
+          title="Share via Email"
+          onClick={() =>
+            window.open(
+              `mailto:?subject=${encodeURIComponent(
+                "Check this Doxxing Incident"
+              )}&body=${encodeURIComponent(window.location.href)}`
+            )
+          }
+        />
+        <FaFacebook
+          className="share-icon"
+          title="Share on Facebook"
+          onClick={() =>
+            window.open(
+              `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                window.location.href
+              )}`,
+              "_blank"
+            )
+          }
+        />
       </div>
       <Modal
         isOpen={isModalOpen}

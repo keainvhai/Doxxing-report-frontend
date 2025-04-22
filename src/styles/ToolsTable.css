@@ -98,3 +98,22 @@
 .custom-modal button:hover {
   background-color: #e0e0e0;
 }
+.share-icons {
+  display: flex;
+  gap: 12px;
+  margin-top: 1rem;
+  /* margin-left: 0.5rem; */
+  font-size: 24px;
+}
+
+.share-icon {
+  cursor: pointer;
+  color: #333;
+  transition: transform 0.2s, color 0.2s;
+  margin-left: 1rem;
+}
+
+.share-icon:hover {
+  transform: scale(1.2);
+  color: #2d7ff9;
+}
