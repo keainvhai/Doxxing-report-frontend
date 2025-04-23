@@ -31,14 +31,60 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
   const getParams = () =>
     syncURL ? new URLSearchParams(location.search) : new URLSearchParams();
 
+  // ✅ 新增：用于标记是否已经恢复完页码（非 URL 模式下）
+  const [hasRestoredPage, setHasRestoredPage] = useState(false);
+
+  // ✅ 1. 页面加载时：从 localStorage 恢复页码（非 URL 模式）
+  useEffect(() => {
+    if (!syncURL) {
+      const saved = localStorage.getItem("returnPage");
+      if (saved) {
+        setPage(parseInt(saved));
+      }
+      setHasRestoredPage(true); // 标记初始化完成
+    }
+  }, []);
+
+  // ✅ 2. 非 URL 模式下，页码变化时：加载对应页数据（仅在初始化完成后）
+  useEffect(() => {
+    if (!syncURL && hasRestoredPage) {
+      getReports();
+    }
+  }, [page, hasRestoredPage]);
+
+  // ✅ 3. 非 URL 模式下，页码变化时：保存当前页到 localStorage
+  useEffect(() => {
+    if (!syncURL) {
+      localStorage.setItem("returnPage", page.toString());
+    }
+  }, [page]);
+
+  // ✅ 4. URL 模式下：解析 search 和 page 参数并加载数据
   useEffect(() => {
     if (syncURL) {
       const params = getParams();
       setSelectedAuthor(params.get("author") || "All Authors");
       setSelectedSource(params.get("source") || "All Sources");
+
+      const pageParam = parseInt(params.get("page"));
+      if (!isNaN(pageParam) && pageParam >= 1) {
+        setPage(pageParam);
+        getReports(pageParam);
+      } else {
+        setPage(1);
+        getReports(1);
+      }
     }
-    getReports();
-  }, [location.search, page]);
+  }, [location.search]);
+
+  // ✅ 5. URL 模式下：page 改变时同步 URL 参数
+  useEffect(() => {
+    if (syncURL) {
+      const params = getParams();
+      params.set("page", page);
+      navigate(`/search?${params.toString()}`, { replace: true });
+    }
+  }, [page]);
 
   useEffect(() => {
     getSources();
@@ -46,7 +92,7 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
     getEntities();
   }, []);
 
-  const getReports = async () => {
+  const getReports = async (customPage = page) => {
     setLoading(true);
     try {
       const params = getParams();
@@ -55,7 +101,7 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
         source: params.get("source") || undefined,
         search: params.get("search") || undefined,
       };
-      const { data } = await fetchApprovedReports(filters, page);
+      const { data } = await fetchApprovedReports(filters, customPage);
       setReports(data.reports);
       setTotalPages(data.totalPages);
     } catch (err) {
@@ -92,6 +138,7 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
       getReports();
     }
   };
+
   const getSources = async () => {
     try {
       const { data } = await fetchSources();
@@ -121,6 +168,7 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
       console.error("❌ Error fetching entities:", err);
     }
   };
+
   const handleEntitySearch = (entityName) => {
     const searchParams = new URLSearchParams(location.search);
     searchParams.set("entity", entityName);
