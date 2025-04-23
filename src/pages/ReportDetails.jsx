@@ -45,7 +45,7 @@ const IncidentStatsCard = ({ incident }) => {
             <td>
               <span
                 className="username-link"
-                onClick={() => navigate(`/user/${report.userId}`)}
+                onClick={() => navigate(`/user/${incident.userId}`)}
               >
                 {incident.editors || "Anonymous"}
               </span>
@@ -109,6 +109,7 @@ const ReportDetails = () => {
           report_count: report.count,
           date: report.incident_date,
           editors: report.author,
+          userId: report.userId,
         }}
       />
       {/* ✅ 报告基本信息 */}

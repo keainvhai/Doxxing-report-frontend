@@ -1,5 +1,5 @@
-import SearchWithResults from "../components/SearchWithResults";
 import "../styles/Home.css";
+import Search from "./Search";
 
 const Home = () => {
   return (
@@ -11,7 +11,7 @@ const Home = () => {
 
       <div className="search-section">
         {/* ✅ 不改变 URL，不跳转，只渲染数据 */}
-        <SearchWithResults hideTitle={true} syncURL={false} />
+        <Search hideTitle={true} />
       </div>
     </div>
   );

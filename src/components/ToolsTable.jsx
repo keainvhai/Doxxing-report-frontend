@@ -123,17 +123,7 @@ const ToolsTable = ({ report, onJumpToComments }) => {
             )
           }
         />
-        <FaEnvelope
-          className="share-icon"
-          title="Share via Email"
-          onClick={() =>
-            window.open(
-              `mailto:?subject=${encodeURIComponent(
-                "Check this Doxxing Incident"
-              )}&body=${encodeURIComponent(window.location.href)}`
-            )
-          }
-        />
+
         <FaFacebook
           className="share-icon"
           title="Share on Facebook"
@@ -143,6 +133,17 @@ const ToolsTable = ({ report, onJumpToComments }) => {
                 window.location.href
               )}`,
               "_blank"
+            )
+          }
+        />
+        <FaEnvelope
+          className="share-icon"
+          title="Share via Email"
+          onClick={() =>
+            window.open(
+              `mailto:?subject=${encodeURIComponent(
+                "Check this Doxxing Incident"
+              )}&body=${encodeURIComponent(window.location.href)}`
             )
           }
         />

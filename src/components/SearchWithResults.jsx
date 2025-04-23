@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import SearchComponent from "./SearchComponent";
 import ReportList from "./ReportList";
 import {
@@ -9,7 +9,7 @@ import {
   fetchEntities,
 } from "../api";
 
-const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
+const SearchWithResults = () => {
   const [reports, setReports] = useState([]);
   const [sources, setSources] = useState([]);
   const [authors, setAuthors] = useState([]);
@@ -25,65 +25,25 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
   const location = useLocation();
-  const navigate = useNavigate();
 
-  // 如果需要同步 URL，再读取参数
-  const getParams = () =>
-    syncURL ? new URLSearchParams(location.search) : new URLSearchParams();
-
-  // ✅ 新增：用于标记是否已经恢复完页码（非 URL 模式下）
   const [hasRestoredPage, setHasRestoredPage] = useState(false);
 
-  // ✅ 1. 页面加载时：从 localStorage 恢复页码（非 URL 模式）
   useEffect(() => {
-    if (!syncURL) {
-      const saved = localStorage.getItem("returnPage");
-      if (saved) {
-        setPage(parseInt(saved));
-      }
-      setHasRestoredPage(true); // 标记初始化完成
+    const saved = localStorage.getItem("returnPage");
+    if (saved) {
+      setPage(parseInt(saved));
     }
+    setHasRestoredPage(true);
   }, []);
 
-  // ✅ 2. 非 URL 模式下，页码变化时：加载对应页数据（仅在初始化完成后）
   useEffect(() => {
-    if (!syncURL && hasRestoredPage) {
+    if (hasRestoredPage) {
       getReports();
     }
   }, [page, hasRestoredPage]);
 
-  // ✅ 3. 非 URL 模式下，页码变化时：保存当前页到 localStorage
   useEffect(() => {
-    if (!syncURL) {
-      localStorage.setItem("returnPage", page.toString());
-    }
-  }, [page]);
-
-  // ✅ 4. URL 模式下：解析 search 和 page 参数并加载数据
-  useEffect(() => {
-    if (syncURL) {
-      const params = getParams();
-      setSelectedAuthor(params.get("author") || "All Authors");
-      setSelectedSource(params.get("source") || "All Sources");
-
-      const pageParam = parseInt(params.get("page"));
-      if (!isNaN(pageParam) && pageParam >= 1) {
-        setPage(pageParam);
-        getReports(pageParam);
-      } else {
-        setPage(1);
-        getReports(1);
-      }
-    }
-  }, [location.search]);
-
-  // ✅ 5. URL 模式下：page 改变时同步 URL 参数
-  useEffect(() => {
-    if (syncURL) {
-      const params = getParams();
-      params.set("page", page);
-      navigate(`/search?${params.toString()}`, { replace: true });
-    }
+    localStorage.setItem("returnPage", page.toString());
   }, [page]);
 
   useEffect(() => {
@@ -92,15 +52,29 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
     getEntities();
   }, []);
 
-  const getReports = async (customPage = page) => {
+  const getReports = async (customPage = page, customFilters = null) => {
     setLoading(true);
     try {
-      const params = getParams();
       const filters = {
-        author: params.get("author") || undefined,
-        source: params.get("source") || undefined,
-        search: params.get("search") || undefined,
+        search: customFilters?.search,
+        id: customFilters?.id,
+        author:
+          (customFilters?.author ?? selectedAuthor) !== "All Authors"
+            ? customFilters?.author ?? selectedAuthor
+            : undefined,
+        source:
+          (customFilters?.source ?? selectedSource) !== "All Sources"
+            ? customFilters?.source ?? selectedSource
+            : undefined,
+        publish_from: customFilters?.publish_from,
+        publish_to: customFilters?.publish_to,
+        incident_from: customFilters?.incident_from,
+        incident_to: customFilters?.incident_to,
+        entity: customFilters?.entity,
       };
+
+      console.log("🟡 getReports with filters:", filters);
+
       const { data } = await fetchApprovedReports(filters, customPage);
       setReports(data.reports);
       setTotalPages(data.totalPages);
@@ -112,31 +86,32 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
   };
 
   const handleSearch = (query, extraFilters = {}) => {
-    const params = new URLSearchParams();
-    if (query) params.set("search", query);
-    if (extraFilters.author && extraFilters.author !== "All Authors")
-      params.set("author", extraFilters.author);
-    if (extraFilters.source && extraFilters.source !== "All Sources")
-      params.set("source", extraFilters.source);
-
-    if (syncURL) {
-      navigate(`/search?${params.toString()}`);
-    } else {
-      getReports();
-    }
-
+    const updatedFilters = {
+      search: query || undefined,
+      author:
+        extraFilters.author !== "All Authors" ? extraFilters.author : undefined,
+      source:
+        extraFilters.source !== "All Sources" ? extraFilters.source : undefined,
+      publish_from: extraFilters.published_from || undefined,
+      publish_to: extraFilters.published_to || undefined,
+      incident_from: extraFilters.incident_from || undefined,
+      incident_to: extraFilters.incident_to || undefined,
+      id: extraFilters.id || undefined,
+      entity: extraFilters.entity || undefined,
+    };
+    setSelectedAuthor(extraFilters.author || "All Authors");
+    setSelectedSource(extraFilters.source || "All Sources");
     setPage(1);
+    localStorage.setItem("returnPage", "1");
+    getReports(1, updatedFilters);
   };
 
   const handleClearFilters = () => {
-    if (syncURL) {
-      navigate(`/search`);
-    } else {
-      setSelectedAuthor("All Authors");
-      setSelectedSource("All Sources");
-      setPage(1);
-      getReports();
-    }
+    setSelectedAuthor("All Authors");
+    setSelectedSource("All Sources");
+    setPage(1);
+    localStorage.setItem("returnPage", "1");
+    getReports(1);
   };
 
   const getSources = async () => {
@@ -170,10 +145,26 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
   };
 
   const handleEntitySearch = (entityName) => {
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set("entity", entityName);
-    navigate(`/search?${searchParams.toString()}`);
+    const updatedFilters = {
+      author: selectedAuthor !== "All Authors" ? selectedAuthor : undefined,
+      source: selectedSource !== "All Sources" ? selectedSource : undefined,
+      entity: entityName,
+    };
     setPage(1);
+    localStorage.setItem("returnPage", "1");
+    getReports(1, updatedFilters);
+  };
+
+  const handleDownloadSearchCSV = () => {
+    const params = new URLSearchParams();
+    params.set("page", page);
+    params.set("limit", 12);
+
+    window.open(
+      `${
+        import.meta.env.VITE_API_URL
+      }/reports/download/search-csv?${params.toString()}`
+    );
   };
 
   return (
@@ -208,7 +199,7 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
         authors={authors}
         selectedAuthor={selectedAuthor}
         setSelectedAuthor={setSelectedAuthor}
-        handleDownloadSearchCSV={() => {}}
+        handleDownloadSearchCSV={handleDownloadSearchCSV}
       />
 
       {loading && <p>Loading...</p>}
