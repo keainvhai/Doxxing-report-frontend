@@ -175,6 +175,35 @@ const SearchWithResults = ({ syncURL = true, hideTitle = false }) => {
         <button onClick={() => setPage(page - 1)} disabled={page === 1}>
           Prev
         </button>
+        <input
+          type="number"
+          min={1}
+          max={totalPages}
+          value={inputPage}
+          onChange={(e) => setInputPage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              const target = parseInt(inputPage);
+              if (!isNaN(target) && target >= 1 && target <= totalPages) {
+                setPage(target);
+                setInputPage("");
+              }
+            }
+          }}
+          placeholder="page"
+          style={{ width: "60px", marginLeft: "8px" }}
+        />
+        <button
+          onClick={() => {
+            const target = parseInt(inputPage);
+            if (!isNaN(target) && target >= 1 && target <= totalPages) {
+              setPage(target);
+              setInputPage("");
+            }
+          }}
+        >
+          Go
+        </button>
         <span>
           {page} / {totalPages}
         </span>

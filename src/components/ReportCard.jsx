@@ -5,11 +5,13 @@ import "../styles/ReportList.css"; // ✅ 引入样式
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const ReportCard = ({ report }) => {
+const ReportCard = ({ report, currentPage }) => {
   const navigate = useNavigate(); // ✅ 处理页面跳转
 
   const handleViewDetails = () => {
-    navigate(`/report/${report.id}`); // ✅ 跳转到 /report/:id
+    navigate(`/report/${report.id}`, {
+      state: { fromPage: currentPage },
+    });
   };
 
   // ✅ 解析 images，避免 JSON.parse(null) 报错

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { fetchReportById } from "../api"; // 获取单个 Report
 import "../styles/ReportDetails.css";
 import ToolsTable from "../components/ToolsTable";
@@ -10,6 +10,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const IncidentStatsCard = ({ incident }) => {
   const navigate = useNavigate();
+
   return (
     <div className="incident-stats-card">
       <h3>Incident Status</h3>
@@ -63,6 +64,14 @@ const ReportDetails = () => {
   const [error, setError] = useState(null);
 
   const commentRef = useRef(null); // 创建 ref
+
+  const location = useLocation();
+  useEffect(() => {
+    const page = location.state?.fromPage;
+    if (page) {
+      localStorage.setItem("returnSearchPage", page);
+    }
+  }, []);
 
   useEffect(() => {
     const getReport = async () => {

@@ -2,7 +2,7 @@ import React from "react";
 import ReportCard from "./ReportCard";
 import "../styles/ReportList.css"; // ✅ 引入样式
 
-const ReportList = ({ reports }) => {
+const ReportList = ({ reports, page }) => {
   // console.log("📌 Reports received by ReportList:", reports);
 
   // 保障 reports 一定是数组
@@ -13,7 +13,7 @@ const ReportList = ({ reports }) => {
       <div className="report-grid">
         {validReports.length > 0 ? (
           validReports.map((report) => (
-            <ReportCard key={report.id} report={report} />
+            <ReportCard key={report.id} report={report} currentPage={page} />
           ))
         ) : (
           <p className="no-results">No reports found.</p>
