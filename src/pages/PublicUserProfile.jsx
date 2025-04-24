@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchUserPublicProfile } from "../api";
 import ReportList from "../components/ReportList";
+import "../styles/PublicUserProfile.css";
 
 const PublicUserProfile = () => {
   const { id } = useParams();
@@ -33,7 +34,7 @@ const PublicUserProfile = () => {
   return (
     <div className="public-user-profile">
       <h2>User: {user.username || "Anonymous"}</h2>
-      <p>Email: {user.email || "N/A"}</p>
+      {/* <p>Email: {user.email || "N/A"}</p> */}
       <h3>Submitted Reports</h3>
       <ReportList reports={reports} />
     </div>

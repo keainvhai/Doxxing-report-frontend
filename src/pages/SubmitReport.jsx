@@ -302,7 +302,9 @@ const SubmitReport = () => {
         {generatedImageUrl && (
           <div className="ai-img-container">
             <p>✅ AI Generated Image:</p>
-
+            <p className="autosave-tip">
+              💡 AI Generated Image will be autosaved automatically.
+            </p>
             <img
               src={generatedImageUrl}
               alt="AI Generated"

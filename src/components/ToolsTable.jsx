@@ -32,6 +32,8 @@ const ToolsTable = ({ report, onJumpToComments }) => {
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const shareURL = `${window.location.origin}/report/${report.id}`;
+
   const generateCitation = () => {
     if (!report) return "";
     const year = new Date(report.date_published).getFullYear();
@@ -105,7 +107,7 @@ const ToolsTable = ({ report, onJumpToComments }) => {
           onClick={() =>
             window.open(
               `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                window.location.href
+                shareURL
               )}&text=${encodeURIComponent(report.title)}`,
               "_blank"
             )
@@ -117,7 +119,7 @@ const ToolsTable = ({ report, onJumpToComments }) => {
           onClick={() =>
             window.open(
               `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-                window.location.href
+                shareURL
               )}`,
               "_blank"
             )
@@ -130,7 +132,7 @@ const ToolsTable = ({ report, onJumpToComments }) => {
           onClick={() =>
             window.open(
               `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                window.location.href
+                shareURL
               )}`,
               "_blank"
             )
@@ -143,7 +145,7 @@ const ToolsTable = ({ report, onJumpToComments }) => {
             window.open(
               `mailto:?subject=${encodeURIComponent(
                 "Check this Doxxing Incident"
-              )}&body=${encodeURIComponent(window.location.href)}`
+              )}&body=${encodeURIComponent(shareURL)}`
             )
           }
         />
