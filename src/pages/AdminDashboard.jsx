@@ -347,12 +347,24 @@ const AdminDashboard = () => {
                         <td>{report.id}</td>
                         <td>{report.title}</td>
                         <td>
-                          <span
+                          {/* <span
                             className="username-link"
                             onClick={() => navigate(`/user/${report.userId}`)}
                           >
                             {report.author || "Anonymous"}
-                          </span>
+                          </span> */}
+                          {report.userId && report.userId > 0 ? (
+                            <span
+                              className="username-link"
+                              onClick={() => navigate(`/user/${report.userId}`)}
+                            >
+                              {report.author || "Anonymous"}
+                            </span>
+                          ) : (
+                            <span className="username-label">
+                              {report.author || "Bot"}
+                            </span>
+                          )}
                         </td>
                         <td>
                           {new Date(report.date_published).toLocaleDateString()}

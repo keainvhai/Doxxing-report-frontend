@@ -43,12 +43,18 @@ const IncidentStatsCard = ({ incident }) => {
               <strong>submittor</strong>
             </td>
             <td>
-              <span
-                className="username-link"
-                onClick={() => navigate(`/user/${incident.userId}`)}
-              >
-                {incident.editors || "Anonymous"}
-              </span>
+              {incident.userId ? (
+                <span
+                  className="username-link"
+                  onClick={() => navigate(`/user/${incident.userId}`)}
+                >
+                  {incident.editors || "Anonymous"}
+                </span>
+              ) : (
+                <span className="username-label">
+                  {incident.editors || "Bot"}
+                </span>
+              )}
             </td>
           </tr>
         </tbody>
