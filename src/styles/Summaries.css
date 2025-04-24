@@ -35,7 +35,29 @@
   color: #1d3557;
 }
 
-/* ✅ 让 Keywords 变成单独的小格子 */
+.digest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.share-icons {
+  /* display: flex; */
+  /* gap: 10px; */
+}
+
+.share-icon {
+  cursor: pointer;
+  color: #555;
+  transition: color 0.2s;
+}
+
+.share-icon:hover {
+  color: #0077b5;
+}
+
+/* 让 Keywords 变成单独的小格子 */
 .keywords-container {
   display: flex;
   flex-wrap: wrap;
