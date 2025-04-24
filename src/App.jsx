@@ -21,6 +21,8 @@ import Footer from "./components/Footer";
 import Data from "./pages/Data";
 import ResetPassword from "./pages/ResetPassword";
 import PublicUserProfile from "./pages/PublicUserProfile";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // 样式很重要，记得一起引入
 
 function App() {
   return (
@@ -55,6 +57,7 @@ function App() {
               <Route path="/data" element={<Data />} />
               <Route path="/user/:id" element={<PublicUserProfile />} />
             </Routes>
+            <ToastContainer position="top-right" autoClose={3000} />
           </div>
           <Footer />
         </div>

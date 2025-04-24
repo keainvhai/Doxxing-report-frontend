@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Bell,
   FilePlus,
@@ -17,12 +18,14 @@ import {
   FaFacebook,
 } from "react-icons/fa6"; // FontAwesome 6
 import "../styles/ToolsTable.css";
+import "react-toastify/dist/ReactToastify.css";
 
 // Modal 必须设定根节点
 Modal.setAppElement("#root");
 
 const ToolsTable = ({ report, onJumpToComments }) => {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [showCitations, setShowCitations] = useState(false);
   const [copySuccess, setCopySuccess] = useState("");
@@ -33,6 +36,51 @@ const ToolsTable = ({ report, onJumpToComments }) => {
   const [loading, setLoading] = useState(false);
 
   const shareURL = `${window.location.origin}/report/${report.id}`;
+
+  const [subscribed, setSubscribed] = useState(false);
+
+  const token = localStorage.getItem("token");
+
+  const checkSubscription = async () => {
+    try {
+      const res = await axios.get(
+        `${API_URL}/subscriptions/${report.id}/check`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setSubscribed(res.data.subscribed);
+    } catch (err) {
+      console.error("❌ Failed to check subscription:", err);
+    }
+  };
+  useEffect(() => {
+    // console.log("📌 useEffect triggered for report.id:", report?.id);
+    checkSubscription();
+  }, [report.id]);
+
+  const handleSubscribe = async () => {
+    try {
+      const res = await axios.post(
+        `${API_URL}/subscriptions/${report.id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.data.message === "Subscribed") {
+        toast.success("Subscribed successfully! You will receive updates.");
+        setSubscribed(true);
+      } else if (res.data.message === "Unsubscribed") {
+        toast.info("Unsubscribed from updates.");
+        setSubscribed(false);
+      }
+    } catch (err) {
+      console.error("❌ Subscription error:", err);
+      toast.error("Subscription failed.");
+    }
+  };
 
   const generateCitation = () => {
     if (!report) return "";
@@ -71,9 +119,11 @@ const ToolsTable = ({ report, onJumpToComments }) => {
     <div className="tools-table">
       <h3>Tools</h3>
       <div className="tools-buttons">
-        <button className="tool-button">
-          <Bell size={18} /> Notify Me of Updates
+        <button className="tool-button" onClick={handleSubscribe}>
+          <Bell size={18} />
+          {subscribed ? "Unsubscribe" : "Notify Me of Updates"}
         </button>
+
         <button className="tool-button" onClick={() => navigate("/submit")}>
           <FilePlus size={18} /> New Report
         </button>

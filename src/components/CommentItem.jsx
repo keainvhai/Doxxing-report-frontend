@@ -3,18 +3,17 @@ import ReplyForm from "./ReplyForm";
 import { useNavigate } from "react-router-dom";
 import "../styles/CommentsSection.css";
 
-const renderFlatReplies = (replies = [], reportId, fetchComments) => {
-  // 展平所有子评论（递归）
-  const flat = [];
+const FlatReplies = ({ replies = [], reportId, fetchComments }) => {
   const navigate = useNavigate();
 
+  // 展平所有子评论（递归）
+  const flat = [];
   const dfs = (node) => {
     flat.push(node);
     if (node.replies?.length > 0) {
       node.replies.forEach(dfs);
     }
   };
-
   replies.forEach(dfs);
 
   return (
@@ -54,6 +53,7 @@ const renderFlatReplies = (replies = [], reportId, fetchComments) => {
 
 const CommentItem = ({ comment, reportId, fetchComments }) => {
   const navigate = useNavigate();
+
   return (
     <li className="comment-item">
       <p className="comment-content">{comment.content}</p>
@@ -73,8 +73,13 @@ const CommentItem = ({ comment, reportId, fetchComments }) => {
         onReplySuccess={fetchComments}
       />
 
-      {comment.replies?.length > 0 &&
-        renderFlatReplies(comment.replies, reportId, fetchComments)}
+      {comment.replies?.length > 0 && (
+        <FlatReplies
+          replies={comment.replies}
+          reportId={reportId}
+          fetchComments={fetchComments}
+        />
+      )}
     </li>
   );
 };
