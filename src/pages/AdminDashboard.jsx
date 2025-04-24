@@ -259,6 +259,16 @@ const AdminDashboard = () => {
       navigate(`/admin?page=${targetPage}`);
     }
   };
+  const openGmailCompose = (email) => {
+    const subject = encodeURIComponent("Regarding your report");
+    const body = encodeURIComponent(
+      `Hello ${email.split("@")[0]},\n\n\n\n\n\n— Doxxing Report Team`
+    );
+    window.open(
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`,
+      "_blank"
+    );
+  };
 
   return (
     <div className="admin-dashboard">
@@ -468,10 +478,13 @@ const AdminDashboard = () => {
                     <td>{user.role}</td>
                     <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                     <td>
-                      <button className="user-action-btn message-btn">
+                      {/* <button className="user-action-btn message-btn">
                         Send message
-                      </button>
-                      <button className="user-action-btn email-btn">
+                      </button> */}
+                      <button
+                        className="user-action-btn email-btn"
+                        onClick={() => openGmailCompose(user.email)}
+                      >
                         Send email
                       </button>
                     </td>
