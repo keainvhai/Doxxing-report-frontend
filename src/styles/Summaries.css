@@ -43,8 +43,9 @@
 }
 
 .share-icons {
-  /* display: flex; */
+  display: flex;
   /* gap: 10px; */
+  font-size: 18px;
 }
 
 .share-icon {
@@ -88,13 +89,17 @@
   }
 
   .digest-card h3 {
-    font-size: 1.2em;
+    font-size: 1em;
   }
 
   .digest-card p {
     font-size: 1em;
   }
-
+  .share-icon {
+    /* font-size: 14px; */
+    gap: 1px;
+    margin-left: 0;
+  }
   .keyword-badge {
     font-size: 0.85em;
     padding: 5px 10px;
