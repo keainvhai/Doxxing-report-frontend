@@ -290,6 +290,17 @@ const AdminDashboard = () => {
         >
           {summaryLoading ? "Generating Summary..." : "Generate Weekly Summary"}
         </button>
+        <button
+          className="action-btn"
+          onClick={() => {
+            window.open(
+              `${import.meta.env.VITE_API_URL}/reports/approved-summary-csv`,
+              "_blank"
+            );
+          }}
+        >
+          Export Approved Report Summary
+        </button>
       </div>
 
       <div className="status-messages">
@@ -334,6 +345,7 @@ const AdminDashboard = () => {
                   <tr>
                     <th>ID</th>
                     <th>Title</th>
+                    <th>URL</th>
                     <th>Author</th>
                     <th>Date Published</th>
                     <th>Status</th>
@@ -346,6 +358,24 @@ const AdminDashboard = () => {
                       <tr key={report.id}>
                         <td>{report.id}</td>
                         <td>{report.title}</td>
+                        <td>
+                          {report.url ? (
+                            <a
+                              href={report.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                color: "#007bff",
+                                wordBreak: "break-all",
+                              }}
+                            >
+                              {report.url}
+                            </a>
+                          ) : (
+                            "N/A"
+                          )}
+                        </td>
+
                         <td>
                           {/* <span
                             className="username-link"

@@ -38,7 +38,9 @@ const FlatReplies = ({ replies = [], reportId, fetchComments }) => {
             >
               {reply.user?.username ?? "Anonymous"}
             </span>
-            <span>{new Date(reply.createdAt).toLocaleString()}</span>
+            <span style={{ marginRight: "1rem" }}>
+              {new Date(reply.createdAt).toLocaleString()}
+            </span>
           </div>
           <ReplyForm
             reportId={reportId}
@@ -64,7 +66,9 @@ const CommentItem = ({ comment, reportId, fetchComments }) => {
         >
           {comment.user?.username ?? "Anonymous"}
         </span>
-        <span>{new Date(comment.createdAt).toLocaleString()}</span>
+        <span style={{ marginRight: "1rem" }}>
+          {new Date(comment.createdAt).toLocaleString()}
+        </span>
       </div>
 
       <ReplyForm

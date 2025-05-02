@@ -92,6 +92,19 @@
   background: #0056b3;
 }
 
+.report-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.report-status {
+  margin-left: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
 .error-message {
   color: red;
   font-size: 14px;

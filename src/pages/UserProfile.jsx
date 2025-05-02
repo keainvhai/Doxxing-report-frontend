@@ -103,6 +103,10 @@ const UserProfile = () => {
                   >
                     Edit
                   </button>
+                  {/* <p className="edit-btn">{report.status}</p> */}
+                  <p className="report-status">
+                    <strong>Status:</strong> {report.status}
+                  </p>
                 </div>
               ))}
             </div>
