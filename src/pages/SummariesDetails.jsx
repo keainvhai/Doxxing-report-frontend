@@ -35,8 +35,13 @@ const SummariesDetails = () => {
 
   return (
     <div className="digest-details-container">
-      <h2>📋 Reports for Week: {new Date(week_start).toLocaleDateString()}</h2>
-      <ReportList reports={reports} /> {/* ✅ 复用 ReportList 组件 */}
+      <h2>
+        {" "}
+        Reports for Week: {new Date(week_start).toLocaleDateString()}
+        {/* <p>{reports.length}</p> */}
+      </h2>
+      <p>Total reports: {reports.length}</p>
+      <ReportList reports={reports} />
     </div>
   );
 };

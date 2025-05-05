@@ -515,7 +515,17 @@ const AdminDashboard = () => {
                 users.map((user) => (
                   <tr key={user.id}>
                     <td>{user.id}</td>
-                    <td>{user.username}</td>
+                    {/* <td>{user.username}</td> */}
+                    <td>
+                      <span
+                        className="username-link"
+                        onClick={() => navigate(`/user/${user.id}`)}
+                        style={{ cursor: "pointer", color: "#007bff" }}
+                      >
+                        {user.username}
+                      </span>
+                    </td>
+
                     <td>{user.email}</td>
                     <td>{user.role}</td>
                     <td>{new Date(user.createdAt).toLocaleDateString()}</td>

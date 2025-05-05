@@ -44,6 +44,17 @@ const Summaries = () => {
         <p>No summaries available.</p>
       ) : (
         summaries.map((summary, index) => {
+          const weekStart = new Date(summary.week_start);
+          const weekEnd = new Date(summary.week_end);
+          const dateRange = `${weekStart.toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+          })} – ${weekEnd.toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}`;
+          const shareText = `Doxxing Summary for ${dateRange}: See what happened this week!`;
           const shareURL = `${window.location.origin}/summaries/${summary.week_start}`;
 
           return (
@@ -71,13 +82,12 @@ const Summaries = () => {
                       window.open(
                         `https://twitter.com/intent/tweet?url=${encodeURIComponent(
                           shareURL
-                        )}&text=${encodeURIComponent(
-                          "Check out this weekly doxxing summary!"
-                        )}`,
+                        )}&text=${encodeURIComponent(shareText)}`,
                         "_blank"
                       )
                     }
                   />
+
                   <FaLinkedin
                     className="share-icon"
                     title="Share on LinkedIn"
@@ -90,6 +100,7 @@ const Summaries = () => {
                       )
                     }
                   />
+
                   <FaFacebook
                     className="share-icon"
                     title="Share on Facebook"
@@ -102,6 +113,7 @@ const Summaries = () => {
                       )
                     }
                   />
+
                   <FaEnvelope
                     className="share-icon"
                     title="Share via Email"
@@ -109,7 +121,9 @@ const Summaries = () => {
                       window.open(
                         `mailto:?subject=${encodeURIComponent(
                           "Weekly Doxxing Summary"
-                        )}&body=${encodeURIComponent(shareURL)}`
+                        )}&body=${encodeURIComponent(
+                          `${shareText}\n\n${shareURL}`
+                        )}`
                       )
                     }
                   />

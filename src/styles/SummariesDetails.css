@@ -13,3 +13,8 @@
   color: #333;
   margin-bottom: 15px;
 }
+
+.digest-details-container p {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
