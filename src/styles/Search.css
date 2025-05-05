@@ -294,7 +294,7 @@
     padding: 10px;
   }
 
-  /* ✅ 小屏幕：搜索框独占一行 */
+  /* ✅ 搜索区域竖排 */
   .search-row {
     flex-direction: column;
     width: 100%;
@@ -305,21 +305,26 @@
     width: 95%;
   }
 
-  /* ✅ 小屏幕：按钮组在一行 */
+  /* ✅ 按钮组变成竖排，所有元素宽度一致 */
   .search-btn-container {
-    display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: stretch;
     gap: 10px;
     width: 100%;
   }
 
   .search-btn,
-  .toggle-advanced-btn {
-    flex: 1;
-    text-align: center;
+  .toggle-advanced-btn,
+  .export-btn,
+  .dropdown-filter {
+    width: 100%;
   }
 
-  /* ✅ 小屏幕：高级搜索选项自动适配 */
+  #sort-by-select {
+    width: 100%;
+  }
+
+  /* ✅ 高级搜索适配小屏 */
   .advanced-search {
     flex-direction: column;
     align-items: center;
@@ -331,7 +336,7 @@
   }
 
   .filters-row {
-    grid-template-columns: 1fr; /* 变成单列 */
+    grid-template-columns: 1fr;
     gap: 8px;
   }
 }

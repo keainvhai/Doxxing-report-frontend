@@ -133,10 +133,15 @@ const ReportDetails = () => {
         <strong>Entity:</strong> {report.entity || "Unknown"}{" "}
         {/* ✅ 显示 Entity */}
       </p>
-      <p>
+      {/* <p>
         <strong>Date Published:</strong>{" "}
         {new Date(report.date_published).toLocaleDateString()}
+      </p> */}
+      <p>
+        <strong>Created Time:</strong>{" "}
+        {new Date(report.createdAt).toLocaleString()}
       </p>
+
       {report.incident_date && (
         <p>
           <strong>Incident Date:</strong>{" "}
