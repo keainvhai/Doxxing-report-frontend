@@ -30,7 +30,7 @@ const IncidentStatsCard = ({ incident }) => {
           </tr>
           <tr>
             <td>
-              <strong>Incident Date</strong>
+              <strong>Date Published</strong>
             </td>
             <td>
               {incident.date
@@ -113,7 +113,7 @@ const ReportDetails = () => {
         incident={{
           id: report.id,
           report_count: report.count,
-          date: report.incident_date,
+          date: report.date_published,
           editors: report.author,
           userId: report.userId,
         }}

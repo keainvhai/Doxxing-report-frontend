@@ -59,8 +59,36 @@ const ToolsTable = ({ report, onJumpToComments }) => {
     checkSubscription();
   }, [report.id]);
 
+  // const handleSubscribe = async () => {
+  //   try {
+  //     const res = await axios.post(
+  //       `${API_URL}/subscriptions/${report.id}`,
+  //       {},
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+
+  //     if (res.data.message === "Subscribed") {
+  //       toast.success("Subscribed successfully! You will receive updates.");
+  //       setSubscribed(true);
+  //     } else if (res.data.message === "Unsubscribed") {
+  //       toast.info("Unsubscribed from updates.");
+  //       setSubscribed(false);
+  //     }
+  //   } catch (err) {
+  //     console.error("❌ Subscription error:", err);
+  //     toast.error("Subscription failed.");
+  //   }
+  // };
+
   const handleSubscribe = async () => {
     try {
+      if (!token) {
+        toast.warn(" Please log in to subscribe to updates.");
+        return;
+      }
+
       const res = await axios.post(
         `${API_URL}/subscriptions/${report.id}`,
         {},
@@ -77,8 +105,8 @@ const ToolsTable = ({ report, onJumpToComments }) => {
         setSubscribed(false);
       }
     } catch (err) {
-      console.error("❌ Subscription error:", err);
-      toast.error("Subscription failed.");
+      console.error("Subscription error:", err);
+      toast.error("Subscription failed. Please try again later.");
     }
   };
 
