@@ -26,6 +26,8 @@ const SearchComponent = ({
     incident_to: "",
     author: undefined,
     source: undefined,
+    sortField: "",
+    sortOrder: "",
   });
 
   const [showSourceFilter, setShowSourceFilter] = useState(false);
@@ -130,15 +132,75 @@ const SearchComponent = ({
               className="toggle-advanced-btn"
               onClick={() => setShowAdvancedSearch((prev) => !prev)}
             >
-              {showAdvancedSearch ? "Hide" : "More filters"}
+              {showAdvancedSearch ? "Hide" : "More"}
             </button>
           )}
-
           <button className="search-btn" onClick={() => handleSearch()}>
             Search
           </button>
+          <div className="dropdown-filter">
+            {/* <label htmlFor="sort-by-select"> Sort By</label> */}
+            {/* <select
+              id="sort-by-select"
+              value={`${filters.sortField}_${filters.sortOrder}`}
+              onChange={(e) => {
+                const [field, order] = e.target.value.split("_");
+                const updatedFilters = {
+                  ...filters,
+                  sortField: field,
+                  sortOrder: order,
+                };
+                setFilters(updatedFilters);
+                handleSearch(updatedFilters);
+              }}
+            >
+              <option value="_">Default</option>
+              <option value="createdAt_asc">Created Time ↑</option>
+              <option value="createdAt_desc">Created Time ↓</option>
+              <option value="date_published_asc">Published Date ↑</option>
+              <option value="date_published_desc">Published Date ↓</option>
+            </select> */}
+            <select
+              id="sort-by-select"
+              value={`${filters.sortField}_${filters.sortOrder}`}
+              // onChange={(e) => {
+              //   // const [field, order] = e.target.value.split("_");
+              //   const value = e.target.value;
+              //   const lastUnderscoreIndex = value.lastIndexOf("_");
+              //   const field = value.slice(0, lastUnderscoreIndex);
+              //   const order = value.slice(lastUnderscoreIndex + 1);
 
-          <div className="flex justify-end mt-4">
+              //   const updatedFilters = {
+              //     ...filters,
+              //     sortField: field,
+              //     sortOrder: order,
+              //   };
+              //   setFilters(updatedFilters);
+              //   handleSearch(updatedFilters);
+              // }}
+              onChange={(e) => {
+                const value = e.target.value;
+                const lastUnderscoreIndex = value.lastIndexOf("_");
+                const field = value.slice(0, lastUnderscoreIndex);
+                const order = value.slice(lastUnderscoreIndex + 1);
+                const updatedFilters = {
+                  ...filters,
+                  sortField: field,
+                  sortOrder: order,
+                };
+                setFilters(updatedFilters);
+                handleSearch(updatedFilters);
+              }}
+            >
+              {/* ✅ 这个必须指定明确值，否则默认是空字符串会出错 */}
+              <option value="createdAt_desc">Default</option>
+              <option value="createdAt_asc">Created Time ↑</option>
+              <option value="createdAt_desc">Created Time ↓</option>
+              <option value="date_published_asc">Published Date ↑</option>
+              <option value="date_published_desc">Published Date ↓</option>
+            </select>
+          </div>
+          <div className="flex justify-end">
             <button onClick={handleDownloadSearchCSV} className="export-btn">
               <FaFileCsv style={{ marginRight: "6px" }} />
               Export

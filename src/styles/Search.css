@@ -103,6 +103,33 @@
   width: 95%;
 }
 
+/* Sort dropdown 样式 */
+.dropdown-filter label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #333;
+  font-size: 14px;
+}
+
+#sort-by-select {
+  width: auto;
+
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border 0.2s ease;
+}
+
+#sort-by-select:hover,
+#sort-by-select:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
 .filters-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 3 列等宽 */
