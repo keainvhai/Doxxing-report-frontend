@@ -40,7 +40,7 @@ const IncidentStatsCard = ({ incident }) => {
           </tr>
           <tr>
             <td>
-              <strong>submittor</strong>
+              <strong>Submitter</strong>
             </td>
             <td>
               {incident.userId ? (

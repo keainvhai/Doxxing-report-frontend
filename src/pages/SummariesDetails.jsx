@@ -3,12 +3,25 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import ReportList from "../components/ReportList";
 import "../styles/SummariesDetails.css";
+import { Helmet } from "react-helmet";
 
 const SummariesDetails = () => {
   const { week_start } = useParams();
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const formattedDate = new Date(week_start).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const summaryTitle = `Weekly Doxxing Summary - Week of ${formattedDate}`;
+  const summaryDescription = `A total of ${reports.length} doxxing reports were submitted this week. Explore the incidents and keywords involved.`;
+  const summaryUrl = `${
+    import.meta.env.VITE_CLIENT_URL
+  }/summaries/${week_start}`;
+  const summaryImage = `${import.meta.env.VITE_CLIENT_URL}/preview.png`; // 你可以自定义这张图
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -34,15 +47,25 @@ const SummariesDetails = () => {
   if (error) return <p className="error">{error}</p>;
 
   return (
-    <div className="digest-details-container">
-      <h2>
-        {" "}
-        Reports for Week: {new Date(week_start).toLocaleDateString()}
-        {/* <p>{reports.length}</p> */}
-      </h2>
-      <p>Total reports: {reports.length}</p>
-      <ReportList reports={reports} />
-    </div>
+    <>
+      <Helmet>
+        <title>{summaryTitle}</title>
+        <meta property="og:title" content={summaryTitle} />
+        <meta property="og:description" content={summaryDescription} />
+        <meta property="og:url" content={summaryUrl} />
+        <meta property="og:image" content={summaryImage} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
+      <div className="digest-details-container">
+        <h2>
+          {" "}
+          Reports for Week: {new Date(week_start).toLocaleDateString()}
+          {/* <p>{reports.length}</p> */}
+        </h2>
+        <p>Total reports: {reports.length}</p>
+        <ReportList reports={reports} />
+      </div>{" "}
+    </>
   );
 };
 
