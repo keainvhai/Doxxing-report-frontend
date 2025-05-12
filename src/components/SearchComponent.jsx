@@ -132,7 +132,7 @@ const SearchComponent = ({
               className="toggle-advanced-btn"
               onClick={() => setShowAdvancedSearch((prev) => !prev)}
             >
-              {showAdvancedSearch ? "Hide" : "More"}
+              {showAdvancedSearch ? "Hide" : "Advanced Search"}
             </button>
           )}
           <button className="search-btn" onClick={() => handleSearch()}>

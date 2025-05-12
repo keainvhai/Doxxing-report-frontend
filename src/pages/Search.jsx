@@ -22,6 +22,7 @@ const Search = ({ hideTitle }) => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [inputPage, setInputPage] = useState("");
+  const [limit, setLimit] = useState(12); // 默认一页显示 12 条
 
   const [entities, setEntities] = useState([]);
 
@@ -44,7 +45,7 @@ const Search = ({ hideTitle }) => {
   // ✅ 监听 `filters, page, selectedSource`，确保搜索 & 分页正常
   useEffect(() => {
     getApprovedReports();
-  }, [filters, page, selectedSource]);
+  }, [filters, page, selectedSource, limit]);
 
   useEffect(() => {
     getSources();
@@ -63,7 +64,12 @@ const Search = ({ hideTitle }) => {
         source: selectedSource === "All Sources" ? undefined : selectedSource, // ✅ 修复 source 为空时的问题
       };
 
-      const { data } = await fetchApprovedReports(queryFilters, page);
+      // const { data } = await fetchApprovedReports(queryFilters, page);
+      const { data } = await fetchApprovedReports(
+        { ...queryFilters, limit },
+        page
+      );
+
       setReports(data.reports);
       setTotalPages(data.totalPages);
     } catch (err) {
@@ -164,7 +170,8 @@ const Search = ({ hideTitle }) => {
       ...filters,
       source: selectedSource === "All Sources" ? "" : selectedSource,
       page,
-      limit: 12, // 传递分页参数（和 Search.jsx 里的一致）
+      // limit: 12, // 传递分页参数（和 Search.jsx 里的一致）
+      limit: limit === 9999 ? "all" : limit, // ✅ 动态传递
     }).toString();
 
     window.open(
@@ -218,6 +225,9 @@ const Search = ({ hideTitle }) => {
       {!loading && reports.length > 0 && <ReportList reports={reports} />}
 
       <div className="pagination">
+        <button onClick={() => setPage(1)} disabled={page === 1}>
+          First
+        </button>
         <button onClick={() => setPage(page - 1)} disabled={page === 1}>
           Previous
         </button>
@@ -229,7 +239,7 @@ const Search = ({ hideTitle }) => {
           disabled={page === totalPages}
         >
           Next
-        </button>
+        </button>{" "}
         <input
           type="number"
           value={inputPage}
@@ -239,6 +249,33 @@ const Search = ({ hideTitle }) => {
           className="page-input"
         />
         <button onClick={handlePageJump}>To</button>
+        <button
+          onClick={() => setPage(totalPages)}
+          disabled={page === totalPages}
+        >
+          Last
+        </button>
+        <div className="page-size-selector">
+          <label htmlFor="limit-select">Per Page:</label>
+          <select
+            id="limit-select"
+            value={limit}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === "all") {
+                setLimit(9999); // 后端需支持大数代表 all
+              } else {
+                setLimit(parseInt(value, 10));
+              }
+              setPage(1); // 切换每页数量时重置页码
+            }}
+          >
+            <option value={12}>12</option>
+            <option value={24}>24</option>
+            <option value={48}>48</option>
+            <option value="all">All</option>
+          </select>
+        </div>
       </div>
     </div>
   );
