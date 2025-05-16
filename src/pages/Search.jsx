@@ -34,6 +34,7 @@ const Search = ({ hideTitle }) => {
     try {
       const { data } = await fetchEntities();
       const topEntities = data
+        .filter((e) => e.name.toLowerCase() !== "news") // 过滤掉名为 "news" 的 entity
         .sort((a, b) => b.count - a.count) // ✅ 按 incident 数量降序排序
         .slice(0, 6); // ✅ 取前 6 个
       setEntities(topEntities);

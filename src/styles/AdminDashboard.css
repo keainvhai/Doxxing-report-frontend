@@ -26,6 +26,7 @@ h2 {
   cursor: pointer;
   color: white;
   transition: background-color 0.3s, opacity 0.3s;
+  background-color: #6c757d;
 }
 
 /* ✅ Crawl 按钮 */

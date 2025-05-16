@@ -194,10 +194,10 @@ const SearchComponent = ({
             >
               {/* ✅ 这个必须指定明确值，否则默认是空字符串会出错 */}
               <option value="createdAt_desc">Default</option>
+              <option value="date_published_desc">Published Date ↓</option>
+              <option value="date_published_asc">Published Date ↑</option>
               <option value="createdAt_asc">Created Time ↑</option>
               <option value="createdAt_desc">Created Time ↓</option>
-              <option value="date_published_asc">Published Date ↑</option>
-              <option value="date_published_desc">Published Date ↓</option>
             </select>
           </div>
           <div className="flex justify-end">

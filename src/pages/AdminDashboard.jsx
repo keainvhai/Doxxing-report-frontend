@@ -26,6 +26,9 @@ const AdminDashboard = () => {
   const [searchParams] = useSearchParams();
   const initialPage = parseInt(searchParams.get("page")) || 1;
   const [page, setPage] = useState(initialPage);
+  const [limit, setLimit] = useState(12); // 默认每页 12 条
+  const [userLimit, setUserLimit] = useState(10);
+
   const [totalPages, setTotalPages] = useState(1);
   const [inputPage, setInputPage] = useState("");
   // User page
@@ -46,24 +49,6 @@ const AdminDashboard = () => {
 
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // 🚨 等待 authState 加载完成
-  //   if (authState.role === undefined) return;
-
-  //   const urlPage = parseInt(searchParams.get("page"));
-  //   const resolvedPage = !isNaN(urlPage) ? urlPage : 1;
-
-  //   if (authState.role !== "admin") {
-  //     navigate("/");
-  //     return;
-  //   }
-
-  //   if (resolvedPage !== page) {
-  //     setPage(resolvedPage); // ✅ 触发更新页面后，第二个 useEffect 会执行
-  //     return;
-  //   }
-  //   getReportsAndSources();
-  // }, [authState, filters, navigate, page, searchParams]); // ✅ 监听 `page` 变化
   useEffect(() => {
     const urlPage = parseInt(searchParams.get("page"));
     const resolvedPage = !isNaN(urlPage) ? urlPage : 1;
@@ -76,7 +61,7 @@ const AdminDashboard = () => {
     if (!authState.status || authState.role !== "admin") return;
 
     getReportsAndSources();
-  }, [authState, page, filters]);
+  }, [authState, page, filters, limit]);
   useEffect(() => {
     if (authState.status && authState.role !== "admin") {
       navigate("/");
@@ -88,7 +73,9 @@ const AdminDashboard = () => {
     setError(null);
     try {
       const [reportsRes, sourcesRes] = await Promise.all([
-        fetchReports(filters, page), // ✅ 传递 `filters` 和 `page`
+        // fetchReports(filters, page), // ✅ 传递 `filters` 和 `page`
+        fetchReports(filters, page, limit),
+
         fetchSources(),
       ]);
       setReports(reportsRes.data.reports);
@@ -235,10 +222,10 @@ const AdminDashboard = () => {
     }
   };
 
-  const fetchUsers = async (page = 1) => {
+  const fetchUsers = async (page = 1, limit = 10) => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/users/all?page=${page}`,
+        `${import.meta.env.VITE_API_URL}/users/all?page=${page}&limit=${limit}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -320,7 +307,7 @@ const AdminDashboard = () => {
           onClick={async () => {
             setActiveTab("users");
             setUserPage(1); // 重置页码
-            fetchUsers(1); // 加载第一页
+            fetchUsers(1, userLimit); // 加载第一页
           }}
         >
           👥 Manage Users
@@ -491,6 +478,27 @@ const AdminDashboard = () => {
             >
               Last
             </button>
+            <div className="page-size-selector">
+              <label htmlFor="limit-select">Per Page:</label>
+              <select
+                id="limit-select"
+                value={limit}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "all") {
+                    setLimit(9999); // 表示全部
+                  } else {
+                    setLimit(parseInt(value, 10));
+                  }
+                  goToPage(1); // 切换每页数量时重置页码
+                }}
+              >
+                <option value={12}>12</option>
+                <option value={24}>24</option>
+                <option value={48}>48</option>
+                <option value="all">All</option>
+              </select>
+            </div>
           </div>
         </>
       )}
@@ -554,7 +562,7 @@ const AdminDashboard = () => {
               onClick={() => {
                 if (userPage !== 1) {
                   setUserPage(1);
-                  fetchUsers(1);
+                  fetchUsers(1, userLimit);
                 }
               }}
               disabled={userPage === 1}
@@ -566,7 +574,7 @@ const AdminDashboard = () => {
                 const newPage = userPage - 1;
                 if (newPage >= 1) {
                   setUserPage(newPage);
-                  fetchUsers(newPage);
+                  fetchUsers(newPage, userLimit);
                 }
               }}
               disabled={userPage === 1}
@@ -581,7 +589,7 @@ const AdminDashboard = () => {
                 const newPage = userPage + 1;
                 if (newPage <= userTotalPages) {
                   setUserPage(newPage);
-                  fetchUsers(newPage);
+                  fetchUsers(newPage, userLimit);
                 }
               }}
               disabled={userPage === userTotalPages}
@@ -601,7 +609,7 @@ const AdminDashboard = () => {
                     pageNum <= userTotalPages
                   ) {
                     setUserPage(pageNum);
-                    fetchUsers(pageNum);
+                    fetchUsers(pageNum, userLimit);
                   }
                   setUserInputPage("");
                 }
@@ -618,7 +626,7 @@ const AdminDashboard = () => {
                   pageNum <= userTotalPages
                 ) {
                   setUserPage(pageNum);
-                  fetchUsers(pageNum);
+                  fetchUsers(pageNum, userLimit);
                 }
                 setUserInputPage("");
               }}
@@ -629,13 +637,31 @@ const AdminDashboard = () => {
               onClick={() => {
                 if (userPage !== userTotalPages) {
                   setUserPage(userTotalPages);
-                  fetchUsers(userTotalPages);
+                  fetchUsers(userTotalPages, userLimit);
                 }
               }}
               disabled={userPage === userTotalPages}
             >
               Last
             </button>
+            <div className="page-size-selector">
+              <label htmlFor="user-limit-select">Per Page:</label>
+              <select
+                id="user-limit-select"
+                value={userLimit}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const newLimit = val === "all" ? 9999 : parseInt(val, 10);
+                  setUserLimit(newLimit);
+                  setUserPage(1);
+                  fetchUsers(1, newLimit);
+                }}
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value="all">All</option>
+              </select>
+            </div>
           </div>
         </div>
       )}

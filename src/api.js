@@ -14,8 +14,18 @@ export const submitReport = (formData) =>
 
 // Get all reports
 // export const fetchReports = () => API.get("/reports");
-export const fetchReports = async (filters = {}, page = 1) => {
-  return API.get("/reports", { params: { ...filters, page } });
+// export const fetchReports = async (filters = {}, page = 1) => {
+//   return API.get("/reports", { params: { ...filters, page } });
+// };
+
+export const fetchReports = async (filters = {}, page = 1, limit = 12) => {
+  const params = { ...filters, page };
+
+  if (limit !== undefined) {
+    params.limit = limit; // ✅ 支持 "all" 或具体数值
+  }
+
+  return API.get("/reports", { params });
 };
 
 // admin Get reports by id
