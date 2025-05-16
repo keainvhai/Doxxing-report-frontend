@@ -35,7 +35,8 @@ const ToolsTable = ({ report, onJumpToComments }) => {
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const shareURL = `${window.location.origin}/report/${report.id}`;
+  // const shareURL = `${window.location.origin}/report/${report.id}`;
+  const shareURL = `${window.location.origin}/share/${report.id}`;
 
   const [subscribed, setSubscribed] = useState(false);
 
@@ -55,6 +56,7 @@ const ToolsTable = ({ report, onJumpToComments }) => {
     }
   };
   useEffect(() => {
+    if (!token) return;
     // console.log("📌 useEffect triggered for report.id:", report?.id);
     checkSubscription();
   }, [report.id]);
@@ -223,20 +225,14 @@ const ToolsTable = ({ report, onJumpToComments }) => {
         <FaEnvelope
           className="share-icon"
           title="Share via Email"
-          onClick={
-            () =>
-              window.open(
-                `mailto:?subject=${encodeURIComponent(
-                  "Check this Doxxing Incident"
-                )}&body=${encodeURIComponent(
-                  `Check out this report: ${shareURL}`
-                )}
-`
-              )
-
-            // mailto:?subject=${encodeURIComponent(
-            //     "Check this Doxxing Incident"
-            //   )}&body=${encodeURIComponent(shareURL)}
+          onClick={() =>
+            window.open(
+              `mailto:?subject=${encodeURIComponent(
+                report.title
+              )}&body=${encodeURIComponent(
+                `Check out this report: ${window.location.origin}/share/${report.id}`
+              )}`
+            )
           }
         />
       </div>

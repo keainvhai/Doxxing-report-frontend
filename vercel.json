@@ -25,6 +25,10 @@
     {
       "source": "/(.*)",
       "destination": "/index.html"
+    },
+    {
+      "source": "/share/:id",
+      "destination": "/api/share/:id"
     }
   ]
 }
