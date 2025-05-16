@@ -55,7 +55,6 @@ const ToolsTable = ({ report, onJumpToComments }) => {
     }
   };
   useEffect(() => {
-    if (!token) return;
     // console.log("📌 useEffect triggered for report.id:", report?.id);
     checkSubscription();
   }, [report.id]);
