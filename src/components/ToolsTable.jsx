@@ -55,6 +55,7 @@ const ToolsTable = ({ report, onJumpToComments }) => {
     }
   };
   useEffect(() => {
+    if (!token) return;
     // console.log("📌 useEffect triggered for report.id:", report?.id);
     checkSubscription();
   }, [report.id]);
@@ -228,7 +229,7 @@ const ToolsTable = ({ report, onJumpToComments }) => {
               `mailto:?subject=${encodeURIComponent(
                 report.title
               )}&body=${encodeURIComponent(
-                `Check out this report: ${window.location.origin}/share/${report.id}`
+                `Check out this report: ${window.location.origin}/report/${report.id}`
               )}`
             )
           }
