@@ -131,6 +131,10 @@ const ToolsTable = ({ report, onJumpToComments }) => {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/reports/${report.id}/history`
       );
+      console.log("📜 Loaded history data:", res.data);
+      console.log("🧪 Trying to load history for report id:", report.id);
+      console.log("🧾 Full report object:", report);
+
       setHistoryData(res.data);
     } catch (err) {
       console.error("❌ Failed to fetch history:", err);
@@ -247,9 +251,16 @@ const ToolsTable = ({ report, onJumpToComments }) => {
           <ul>
             {historyData.map((entry, idx) => (
               <li key={idx} style={{ marginBottom: "10px" }}>
-                👤 {entry.author || entry.user?.username || "Anonymous"}{" "}
-                {/* <br /> */}
-                🕒{new Date(entry.submittedAt).toLocaleString()}
+                {/* 👤 {entry.author || entry.user?.username || "Anonymous"}{" "}
+                🕒{new Date(entry.submittedAt).toLocaleString()} */}
+                {entry.author === "Bot" ? (
+                  <>
+                    🤖 <strong>Bot</strong>
+                  </>
+                ) : (
+                  <>👤 {entry.author || entry.user?.username || "Anonymous"}</>
+                )}{" "}
+                🕒 {new Date(entry.submittedAt).toLocaleString()}
               </li>
             ))}
           </ul>
