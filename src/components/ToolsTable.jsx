@@ -223,12 +223,20 @@ const ToolsTable = ({ report, onJumpToComments }) => {
         <FaEnvelope
           className="share-icon"
           title="Share via Email"
-          onClick={() =>
-            window.open(
-              `mailto:?subject=${encodeURIComponent(
-                "Check this Doxxing Incident"
-              )}&body=${encodeURIComponent(shareURL)}`
-            )
+          onClick={
+            () =>
+              window.open(
+                `mailto:?subject=${encodeURIComponent(
+                  "Check this Doxxing Incident"
+                )}&body=${encodeURIComponent(
+                  `Check out this report: ${shareURL}`
+                )}
+`
+              )
+
+            // mailto:?subject=${encodeURIComponent(
+            //     "Check this Doxxing Incident"
+            //   )}&body=${encodeURIComponent(shareURL)}
           }
         />
       </div>
