@@ -35,8 +35,7 @@ const ToolsTable = ({ report, onJumpToComments }) => {
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // const shareURL = `${window.location.origin}/report/${report.id}`;
-  const shareURL = `${window.location.origin}/share/${report.id}`;
+  const shareURL = `${window.location.origin}/report/${report.id}`;
 
   const [subscribed, setSubscribed] = useState(false);
 

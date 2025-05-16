@@ -5,7 +5,6 @@ import { fetchReportById } from "../api"; // 获取单个 Report
 import "../styles/ReportDetails.css";
 import ToolsTable from "../components/ToolsTable";
 import CommentsSection from "../components/CommentsSection";
-import { Helmet } from "react-helmet";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -100,70 +99,13 @@ const ReportDetails = () => {
   if (error) return <p className="error">{error}</p>;
   if (!report) return <p>No report found.</p>;
 
-  // ✅ 添加这一段：定义 title, description, url, image 给 <Helmet> 用
-  const title = report.title || "Doxxing Incident Report";
-  const description =
-    report.text?.slice(0, 160) || "Detailed report on online abuse or doxxing.";
-  const url = `${window.location.origin}/report/${report.id}`;
-  const image =
-    (report.images && JSON.parse(report.images)?.[0]) ||
-    "https://doxxing-report.vercel.app/default-cover.jpg";
-
   return (
     <div className="report-details">
-      {/* ✅ 添加用于 Facebook/LinkedIn/SEO 分享的 meta 标签 */}
-      {report && (
-        <Helmet>
-          <title>{report.title}</title>
-          <meta
-            name="description"
-            content={
-              report.text?.slice(0, 160) ||
-              "Detailed report on online abuse or doxxing."
-            }
-          />
-          <meta property="og:type" content="article" />
-          <meta property="og:title" content={report.title} />
-          <meta
-            property="og:description"
-            content={report.text?.slice(0, 160) || ""}
-          />
-          <meta
-            property="og:url"
-            content={`${window.location.origin}/report/${report.id}`}
-          />
-          <meta
-            property="og:image"
-            content={
-              (report.images && JSON.parse(report.images)?.[0]) ||
-              "https://doxxing-report.vercel.app/default-cover.jpg"
-            }
-          />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={report.title} />
-          <meta
-            name="twitter:description"
-            content={report.text?.slice(0, 160) || ""}
-          />
-          <meta
-            name="twitter:image"
-            content={
-              (report.images && JSON.parse(report.images)?.[0]) ||
-              "https://doxxing-report.vercel.app/default-cover.jpg"
-            }
-          />
-        </Helmet>
-      )}
-
       <h2>{report.title}</h2>
       <ToolsTable
         report={report}
         onJumpToComments={() =>
-          // commentRef.current?.scrollIntoView({ behavior: "smooth" })
-          {
-            const el = document.getElementById("comments-section");
-            if (el) el.scrollIntoView({ behavior: "smooth" });
-          }
+          commentRef.current?.scrollIntoView({ behavior: "smooth" })
         }
       />
       {/* ✅ Incident Stats Card */}
