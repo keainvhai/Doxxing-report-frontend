@@ -112,19 +112,49 @@ const ReportDetails = () => {
   return (
     <div className="report-details">
       {/* ✅ 添加用于 Facebook/LinkedIn/SEO 分享的 meta 标签 */}
-      <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:url" content={url} />
-        <meta property="og:image" content={image} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={image} />
-      </Helmet>
+      {report && (
+        <Helmet>
+          <title>{report.title}</title>
+          <meta
+            name="description"
+            content={
+              report.text?.slice(0, 160) ||
+              "Detailed report on online abuse or doxxing."
+            }
+          />
+          <meta property="og:type" content="article" />
+          <meta property="og:title" content={report.title} />
+          <meta
+            property="og:description"
+            content={report.text?.slice(0, 160) || ""}
+          />
+          <meta
+            property="og:url"
+            content={`${window.location.origin}/report/${report.id}`}
+          />
+          <meta
+            property="og:image"
+            content={
+              (report.images && JSON.parse(report.images)?.[0]) ||
+              "https://doxxing-report.vercel.app/default-cover.jpg"
+            }
+          />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={report.title} />
+          <meta
+            name="twitter:description"
+            content={report.text?.slice(0, 160) || ""}
+          />
+          <meta
+            name="twitter:image"
+            content={
+              (report.images && JSON.parse(report.images)?.[0]) ||
+              "https://doxxing-report.vercel.app/default-cover.jpg"
+            }
+          />
+        </Helmet>
+      )}
+
       <h2>{report.title}</h2>
       <ToolsTable
         report={report}
