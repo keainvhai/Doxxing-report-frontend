@@ -76,11 +76,21 @@ function Login() {
         console.error("Login Error:", error.response?.data);
 
         if (error.response) {
-          const errorMsg = error.response.data?.error || "Unknown error";
+          const status = error.response.status;
+          const errorMsg =
+            error.response.data?.error ||
+            error.response.data ||
+            "Unknown error";
 
-          if (error.response.status === 401) {
-            // 🔹 如果是 401（未授权），显示错误
+          if (status === 401) {
+            // 🔹 如果是 401（未授权），显示错误在表单中
             setErrors({ email: errorMsg });
+          } else if (status === 429) {
+            // ✅ 特别处理 429（限流）
+            setToastMessage(`🚫 ${errorMsg}`);
+            setToastType("error");
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
           } else {
             // ✅ 显示错误 Toast
             setToastMessage(`❌ ${errorMsg}`);

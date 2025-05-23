@@ -83,7 +83,14 @@ const CommentsSection = ({ reportId }) => {
       fetchComments(); // 重新拉取第一页
     } catch (err) {
       console.error("❌ submit failed:", err.response?.data || err.message);
-      toast.error("Failed to submit comment");
+      if (err.response?.status === 429) {
+        toast.error(
+          err.response.data ||
+            "🚫 You're commenting too frequently. Please wait a moment."
+        );
+      } else {
+        toast.error("Failed to submit comment");
+      }
     }
   };
 

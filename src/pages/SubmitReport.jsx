@@ -151,7 +151,15 @@ const SubmitReport = () => {
         "❌ Submission failed:",
         error.response ? error.response.data : error.message
       );
-      setToastMessage("❌ Failed to submit report.");
+      if (error.response?.status === 429) {
+        setToastMessage(
+          error.response.data ||
+            "🚫 You're submitting reports too frequently. Please wait a moment."
+        );
+      } else {
+        setToastMessage("❌ Failed to submit report.");
+      }
+
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
     }

@@ -44,6 +44,17 @@ function Register() {
       setToastType("success");
       setOtpSent(true);
     } catch (error) {
+      if (error.response?.status === 429) {
+        setToastMessage(
+          error.response.data ||
+            "🚫 You're sending OTP too frequently. Please wait a moment."
+        );
+        setToastType("error");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+        setIsSendingOtp(false);
+        return;
+      }
       // ✅ 详细处理 error.response 的错误信息
       let errorMsg = " Failed to send OTP. Please try again.";
       if (error.response && error.response.data && error.response.data.error) {
@@ -85,6 +96,16 @@ function Register() {
       .catch((error) => {
         if (error.response) {
           const errorMsg = error.response.data?.error || "Unknown error";
+          if (error.response.status === 429) {
+            setToastMessage(
+              errorMsg ||
+                "🚫 You're registering too frequently. Please wait a moment."
+            );
+            setToastType("error");
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
+            return;
+          }
           if (error.response.status === 400) {
             setErrors({ email: errorMsg });
           } else {
