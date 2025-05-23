@@ -25,14 +25,19 @@ const AdminDashboard = () => {
   // report page
   const [searchParams] = useSearchParams();
   const initialPage = parseInt(searchParams.get("page")) || 1;
+  const initialLimit = parseInt(searchParams.get("limit")) || 12;
   const [page, setPage] = useState(initialPage);
-  const [limit, setLimit] = useState(12); // 默认每页 12 条
-  const [userLimit, setUserLimit] = useState(10);
+  const [limit, setLimit] = useState(initialLimit); // 默认每页 12 条
 
   const [totalPages, setTotalPages] = useState(1);
   const [inputPage, setInputPage] = useState("");
+
   // User page
-  const [userPage, setUserPage] = useState(1);
+  const initialUserPage = parseInt(searchParams.get("page")) || 1;
+  const initialUserLimit = parseInt(searchParams.get("limit")) || 10;
+  const [userPage, setUserPage] = useState(initialUserPage);
+  const [userLimit, setUserLimit] = useState(initialUserLimit);
+
   const [userTotalPages, setUserTotalPages] = useState(1);
   const [userInputPage, setUserInputPage] = useState("");
 
@@ -50,18 +55,49 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const tab = searchParams.get("tab");
+    const userPageParam = parseInt(searchParams.get("page"));
+    const userLimitParam = parseInt(searchParams.get("limit"));
+
+    if (tab === "users") {
+      setActiveTab("users");
+
+      if (!isNaN(userPageParam)) {
+        setUserPage(userPageParam);
+      }
+      if (!isNaN(userLimitParam)) {
+        setUserLimit(userLimitParam);
+      }
+
+      fetchUsers(
+        isNaN(userPageParam) ? 1 : userPageParam,
+        isNaN(userLimitParam) ? 10 : userLimitParam
+      );
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     const urlPage = parseInt(searchParams.get("page"));
     const resolvedPage = !isNaN(urlPage) ? urlPage : 1;
     if (resolvedPage !== page) {
       setPage(resolvedPage);
     }
   }, [searchParams]); // 🔁 每当 URL 参数变化时触发
+
+  useEffect(() => {
+    const urlLimit = parseInt(searchParams.get("limit"));
+    if (!isNaN(urlLimit) && urlLimit !== limit) {
+      setLimit(urlLimit);
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     // ✅ 确保登录完成再加载
     if (!authState.status || authState.role !== "admin") return;
 
     getReportsAndSources();
   }, [authState, page, filters, limit]);
+
   useEffect(() => {
     if (authState.status && authState.role !== "admin") {
       navigate("/");
@@ -243,9 +279,18 @@ const AdminDashboard = () => {
   const goToPage = (targetPage) => {
     if (targetPage !== page) {
       setPage(targetPage);
-      navigate(`/admin?page=${targetPage}`);
+      navigate(`/admin?page=${targetPage}&limit=${limit}`);
     }
   };
+
+  const goToUserPage = (targetPage) => {
+    if (targetPage !== userPage) {
+      setUserPage(targetPage);
+      navigate(`/admin?tab=users&page=${targetPage}&limit=${userLimit}`);
+      fetchUsers(targetPage, userLimit);
+    }
+  };
+
   const openGmailCompose = (email) => {
     const subject = encodeURIComponent("Regarding your report");
     const body = encodeURIComponent(
@@ -306,8 +351,7 @@ const AdminDashboard = () => {
           className={activeTab === "users" ? "active" : ""}
           onClick={async () => {
             setActiveTab("users");
-            setUserPage(1); // 重置页码
-            fetchUsers(1, userLimit); // 加载第一页
+            goToUserPage(1); // 重置页码
           }}
         >
           👥 Manage Users
@@ -485,12 +529,10 @@ const AdminDashboard = () => {
                 value={limit}
                 onChange={(e) => {
                   const value = e.target.value;
-                  if (value === "all") {
-                    setLimit(9999); // 表示全部
-                  } else {
-                    setLimit(parseInt(value, 10));
-                  }
-                  goToPage(1); // 切换每页数量时重置页码
+                  const newLimit = value === "all" ? 9999 : parseInt(value, 10);
+                  setLimit(newLimit);
+                  setPage(1); // 重置页码
+                  navigate(`/admin?page=1&limit=${newLimit}`);
                 }}
               >
                 <option value={12}>12</option>
@@ -561,8 +603,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => {
                 if (userPage !== 1) {
-                  setUserPage(1);
-                  fetchUsers(1, userLimit);
+                  goToUserPage(1);
                 }
               }}
               disabled={userPage === 1}
@@ -573,8 +614,7 @@ const AdminDashboard = () => {
               onClick={() => {
                 const newPage = userPage - 1;
                 if (newPage >= 1) {
-                  setUserPage(newPage);
-                  fetchUsers(newPage, userLimit);
+                  goToUserPage(newPage);
                 }
               }}
               disabled={userPage === 1}
@@ -588,8 +628,7 @@ const AdminDashboard = () => {
               onClick={() => {
                 const newPage = userPage + 1;
                 if (newPage <= userTotalPages) {
-                  setUserPage(newPage);
-                  fetchUsers(newPage, userLimit);
+                  goToUserPage(newPage);
                 }
               }}
               disabled={userPage === userTotalPages}
@@ -608,8 +647,7 @@ const AdminDashboard = () => {
                     pageNum >= 1 &&
                     pageNum <= userTotalPages
                   ) {
-                    setUserPage(pageNum);
-                    fetchUsers(pageNum, userLimit);
+                    goToUserPage(pageNum);
                   }
                   setUserInputPage("");
                 }
@@ -625,8 +663,7 @@ const AdminDashboard = () => {
                   pageNum >= 1 &&
                   pageNum <= userTotalPages
                 ) {
-                  setUserPage(pageNum);
-                  fetchUsers(pageNum, userLimit);
+                  goToUserPage(pageNum);
                 }
                 setUserInputPage("");
               }}
@@ -636,8 +673,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => {
                 if (userPage !== userTotalPages) {
-                  setUserPage(userTotalPages);
-                  fetchUsers(userTotalPages, userLimit);
+                  goToUserPage(userTotalPages);
                 }
               }}
               disabled={userPage === userTotalPages}
@@ -649,11 +685,18 @@ const AdminDashboard = () => {
               <select
                 id="user-limit-select"
                 value={userLimit}
+                // onChange={(e) => {
+                //   const val = e.target.value;
+                //   const newLimit = val === "all" ? 9999 : parseInt(val, 10);
+                //   setUserLimit(newLimit);
+                //   goToUserPage(1);
+                // }}
                 onChange={(e) => {
-                  const val = e.target.value;
-                  const newLimit = val === "all" ? 9999 : parseInt(val, 10);
+                  const value = e.target.value;
+                  const newLimit = value === "all" ? 9999 : parseInt(value, 10);
                   setUserLimit(newLimit);
-                  setUserPage(1);
+                  setUserPage(1); // 重置页码
+                  navigate(`/admin?tab=users&page=1&limit=${newLimit}`);
                   fetchUsers(1, newLimit);
                 }}
               >
