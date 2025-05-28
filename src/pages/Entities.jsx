@@ -29,9 +29,11 @@ const Entities = () => {
   }, []);
 
   // 搜索过滤
-  const filteredEntities = entities.filter((entity) =>
-    entity.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredEntities = entities
+    .filter((entity) => entity.name.toLowerCase() !== "news")
+    .filter((entity) =>
+      entity.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   return (
     <div className="entities-container">

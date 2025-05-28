@@ -73,6 +73,8 @@ const AdminDashboard = () => {
         isNaN(userPageParam) ? 1 : userPageParam,
         isNaN(userLimitParam) ? 10 : userLimitParam
       );
+    } else {
+      setActiveTab("reports");
     }
   }, [searchParams]);
 
