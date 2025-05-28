@@ -77,6 +77,12 @@ const AdminDashboard = () => {
   }, [searchParams]);
 
   useEffect(() => {
+    if (activeTab === "users") {
+      fetchUsers(userPage, userLimit);
+    }
+  }, [activeTab, userPage, userLimit]);
+
+  useEffect(() => {
     const urlPage = parseInt(searchParams.get("page"));
     const resolvedPage = !isNaN(urlPage) ? urlPage : 1;
     if (resolvedPage !== page) {
@@ -427,8 +433,30 @@ const AdminDashboard = () => {
                             </span>
                           )}
                         </td>
-                        <td>
+                        {/* <td>
                           {new Date(report.date_published).toLocaleDateString()}
+                        </td> */}
+                        <td>
+                          <span
+                            title={
+                              report.isEstimatedDate
+                                ? "⚠️ This date was inferred automatically (not found in source)"
+                                : "Original publication date"
+                            }
+                            style={{
+                              color: report.isEstimatedDate
+                                ? "#d97706"
+                                : "inherit", // amber color
+                              fontWeight: report.isEstimatedDate
+                                ? "bold"
+                                : "normal",
+                            }}
+                          >
+                            {new Date(
+                              report.date_published
+                            ).toLocaleDateString()}
+                            {report.isEstimatedDate}
+                          </span>
                         </td>
                         <td>{report.status}</td>
                         <td>

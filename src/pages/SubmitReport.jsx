@@ -114,7 +114,7 @@ const SubmitReport = () => {
       newImages.forEach((image) => {
         formData.append("images", image);
       });
-      // console.log("📌 Images added to FormData:", newImages); // ✅ 检查图片是否添加到 FormData
+      // console.log("📌 Images added to FormData:", newImages); //  检查图片是否添加到 FormData
     } else {
       console.log("🚨 No images selected.");
     }
@@ -130,7 +130,7 @@ const SubmitReport = () => {
         url: "",
         title: "",
         // author: "",
-        // ✅ 保持 `author` 填充状态
+        //  保持 `author` 填充状态
         // author: user?.email ? user.email.split("@")[0] : "Anonymous",
         author: user?.status ? user.username : "Anonymous", // **保持正确的 author**
         date_published: "",
@@ -139,10 +139,10 @@ const SubmitReport = () => {
         victim: "",
         images: [],
       });
-      setGeneratedImageUrl(null); // ✅ 清空 AI 生成的图片
-      setNewImages([]); // ✅ 清空上传的图片
+      setGeneratedImageUrl(null); // 清空 AI 生成的图片
+      setNewImages([]); //  清空上传的图片
 
-      // ✅ **清空文件输入框**
+      //  **清空文件输入框**
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
