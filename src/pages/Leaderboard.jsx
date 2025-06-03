@@ -158,21 +158,23 @@ const Leaderboard = () => {
           <div className="leaderboard-section">
             <h2>🌐 Report Domains</h2>
             <ul className="leaderboard-list">
-              {leaderboardData.reportDomains.map((entry, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleSourceClick(entry.entity)} // ✅ 加点击
-                  style={{ cursor: "pointer" }}
-                >
-                  <span className="rank-badge">
-                    <div className="medal-container">
-                      <span className="medal">{getMedal(index)}</span>
-                    </div>
-                    <span className="rank-content">{entry.entity}</span>
-                  </span>
-                  <span className="count-badge">{entry.count}</span>
-                </li>
-              ))}
+              {leaderboardData.reportDomains
+                .filter((entry) => !entry.entity.toLowerCase().includes("news"))
+                .map((entry, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleSourceClick(entry.entity)} // ✅ 加点击
+                    style={{ cursor: "pointer" }}
+                  >
+                    <span className="rank-badge">
+                      <div className="medal-container">
+                        <span className="medal">{getMedal(index)}</span>
+                      </div>
+                      <span className="rank-content">{entry.entity}</span>
+                    </span>
+                    <span className="count-badge">{entry.count}</span>
+                  </li>
+                ))}
             </ul>
           </div>
         )}

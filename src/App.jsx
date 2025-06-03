@@ -10,7 +10,7 @@ import ReportDetails from "./pages/ReportDetails";
 import ReportEdit from "./pages/ReportEdit";
 import Register from "./pages/Register";
 import { AuthProvider } from "./helpers/AuthContext"; // ✅ 用 AuthProvider
-import Leaderboard from "./components/Leaderboard";
+import Leaderboard from "./pages/Leaderboard";
 import Entities from "./pages/Entities";
 import UserProfile from "./pages/UserProfile";
 import UserReportEdit from "./pages/UserReportEdit";
