@@ -23,6 +23,7 @@ import ResetPassword from "./pages/ResetPassword";
 import PublicUserProfile from "./pages/PublicUserProfile";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // 样式很重要，记得一起引入
+import Statistic from "./pages/Statistic";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
               />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/data" element={<Data />} />
+              <Route path="/statistic" element={<Statistic />} />
               <Route path="/user/:id" element={<PublicUserProfile />} />
             </Routes>
             <ToastContainer position="top-right" autoClose={3000} />

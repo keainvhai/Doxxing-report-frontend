@@ -1,0 +1,25 @@
+.statistic-container {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.controls label {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.controls select,
+.controls input,
+.controls button {
+  padding: 6px 10px;
+  font-size: 1rem;
+}

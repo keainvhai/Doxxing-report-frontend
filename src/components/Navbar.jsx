@@ -93,6 +93,10 @@ const Navbar = () => {
           Data
         </Link>
 
+        <Link to="/statistic" onClick={() => setMenuOpen(false)}>
+          Statistics
+        </Link>
+
         <Link to="/leaderboard" onClick={() => setMenuOpen(false)}>
           Leaderboard
         </Link>
@@ -101,7 +105,7 @@ const Navbar = () => {
         </Link>
 
         <Link to="/summaries" onClick={() => setMenuOpen(false)}>
-          Weekly Summary
+          Weekly AI Summary
         </Link>
 
         <Link to="/submit" onClick={() => setMenuOpen(false)}>
