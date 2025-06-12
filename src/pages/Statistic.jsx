@@ -156,7 +156,9 @@ const Statistic = () => {
             <option value="year">Year</option>
           </select>
         </div>
-        <button onClick={fetchStatistics}>Show Chart</button>
+        <button className="c" onClick={fetchStatistics}>
+          Show Chart
+        </button>
       </div>
 
       {loading ? (
