@@ -171,17 +171,27 @@ const Statistic = () => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="time"
-              tickFormatter={(time) => dayjs(time).format("MM/DD")}
+              tickFormatter={(time) => {
+                if (unit === "year") return time;
+                if (unit === "month") return dayjs(time).format("YYYY-MM");
+                if (unit === "week") return dayjs(time).format("MM/DD");
+                return dayjs(time).format("MM/DD"); // 默认为 day
+              }}
               ticks={data.map((d) => d.time)}
             />
             <YAxis />
             {/* <Tooltip /> */}
             <Tooltip
               formatter={(value, name, props) => [`${value} reports`, "Count"]}
-              labelFormatter={(label) =>
-                `month ${label.split("-")[1]} (${label})`
-              }
+              labelFormatter={(label) => {
+                if (unit === "year") return `Year ${label}`;
+                if (unit === "month") return `Month ${label}`;
+                if (unit === "week")
+                  return `Week of ${dayjs(label).format("MM/DD")}`;
+                return `Date ${dayjs(label).format("MM/DD")}`;
+              }}
             />
+
             <Line
               type="monotone"
               dataKey="count"
