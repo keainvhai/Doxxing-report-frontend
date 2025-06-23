@@ -191,6 +191,17 @@ const ReportDetails = () => {
         <strong>Entity:</strong> {report.entity || "Unknown"}{" "}
         {/* ✅ 显示 Entity */}
       </p>
+      {report.victim_location && (
+        <p>
+          <strong>Victim Location:</strong> {report.victim_location}
+        </p>
+      )}
+      {report.platform && (
+        <p>
+          <strong>Platform:</strong> {report.platform}
+        </p>
+      )}
+
       {/* <p>
         <strong>Date Published:</strong>{" "}
         {new Date(report.date_published).toLocaleDateString()}

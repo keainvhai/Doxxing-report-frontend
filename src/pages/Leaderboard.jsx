@@ -7,6 +7,14 @@ const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState(null);
   const navigate = useNavigate();
 
+  // 过滤掉 "Unknown" 和 "Online"
+  const excludeUnknownOnline = (list, key) =>
+    list.filter(
+      (entry) =>
+        entry[key] && entry[key] !== "Unknown" && entry[key] !== "Online"
+      // entry[key] !== "Google News"
+    );
+
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
@@ -175,6 +183,57 @@ const Leaderboard = () => {
                     <span className="count-badge">{entry.count}</span>
                   </li>
                 ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Victim Location 排行榜 */}
+        {excludeUnknownOnline(
+          leaderboardData.victimLocations,
+          "victim_location"
+        ).length > 0 && (
+          <div className="leaderboard-section">
+            <h2>📍 Victim Locations</h2>
+            <ul className="leaderboard-list">
+              {excludeUnknownOnline(
+                leaderboardData.victimLocations,
+                "victim_location"
+              ).map((entry, index) => (
+                <li key={index}>
+                  <span className="rank-badge">
+                    <div className="medal-container">
+                      <span className="medal">{getMedal(index)}</span>
+                    </div>
+                    <span className="rank-content">
+                      {entry.victim_location}
+                    </span>
+                  </span>
+                  <span className="count-badge">{entry.count}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Platform 排行榜 */}
+        {excludeUnknownOnline(leaderboardData.platforms, "platform").length >
+          0 && (
+          <div className="leaderboard-section">
+            <h2>💻 Platforms</h2>
+            <ul className="leaderboard-list">
+              {excludeUnknownOnline(leaderboardData.platforms, "platform").map(
+                (entry, index) => (
+                  <li key={index}>
+                    <span className="rank-badge">
+                      <div className="medal-container">
+                        <span className="medal">{getMedal(index)}</span>
+                      </div>
+                      <span className="rank-content">{entry.platform}</span>
+                    </span>
+                    <span className="count-badge">{entry.count}</span>
+                  </li>
+                )
+              )}
             </ul>
           </div>
         )}
