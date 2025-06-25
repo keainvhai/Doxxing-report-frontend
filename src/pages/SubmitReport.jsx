@@ -14,6 +14,8 @@ const SubmitReport = () => {
     incident_date: "",
     text: "",
     victim: "",
+    platform: "",
+    victim_location: "",
     images: [],
   });
 
@@ -108,6 +110,8 @@ const SubmitReport = () => {
       form.victim.trim() === "" ? "Unknown" : form.victim
     );
     formData.append("userId", user?.id || "");
+    formData.append("platform", form.platform.trim());
+    formData.append("victim_location", form.victim_location.trim());
 
     //确保正确添加 `images`
     if (newImages.length > 0) {
@@ -273,6 +277,26 @@ const SubmitReport = () => {
           placeholder="Victim Name"
           value={form.victim}
           onChange={(e) => setForm({ ...form, victim: e.target.value })}
+        />
+
+        {/* Platform */}
+        <label htmlFor="platform">📱 Platform (Optional)</label>
+        <input
+          type="text"
+          placeholder="e.g., Twitter, Facebook, Telegram"
+          value={form.platform}
+          onChange={(e) => setForm({ ...form, platform: e.target.value })}
+        />
+
+        {/* Victim Location */}
+        <label htmlFor="victim_location">🌍 Victim Location (Optional)</label>
+        <input
+          type="text"
+          placeholder='e.g., "New York, US" or JSON like {"country": "..."}'
+          value={form.victim_location}
+          onChange={(e) =>
+            setForm({ ...form, victim_location: e.target.value })
+          }
         />
 
         {/* Incident Date */}

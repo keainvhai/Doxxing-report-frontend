@@ -22,6 +22,8 @@ const ReportEdit = () => {
     incident_date: "",
     text: "",
     victim: "",
+    victim_location: "", // ✅ 添加
+    platform: "",
     entity: "",
     images: [],
   });
@@ -56,6 +58,8 @@ const ReportEdit = () => {
           incident_date: formatDate(data.incident_date),
           text: data.text || "",
           victim: data.victim || "",
+          victim_location: data.victim_location || "",
+          platform: data.platform || "",
           entity: data.entity || "",
           // images: data.images ? JSON.parse(data.images) : [],
           images: data.images
@@ -218,6 +222,22 @@ const ReportEdit = () => {
           onChange={(e) => setForm({ ...form, victim: e.target.value })}
           required
         />
+        <label>📍 Victim Location</label>
+        <input
+          type="text"
+          value={form.victim_location}
+          onChange={(e) =>
+            setForm({ ...form, victim_location: e.target.value })
+          }
+        />
+
+        <label>🌐 Platform</label>
+        <input
+          type="text"
+          value={form.platform}
+          onChange={(e) => setForm({ ...form, platform: e.target.value })}
+        />
+
         {/* Entity */}
         <label>🏢 Entity</label>
         <input

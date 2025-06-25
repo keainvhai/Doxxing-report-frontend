@@ -17,6 +17,8 @@ const UserReportEdit = () => {
     author: "",
     text: "",
     victim: "",
+    victim_location: "",
+    platform: "",
     date_published: "",
     incident_date: "",
   });
@@ -54,6 +56,8 @@ const UserReportEdit = () => {
           author: data.author || "Anonymous",
           text: data.text || "",
           victim: data.victim || "Unknown",
+          victim_location: data.victim_location || "",
+          platform: data.platform || "",
           date_published: formatDate(data.date_published),
           incident_date: formatDate(data.incident_date),
         });
@@ -136,6 +140,21 @@ const UserReportEdit = () => {
             type="text"
             name="victim"
             value={form.victim}
+            onChange={handleChange}
+          />
+          <label>📍 Victim Location</label>
+          <input
+            type="text"
+            name="victim_location"
+            value={form.victim_location}
+            onChange={handleChange}
+          />
+
+          <label>🌐 Platform</label>
+          <input
+            type="text"
+            name="platform"
+            value={form.platform}
             onChange={handleChange}
           />
 
