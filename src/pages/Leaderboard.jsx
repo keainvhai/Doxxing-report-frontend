@@ -11,8 +11,12 @@ const Leaderboard = () => {
   const excludeUnknownOnline = (list, key) =>
     list.filter(
       (entry) =>
-        entry[key] && entry[key] !== "Unknown" && entry[key] !== "Online"
-      // entry[key] !== "Google News"
+        entry[key] &&
+        entry[key] !== "Unknown" &&
+        entry[key] !== "Online" &&
+        entry[key] !== "null" &&
+        entry[key] !== "social media" &&
+        entry[key] !== "Google News"
     );
 
   useEffect(() => {
