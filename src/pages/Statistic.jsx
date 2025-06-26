@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
+import GlobeMap from "../components/GlobeMap";
 import "../styles/Statistic.css";
 
 //规避周日无法被计算在本周的情况
@@ -25,11 +26,26 @@ const Statistic = () => {
   const [endDate, setEndDate] = useState(new Date());
   const [unit, setUnit] = useState("month");
   const [data, setData] = useState([]); //图表的数据数组
+
+  const [locationData, setLocationData] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   // useEffect(() => {
   //   fetchStatistics();
   // }, []);
+  useEffect(() => {
+    fetchLocationSummary();
+  }, []);
+
+  const fetchLocationSummary = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/reports/location-summary`);
+      setLocationData(res.data);
+    } catch (err) {
+      console.error("地图数据加载失败:", err);
+    }
+  };
 
   const handleUnitChange = (e) => {
     const newUnit = e.target.value;
@@ -110,7 +126,6 @@ const Statistic = () => {
   return (
     <div className="statistic-container">
       <h2>📊 Report Statistics</h2>
-
       <div className="controls">
         <div>
           <label>Start Date:</label>
@@ -160,7 +175,6 @@ const Statistic = () => {
           Show Chart
         </button>
       </div>
-
       {loading ? (
         <p>Loading...</p>
       ) : data.length === 0 ? (
@@ -200,6 +214,12 @@ const Statistic = () => {
             />
           </LineChart>
         </ResponsiveContainer>
+      )}
+      <h2>🌍 Victim Location Map</h2>
+      {locationData.length > 0 ? (
+        <GlobeMap data={locationData} />
+      ) : (
+        <p>No location data yet.</p>
       )}
     </div>
   );
