@@ -43,7 +43,14 @@ function GlobeMap({ data }) {
   const getGeoJSONFromData = (data) => ({
     type: "FeatureCollection",
     features: data
-      .filter((d) => d.lat && d.lng && d.lat !== 0 && d.lng !== 0)
+      .filter(
+        (d) =>
+          d.lat &&
+          d.lng &&
+          d.lat !== 0 &&
+          d.lng !== 0 &&
+          d.location !== "Unknown"
+      )
       .map((d) => ({
         type: "Feature",
         properties: {
@@ -130,6 +137,7 @@ function GlobeMap({ data }) {
         },
       });
       map.current.off("click", "victim-count-labels");
+
       // ✅ 鼠标悬浮显示 tooltip
       map.current.on("mouseenter", "victim-count-labels", (e) => {
         map.current.getCanvas().style.cursor = "pointer";
@@ -152,7 +160,6 @@ function GlobeMap({ data }) {
       ? `State: ${e.features[0].properties.state}<br/>`
       : ""
   }
-  Country: ${e.features[0].properties.country}<br/>
   Reports: ${e.features[0].properties.count}
 `
           )
@@ -169,6 +176,19 @@ function GlobeMap({ data }) {
       //   const country = e.features[0].properties.country;
       //   window.location.href = `/search?country=${encodeURIComponent(country)}`;
       // });
+      map.current.on("click", "victim-count-labels", (e) => {
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const zoomLevel = 5; // 你可以调整放大等级，比如 4~8 之间
+
+        map.current.flyTo({
+          center: coordinates,
+          zoom: zoomLevel,
+          speed: 1.5, // 飞行速度，越大越快
+          curve: 1.2, // 趋势，1-1.5 通常比较自然
+          easing: (t) => t,
+          essential: true,
+        });
+      });
     }
   };
 
