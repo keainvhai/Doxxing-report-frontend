@@ -12,33 +12,33 @@ function GlobeMap({ data }) {
     new mapboxgl.Popup({ closeButton: false, closeOnClick: false })
   );
 
-  const normalizeLocation = (d) => {
-    // 如果已有 city/state 字段，直接使用
-    const city = d.city || "";
-    const state = d.state || "";
-    let country = d.country;
+  // const normalizeLocation = (d) => {
+  //   // 如果已有 city/state 字段，直接使用
+  //   const city = d.city || "";
+  //   const state = d.state || "";
+  //   let country = d.country;
 
-    // 处理异常缩写或错误国家名
-    if (["D.C.", "IL", "KR", "SG"].includes(country)) {
-      if (country === "D.C.") {
-        country = "United States";
-      } else if (country === "IL") {
-        country = "United States";
-      } else if (country === "KR") {
-        country = "South Korea";
-      } else if (country === "SG") {
-        country = "Singapore";
-      }
-    }
+  //   // 处理异常缩写或错误国家名
+  //   if (["D.C.", "IL", "KR", "SG"].includes(country)) {
+  //     if (country === "D.C.") {
+  //       country = "United States";
+  //     } else if (country === "IL") {
+  //       country = "United States";
+  //     } else if (country === "KR") {
+  //       country = "South Korea";
+  //     } else if (country === "SG") {
+  //       country = "Singapore";
+  //     }
+  //   }
 
-    return {
-      ...d,
-      city,
-      state,
-      country,
-      label: city || state || country,
-    };
-  };
+  //   return {
+  //     ...d,
+  //     city,
+  //     state,
+  //     country,
+  //     label: city || state || country,
+  //   };
+  // };
 
   const getGeoJSONFromData = (data) => ({
     type: "FeatureCollection",
