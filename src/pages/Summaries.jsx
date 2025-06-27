@@ -61,18 +61,19 @@ const Summaries = () => {
             <div key={index} className="digest-card">
               {/* ✅ 点击标题跳转到 DigestDetails 页面 */}
               <div className="digest-header">
-                <h3>
+                <h3 className="digest-title">
                   <Link
                     to={`/summaries/${summary.week_start}`}
                     className="digest-link"
                   >
-                    {/* Week: {new Date(summary.week_start).toLocaleDateString()} -{" "}
-                {new Date(summary.week_end).toLocaleDateString()} */}
                     Week of:{" "}
                     {new Date(summary.week_start).toLocaleDateString("en-US", {
                       timeZone: "UTC",
                     })}
                   </Link>
+                  <span className="report-count">
+                    Total Reports: {summary.reportCount ?? "N/A"}
+                  </span>
                 </h3>
                 <div className="share-icons">
                   <FaXTwitter

@@ -42,6 +42,20 @@
   gap: 12px;
 }
 
+.digest-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.report-count {
+  font-size: 0.9rem;
+  color: #666;
+  white-space: nowrap;
+}
+
 .share-icons {
   display: flex;
   /* gap: 10px; */

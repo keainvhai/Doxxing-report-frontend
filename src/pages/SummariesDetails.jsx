@@ -21,7 +21,7 @@ const SummariesDetails = () => {
   const summaryUrl = `${
     import.meta.env.VITE_CLIENT_URL
   }/summaries/${week_start}`;
-  const summaryImage = `${import.meta.env.VITE_CLIENT_URL}/preview.png`; // 你可以自定义这张图
+  const summaryImage = `${import.meta.env.VITE_CLIENT_URL}/preview.png`; // 自定义图
 
   useEffect(() => {
     const fetchReports = async () => {
