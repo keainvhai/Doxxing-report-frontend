@@ -24,6 +24,7 @@ import PublicUserProfile from "./pages/PublicUserProfile";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // 样式很重要，记得一起引入
 import Statistic from "./pages/Statistic";
+import FloatingChatWithAgent from "./components/FloatingChatWithAgent.jsx";
 
 function App() {
   return (
@@ -64,6 +65,7 @@ function App() {
           <Footer />
         </div>
       </Router>
+      <FloatingChatWithAgent />
     </AuthProvider>
   );
 }
