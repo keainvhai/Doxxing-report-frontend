@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import { AuthContext } from "../helpers/AuthContext";
 import { useContext } from "react";
-import ReplyForm from "./ReplyForm";
 import CommentItem from "./CommentItem";
 import { buildCommentTree } from "./buildCommentTree"; // 可选分离出去
 
@@ -25,7 +26,12 @@ const CommentsSection = ({ reportId }) => {
   const { authState } = useContext(AuthContext);
   const isLoggedIn = authState?.status === true;
 
-  const limit = 5;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLoginRedirect = () => {
+    navigate("/login", { state: { from: location } });
+  };
 
   useEffect(() => {
     // console.log("📌 当前 reportId 是：", reportId);
@@ -166,7 +172,11 @@ const CommentsSection = ({ reportId }) => {
         </form>
       ) : (
         <p className="login-tip">
-          Please <a href="/login">log in</a> to post a comment.
+          Please{" "}
+          <span className="login-link" onClick={handleLoginRedirect}>
+            log in
+          </span>{" "}
+          to post a comment.
         </p>
       )}
     </div>

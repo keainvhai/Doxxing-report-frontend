@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -20,6 +20,9 @@ function Login() {
   const [toastMessage, setToastMessage] = useState(""); // ✅ 动态设置 Toast 消息
   const [toastType, setToastType] = useState("success"); // ✅ 记录 Toast 类型
   const [showPassword, setShowPassword] = useState(false); // ✅ 控制密码可见性
+
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/"; // 没有来源就回到 /
 
   // ✅ 表单验证规则（Yup）
   const validationSchema = Yup.object().shape({
@@ -68,7 +71,7 @@ function Login() {
           // ✅ 3 秒后跳转到主页 `/`
           setTimeout(() => {
             setShowToast(false);
-            navigate("/");
+            navigate(from, { replace: true });
           }, 3000);
         }
       })

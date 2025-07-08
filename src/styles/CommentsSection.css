@@ -180,6 +180,11 @@
   color: #2d7ff9;
   text-decoration: underline;
 }
+.login-link {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
 
 /* ===== 加载更多按钮later ===== */
 .load-more-btn {
