@@ -32,6 +32,8 @@ const SubmitReport = () => {
 
   const [urlError, setUrlError] = useState("");
 
+  const [loadingSuggestion, setLoadingSuggestion] = useState(false);
+
   useEffect(() => {
     console.log("🔍 当前 authState:", authState);
 
@@ -74,6 +76,19 @@ const SubmitReport = () => {
     setGenerating(false);
   };
 
+  function normalizeVictimLocation(input) {
+    if (typeof input === "string") return input.trim();
+    if (Array.isArray(input)) return input.join(", ");
+    if (typeof input === "object" && input !== null) {
+      return (
+        Object.values(input)
+          .filter((val) => typeof val === "string" && val && val !== "Unknown")
+          .join(", ") || "Unknown"
+      );
+    }
+    return "Unknown";
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -111,7 +126,17 @@ const SubmitReport = () => {
     );
     formData.append("userId", user?.id || "");
     formData.append("platform", form.platform.trim());
-    formData.append("victim_location", form.victim_location.trim());
+
+    console.log(
+      "🚀 即将提交的 victim_location 类型和值：",
+      typeof form.victim_location,
+      form.victim_location
+    );
+
+    formData.append(
+      "victim_location",
+      normalizeVictimLocation(form.victim_location)
+    );
 
     //确保正确添加 `images`
     if (newImages.length > 0) {
@@ -141,6 +166,8 @@ const SubmitReport = () => {
         incident_date: "",
         text: "",
         victim: "",
+        platform: "", // ✅ 补上
+        victim_location: "",
         images: [],
       });
       setGeneratedImageUrl(null); // 清空 AI 生成的图片
@@ -259,6 +286,71 @@ const SubmitReport = () => {
           onChange={(e) => setForm({ ...form, date_published: e.target.value })}
           required
         />
+
+        <button
+          type="button"
+          className="ai-img-btn"
+          disabled={loadingSuggestion}
+          onClick={async () => {
+            setLoadingSuggestion(true);
+            try {
+              const res = await fetch(
+                `${API_URL}/reports/generate-suggestion`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    url: form.url,
+                    title: form.title,
+                    date_published: form.date_published,
+                  }),
+                }
+              );
+
+              const data = await res.json();
+              if (res.ok) {
+                const suggestion = data.suggestion;
+
+                console.log("🧠 Suggestion response from AI:", data.suggestion);
+
+                setForm((prev) => ({
+                  ...prev,
+                  platform: suggestion.platform,
+                  victim_location: normalizeVictimLocation(
+                    suggestion.victim_location
+                  ),
+                  text: suggestion.text,
+                }));
+
+                // ⬇️ ⬇️ ⬇️ 你应该加这个 👇
+                console.log(
+                  "🚨 After setting form.victim_location:",
+                  typeof normalizeVictimLocation(suggestion.victim_location),
+                  normalizeVictimLocation(suggestion.victim_location)
+                );
+
+                console.log(
+                  "🧾 Updated form.victim_location:",
+                  suggestion.victim_location
+                );
+                setToastMessage("✅ Suggestion filled in!");
+              } else {
+                console.error(data.error);
+                setToastMessage("❌ Failed to generate suggestion");
+              }
+            } catch (e) {
+              console.error("❌ Error fetching suggestion:", e);
+              setToastMessage("❌ Network error");
+            }
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
+            setLoadingSuggestion(false);
+          }}
+        >
+          {loadingSuggestion
+            ? "Generating..."
+            : "💡 Generate Suggestions with AI"}
+        </button>
 
         {/* Author */}
         <label htmlFor="author">✍️ Author</label>
