@@ -11,11 +11,12 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CommentsSection = ({ reportId }) => {
-  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
   const [flatComments, setFlatComments] = useState([]);
   const [commentTree, setCommentTree] = useState([]);
+
+  const [generating, setGenerating] = useState(false);
 
   // const [page, setPage] = useState(1);
   // const [total, setTotal] = useState(0);
@@ -94,9 +95,29 @@ const CommentsSection = ({ reportId }) => {
     }
   };
 
-  const formatDate = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleString();
+  const handleGenerateComment = async () => {
+    setGenerating(true);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/comments/generate`,
+        {
+          reportId,
+        }
+      );
+
+      const suggestion = res.data?.suggestion;
+      if (suggestion) {
+        setNewComment(suggestion);
+        toast.success("AI-generated comment added!");
+      } else {
+        toast.error("No suggestion received.");
+      }
+    } catch (err) {
+      console.error("Failed to generate comment:", err);
+      toast.error("Failed to generate AI comment.");
+    } finally {
+      setGenerating(false);
+    }
   };
 
   return (
@@ -132,6 +153,14 @@ const CommentsSection = ({ reportId }) => {
             />
             <button type="submit" className="comment-submit">
               Submit
+            </button>
+            <button
+              type="button"
+              className="comment-generate"
+              onClick={handleGenerateComment}
+              disabled={generating}
+            >
+              💡 {generating ? "Generating..." : "Generate with AI"}
             </button>
           </div>
         </form>
