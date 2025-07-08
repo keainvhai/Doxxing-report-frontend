@@ -86,7 +86,7 @@ const PlatformChart = () => {
           marginBottom: "10px",
         }}
       >
-        <h3 style={{ marginTop: "2rem" }}>Platform Distribution</h3>
+        <h3 style={{ marginTop: "2rem" }}>Online Platform Distribution</h3>
         <select
           value={topCount}
           onChange={(e) => setTopCount(e.target.value)}
