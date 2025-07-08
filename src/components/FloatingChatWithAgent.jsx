@@ -8,6 +8,8 @@ const FloatingChatWithAgent = () => {
 
   const messages = useChatStore((state) => state.messages);
   const addMessage = useChatStore((state) => state.addMessage);
+  const clearMessages = useChatStore((state) => state.clearMessages);
+
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -15,9 +17,25 @@ const FloatingChatWithAgent = () => {
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (isOpen) {
+      const timeout = setTimeout(() => {
+        scrollToBottom();
+      }, 50);
+      return () => clearTimeout(timeout);
+    }
+  }, [isOpen]);
+  useEffect(() => {
+    // 保证滚到底部
+    requestAnimationFrame(() => {
+      scrollToBottom();
+    });
   }, [messages]);
 
+  const handleClear = () => {
+    if (confirm("Are you sure you want to clear the chat history?")) {
+      clearMessages();
+    }
+  };
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -56,6 +74,7 @@ const FloatingChatWithAgent = () => {
         <div style={styles.chatBox}>
           <div style={styles.header}>
             <span>AI Companion</span>
+
             <button style={styles.closeBtn} onClick={() => setIsOpen(false)}>
               ×
             </button>
@@ -102,6 +121,9 @@ const FloatingChatWithAgent = () => {
               onKeyDown={handleKeyDown}
               placeholder="Say something..."
             />
+            <button style={styles.clearBtn} onClick={handleClear}>
+              🗑
+            </button>
             <button style={styles.sendButton} onClick={sendMessage}>
               Send
             </button>
@@ -150,6 +172,14 @@ const styles = {
     marginBottom: "0.5rem",
     display: "flex",
     justifyContent: "space-between",
+  },
+  clearBtn: {
+    background: "transparent",
+    border: "none",
+    fontSize: "18px",
+    marginRight: "0.5rem",
+    cursor: "pointer",
+    color: "#888",
   },
   closeBtn: {
     background: "transparent",

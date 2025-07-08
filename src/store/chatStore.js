@@ -12,7 +12,8 @@ const useChatStore = create((set) => ({
       : [
           {
             role: "assistant",
-            content: "Hi, I'm here to listen. What's on your mind?",
+            content:
+              "I'm your AI companion. I can help you think through situations, suggest strategies, or just be here to listen. What's going on?",
           },
         ],
   addMessage: (msg) =>
