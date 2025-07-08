@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css"; // ✅ 引入 Mapbox CSS
 import "../styles/GlobeMap.css";
+import { locationOverrides } from "../helpers/locationOverrides";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -40,31 +41,48 @@ function GlobeMap({ data }) {
   //   };
   // };
 
-  const getGeoJSONFromData = (data) => ({
-    type: "FeatureCollection",
-    features: data
-      .filter(
-        (d) =>
-          d.lat &&
-          d.lng &&
-          d.lat !== 0 &&
-          d.lng !== 0 &&
-          d.location !== "Unknown"
-      )
-      .map((d) => ({
+  const getGeoJSONFromData = (data) => {
+    const grouped = {};
+
+    const getNormalizedName = (loc) =>
+      locationOverrides[loc]?.normalized || loc;
+
+    data.forEach((d) => {
+      const key = getNormalizedName(d.location);
+      const override = locationOverrides[d.location];
+      const lat = override?.lat || d.lat;
+      const lng = override?.lng || d.lng;
+
+      if (!lat || !lng || lat === 0 || lng === 0 || key === "Unknown") return;
+
+      if (!grouped[key]) {
+        grouped[key] = {
+          location: key,
+          count: 0,
+          lat,
+          lng,
+        };
+      }
+
+      grouped[key].count += d.count;
+    });
+
+    return {
+      type: "FeatureCollection",
+      features: Object.values(grouped).map((d) => ({
         type: "Feature",
         properties: {
-          location: d.location, // 从 country 改成 location
+          location: d.location,
           count: d.count,
-          label: `${d.location}`,
-          // label: `${d.location} ${d.count}`,
+          label: d.location,
         },
         geometry: {
           type: "Point",
           coordinates: [d.lng, d.lat],
         },
       })),
-  });
+    };
+  };
 
   // 初始化地图
   useEffect(() => {
@@ -101,6 +119,7 @@ function GlobeMap({ data }) {
 
   const addLabelLayer = (data) => {
     const geojson = getGeoJSONFromData(data);
+    // console.log("✅ GeoJSON Features:", geojson.features);
 
     if (map.current.getSource("victim-labels")) {
       map.current.getSource("victim-labels").setData(geojson);
