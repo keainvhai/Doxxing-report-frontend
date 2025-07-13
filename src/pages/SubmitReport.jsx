@@ -79,13 +79,20 @@ const SubmitReport = () => {
   function normalizeVictimLocation(input) {
     if (typeof input === "string") return input.trim();
     if (Array.isArray(input)) return input.join(", ");
+
     if (typeof input === "object" && input !== null) {
+      const values = Object.values(input);
+      const allUnknown = values.every((val) => !val || val === "Unknown");
+
+      if (allUnknown) return "Unknown";
+
       return (
-        Object.values(input)
+        values
           .filter((val) => typeof val === "string" && val && val !== "Unknown")
           .join(", ") || "Unknown"
       );
     }
+
     return "Unknown";
   }
 
@@ -135,7 +142,9 @@ const SubmitReport = () => {
 
     formData.append(
       "victim_location",
-      normalizeVictimLocation(form.victim_location)
+      typeof form.victim_location === "string"
+        ? form.victim_location.trim()
+        : normalizeVictimLocation(form.victim_location)
     );
 
     //确保正确添加 `images`
