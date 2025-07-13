@@ -360,6 +360,10 @@ const SubmitReport = () => {
             ? "Generating..."
             : "💡 Generate Suggestions with AI"}
         </button>
+        <p style={{ fontSize: "13px", color: "#555", marginTop: "4px" }}>
+          his will auto-fill platform, location, and summary based on the URL
+          and title.
+        </p>
 
         {/* Author */}
         <label htmlFor="author">✍️ Author</label>

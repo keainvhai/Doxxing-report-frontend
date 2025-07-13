@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
+import "../styles/TimeChart.css";
 
 dayjs.extend(isoWeek);
 
@@ -104,6 +105,9 @@ const TimeChart = () => {
                 ? "yyyy-MM"
                 : "yyyy-MM-dd"
             }
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
           />
         </div>
         <div>
@@ -120,6 +124,9 @@ const TimeChart = () => {
                 ? "yyyy-MM"
                 : "yyyy-MM-dd"
             }
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
           />
         </div>
         <div>

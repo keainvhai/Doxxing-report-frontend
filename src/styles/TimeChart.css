@@ -1,0 +1,47 @@
+/* 放大整个日历弹窗 */
+.react-datepicker {
+  font-size: 1.15rem;
+}
+
+/* 放大头部导航区域 */
+.react-datepicker__current-month,
+.react-datepicker__month-read-view,
+.react-datepicker__year-read-view {
+  font-size: 1.2rem;
+}
+
+/* 放大日期格子 */
+.react-datepicker__day,
+.react-datepicker__day-name {
+  width: 2.4rem;
+  line-height: 2.4rem;
+  margin: 0.2rem;
+  font-size: 1.1rem;
+}
+
+/* 放大月份选择项 */
+.react-datepicker__month-dropdown-container,
+.react-datepicker__year-dropdown-container {
+  font-size: 1.1rem;
+}
+
+/* 放大月份选择器整体 */
+.react-datepicker__month-dropdown,
+.react-datepicker__month-year-dropdown,
+.react-datepicker__month-wrapper {
+  font-size: 1.2rem;
+  padding: 0.5rem;
+}
+
+/* 放大单个月份块 */
+.react-datepicker__month-option {
+  padding: 0.4rem 0.8rem;
+  font-size: 1.15rem;
+}
+
+/* 放大月份网格布局 */
+.react-datepicker__month-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(60px, 1fr)); /* 三列更大 */
+  gap: 0.6rem;
+}
