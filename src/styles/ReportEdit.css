@@ -35,6 +35,17 @@ textarea {
   font-size: 16px;
 }
 
+/* ✅ AI 标记样式 */
+.ai-badge {
+  display: inline-block;
+  background-color: #cdf8ff;
+  padding: 2px 8px;
+  margin-left: 10px;
+  font-size: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
 textarea {
   min-height: 120px;
   resize: vertical;
