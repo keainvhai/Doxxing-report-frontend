@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { AuthContext } from "../helpers/AuthContext";
-import { useContext } from "react";
 import CommentItem from "./CommentItem";
-import { buildCommentTree } from "./buildCommentTree"; // 可选分离出去
+import { buildCommentTree } from "./buildCommentTree";
+import AICommentAssistant from "./AICommentAssistant"; // ✅ 引入 AI 助手组件
 
 import "../styles/CommentsSection.css";
 import { toast } from "react-toastify";
@@ -13,15 +13,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 const CommentsSection = ({ reportId }) => {
   const [newComment, setNewComment] = useState("");
-
   const [flatComments, setFlatComments] = useState([]);
   const [commentTree, setCommentTree] = useState([]);
-
   const [generating, setGenerating] = useState(false);
-
-  // const [page, setPage] = useState(1);
-  // const [total, setTotal] = useState(0);
-  // const [loading, setLoading] = useState(false);
+  const [showAssistant, setShowAssistant] = useState(false); // ✅ 控制 AI 弹窗
 
   const { authState } = useContext(AuthContext);
   const isLoggedIn = authState?.status === true;
@@ -34,8 +29,7 @@ const CommentsSection = ({ reportId }) => {
   };
 
   useEffect(() => {
-    // console.log("📌 当前 reportId 是：", reportId);
-    fetchComments(); // ✅ 自动拉取
+    fetchComments();
   }, [reportId]);
 
   const fetchComments = async () => {
@@ -44,9 +38,7 @@ const CommentsSection = ({ reportId }) => {
         `${import.meta.env.VITE_API_URL}/comments/${reportId}`
       );
       const flat = res.data.comments;
-
       setFlatComments(flat);
-
       const tree = buildCommentTree(flat);
       setCommentTree(tree);
     } catch (err) {
@@ -56,20 +48,14 @@ const CommentsSection = ({ reportId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("🟢 handleSubmit 被调用");
-    console.log("📨 comment:", newComment);
 
     const token = localStorage.getItem("token");
-    console.log("token is:", token);
-
     if (!token) {
-      console.warn("⛔️ please login");
       toast.error("You must login to submit a comment.");
       return;
     }
 
     if (!newComment.trim()) {
-      console.warn("⛔️ empty comment");
       toast.error("Comment cannot be empty");
       return;
     }
@@ -84,12 +70,10 @@ const CommentsSection = ({ reportId }) => {
           },
         }
       );
-      console.log("✅ submit comments successful:", res.data);
       setNewComment("");
       toast.success("Comment submitted!");
-      fetchComments(); // 重新拉取第一页
+      fetchComments();
     } catch (err) {
-      console.error("❌ submit failed:", err.response?.data || err.message);
       if (err.response?.status === 429) {
         toast.error(
           err.response.data ||
@@ -106,11 +90,8 @@ const CommentsSection = ({ reportId }) => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/comments/generate`,
-        {
-          reportId,
-        }
+        { reportId }
       );
-
       const suggestion = res.data?.suggestion;
       if (suggestion) {
         setNewComment(suggestion);
@@ -119,7 +100,6 @@ const CommentsSection = ({ reportId }) => {
         toast.error("No suggestion received.");
       }
     } catch (err) {
-      console.error("Failed to generate comment:", err);
       toast.error("Failed to generate AI comment.");
     } finally {
       setGenerating(false);
@@ -128,9 +108,34 @@ const CommentsSection = ({ reportId }) => {
 
   return (
     <div className="comments-container">
-      <h3 className="comments-title">
-        💬 Comments {flatComments.length > 0 && `(${flatComments.length})`}
-      </h3>
+      <div className="comments-title-wrapper">
+        <div className="comments-title-row">
+          <h3 className="comments-title">
+            💬 Comments {flatComments.length > 0 && `(${flatComments.length})`}
+          </h3>
+          {isLoggedIn && (
+            <button
+              className="inline-ai-assistant-btn"
+              onClick={() => setShowAssistant((prev) => !prev)}
+            >
+              🤖 AI Assistant
+            </button>
+          )}
+        </div>
+
+        {showAssistant && (
+          <div className="inline-ai-assistant-popup">
+            <AICommentAssistant
+              reportId={reportId}
+              onAdopt={(text) => {
+                setNewComment(text);
+                setShowAssistant(false);
+              }}
+              onClose={() => setShowAssistant(false)}
+            />
+          </div>
+        )}
+      </div>
 
       {commentTree.length === 0 ? (
         <p className="no-comments">No comments yet. Be the first to comment!</p>
@@ -168,6 +173,13 @@ const CommentsSection = ({ reportId }) => {
             >
               💡 {generating ? "Generating..." : "Generate with AI"}
             </button>
+            {/* <button
+              type="button"
+              className="comment-generate"
+              onClick={() => setShowAssistant(true)}
+            >
+              💬 Open AI Assistant
+            </button> */}
           </div>
         </form>
       ) : (

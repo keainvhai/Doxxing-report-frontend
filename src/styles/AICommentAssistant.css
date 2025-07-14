@@ -1,0 +1,100 @@
+.ai-assistant-box {
+  width: 340px;
+  height: 460px;
+  position: fixed;
+  right: 20px; /* 替代 left */
+  bottom: 100px; /* 替代 top */
+  background-color: white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  overflow: hidden;
+  z-index: 9999;
+  cursor: move;
+}
+
+.ai-assistant-header {
+  padding: 10px 14px;
+  background-color: #3f51b5;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.ai-assistant-chat {
+  display: flex;
+  flex-direction: column; /* 垂直排列消息气泡 */
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background: #fafafa;
+}
+
+.ai-message {
+  margin: 6px 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  max-width: 80%; /* 控制最长气泡宽度 */
+  word-break: break-word;
+  display: inline-block; /* 自适应宽度 */
+}
+
+/* ✅ 用户消息 - 靠右 */
+.user {
+  background-color: #d7f7f3;
+  align-self: flex-end; /* 让气泡靠右对齐 */
+  text-align: left;
+  border-bottom-right-radius: 4px;
+}
+
+/* ✅ AI 消息 - 靠左 */
+.assistant {
+  background-color: #f3e8ff;
+  align-self: flex-start; /* 让气泡靠左对齐 */
+  text-align: left;
+  border-bottom-left-radius: 4px;
+}
+
+.ai-assistant-input {
+  padding: 8px 12px;
+  margin-right: 10px;
+  border-top: 1px solid #ddd;
+  background-color: white;
+}
+
+.ai-assistant-input textarea {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 6px;
+  resize: none;
+  font-family: inherit;
+}
+
+.ai-assistant-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.ai-assistant-actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #3f51b5;
+  color: white;
+}

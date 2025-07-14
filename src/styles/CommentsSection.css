@@ -8,6 +8,37 @@
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
 }
 
+.comments-title-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.comments-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.inline-ai-assistant-btn {
+  padding: 6px 10px;
+  font-size: 14px;
+  background-color: #ececff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.inline-ai-assistant-popup {
+  position: absolute;
+  top: 0;
+  left: 100%; /* 靠右显示 */
+  margin-left: 16px;
+  z-index: 999;
+  width: 400px;
+  max-height: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 .comments-title {
   font-size: 20px;
   font-weight: bold;
