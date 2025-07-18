@@ -56,9 +56,10 @@ const AICommentAssistant = ({ reportId, onAdopt, onClose }) => {
 
   // ✅ 发送消息并更新 store 中的 messages
   const sendMessage = async () => {
-    const input = userInput.trim();
-    if (!input) return;
-
+    let input = userInput.trim();
+    if (!input) {
+      input = "Generate a comment for this article"; // 默认 placeholder 内容
+    }
     const newMessages = [...messages, { role: "user", content: input }];
     setMessages(reportId, newMessages);
     setUserInput("");
@@ -116,13 +117,13 @@ const AICommentAssistant = ({ reportId, onAdopt, onClose }) => {
       <div className="ai-assistant-input">
         <textarea
           rows={2}
-          placeholder="Type your message..."
+          placeholder="Generate a comment for this article"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           disabled={loading}
         />
         <div className="ai-assistant-actions">
-          <button onClick={sendMessage} disabled={loading || !userInput.trim()}>
+          <button onClick={sendMessage} disabled={loading}>
             {loading ? "Thinking..." : "Send"}
           </button>
 
