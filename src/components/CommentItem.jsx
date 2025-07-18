@@ -31,6 +31,9 @@ const FlatReplies = ({ replies = [], reportId, fetchComments }) => {
             )}
             {reply.content}
           </p>
+          {reply.is_ai_generated && (
+            <span className="ai-tag">💡 AI-generated</span>
+          )}
           <div className="comment-meta">
             <span
               className="username-link"
@@ -38,6 +41,7 @@ const FlatReplies = ({ replies = [], reportId, fetchComments }) => {
             >
               {reply.user?.username ?? "Anonymous"}
             </span>
+
             <span style={{ marginRight: "1rem" }}>
               {new Date(reply.createdAt).toLocaleString()}
             </span>
@@ -58,6 +62,9 @@ const CommentItem = ({ comment, reportId, fetchComments }) => {
 
   return (
     <li className="comment-item">
+      {comment.is_ai_generated && (
+        <span className="ai-tag">💡 AI-generated</span> // ✅ 新增：显示 AI 标记
+      )}
       <p className="comment-content">{comment.content}</p>
       <div className="comment-meta">
         <span
@@ -66,6 +73,7 @@ const CommentItem = ({ comment, reportId, fetchComments }) => {
         >
           {comment.user?.username ?? "Anonymous"}
         </span>
+
         <span style={{ marginRight: "1rem" }}>
           {new Date(comment.createdAt).toLocaleString()}
         </span>

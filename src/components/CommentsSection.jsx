@@ -18,6 +18,9 @@ const CommentsSection = ({ reportId }) => {
   const [generating, setGenerating] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false); // ✅ 控制 AI 弹窗
 
+  //comment ai generate recognition
+  const [isAI, setIsAI] = useState(false);
+
   const { authState } = useContext(AuthContext);
   const isLoggedIn = authState?.status === true;
 
@@ -63,7 +66,7 @@ const CommentsSection = ({ reportId }) => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/comments`,
-        { content: newComment, reportId },
+        { content: newComment, reportId, is_ai_generated: isAI },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -95,6 +98,7 @@ const CommentsSection = ({ reportId }) => {
       const suggestion = res.data?.suggestion;
       if (suggestion) {
         setNewComment(suggestion);
+        setIsAI(true); // ✅ 标记为 AI
         toast.success("AI-generated comment added!");
       } else {
         toast.error("No suggestion received.");
@@ -129,6 +133,7 @@ const CommentsSection = ({ reportId }) => {
               reportId={reportId}
               onAdopt={(text) => {
                 setNewComment(text);
+                setIsAI(true); // ✅ 标记为 AI
                 setShowAssistant(false);
               }}
               onClose={() => setShowAssistant(false)}
@@ -159,9 +164,14 @@ const CommentsSection = ({ reportId }) => {
               className="comment-input"
               placeholder="Write your comment..."
               value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
+              onChange={(e) => {
+                setNewComment(e.target.value);
+                setIsAI(false);
+              }}
               rows={2}
             />
+            {isAI && <span className="ai-label">💡 AI-generated</span>}
+
             <button type="submit" className="comment-submit">
               Submit
             </button>

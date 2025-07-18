@@ -80,6 +80,16 @@
   color: #888;
 }
 
+.ai-tag {
+  margin-left: 8px;
+  background-color: #fff8e1;
+  color: #d97706;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
 /* mention 样式，如 @admin */
 .mention {
   color: #888;
