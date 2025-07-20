@@ -18,6 +18,8 @@ const CommentsSection = ({ reportId }) => {
   const [generating, setGenerating] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false); // ✅ 控制 AI 弹窗
 
+  const [replyTo, setReplyTo] = useState(null); // 🔁 当前正在回复的 comment id
+
   //comment ai generate recognition
   const [isAI, setIsAI] = useState(false);
 
@@ -66,7 +68,12 @@ const CommentsSection = ({ reportId }) => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/comments`,
-        { content: newComment, reportId, is_ai_generated: isAI },
+        {
+          content: newComment,
+          reportId,
+          parentId: replyTo,
+          is_ai_generated: isAI,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -76,6 +83,7 @@ const CommentsSection = ({ reportId }) => {
       setNewComment("");
       toast.success("Comment submitted!");
       fetchComments();
+      setReplyTo(null);
     } catch (err) {
       if (err.response?.status === 429) {
         toast.error(
@@ -93,7 +101,7 @@ const CommentsSection = ({ reportId }) => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/comments/generate`,
-        { reportId }
+        { reportId, parentId: replyTo }
       );
       const suggestion = res.data?.suggestion;
       if (suggestion) {
@@ -152,6 +160,7 @@ const CommentsSection = ({ reportId }) => {
               comment={c}
               reportId={reportId}
               fetchComments={fetchComments}
+              setReplyTo={setReplyTo}
             />
           ))}
         </ul>
@@ -159,6 +168,12 @@ const CommentsSection = ({ reportId }) => {
 
       {isLoggedIn ? (
         <form onSubmit={handleSubmit} className="comment-form">
+          {replyTo && (
+            <div className="replying-to-bar">
+              Replying to comment #{replyTo}{" "}
+              <button onClick={() => setReplyTo(null)}>Cancel</button>
+            </div>
+          )}
           <div className="comment-row">
             <textarea
               className="comment-input"

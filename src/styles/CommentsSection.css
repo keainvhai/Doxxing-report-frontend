@@ -57,6 +57,34 @@
   margin: 0;
 }
 
+.replying-to-bar {
+  /* background-color: #eef3ff; */
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2b4db8;
+}
+
+.replying-to-bar button {
+  background: none;
+  border: none;
+  color: #444;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.replying-to-bar button:hover {
+  background-color: #dcdcdc;
+}
+
 /* ===== 一级评论 + 子评论通用 ===== */
 .comment-item {
   margin-bottom: 1rem;
