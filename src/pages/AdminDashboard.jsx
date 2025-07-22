@@ -330,7 +330,7 @@ const AdminDashboard = () => {
         >
           {summaryLoading ? "Generating Summary..." : "Generate Weekly Summary"}
         </button>
-        <button
+        {/* <button
           className="action-btn"
           onClick={() => {
             window.open(
@@ -340,7 +340,7 @@ const AdminDashboard = () => {
           }}
         >
           Export Approved Report Summary
-        </button>
+        </button> */}
         <button
           className="action-btn"
           onClick={() => {
@@ -351,6 +351,17 @@ const AdminDashboard = () => {
           }}
         >
           Export All Report Summary
+        </button>
+        <button
+          className="action-btn"
+          onClick={() => {
+            window.open(
+              `${import.meta.env.VITE_API_URL}/reports/user-activity-csv`,
+              "_blank"
+            );
+          }}
+        >
+          Export User Activity Summary
         </button>
       </div>
 
