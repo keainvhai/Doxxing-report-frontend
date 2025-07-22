@@ -341,6 +341,17 @@ const AdminDashboard = () => {
         >
           Export Approved Report Summary
         </button>
+        <button
+          className="action-btn"
+          onClick={() => {
+            window.open(
+              `${import.meta.env.VITE_API_URL}/reports/full-summary-csv`,
+              "_blank"
+            );
+          }}
+        >
+          Export All Report Summary
+        </button>
       </div>
 
       <div className="status-messages">
