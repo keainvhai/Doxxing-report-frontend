@@ -42,8 +42,11 @@ const Leaderboard = () => {
 
   // 点击后跳转 Search 页，并传递 query 参数
   // encodeURIComponent 防止有特殊字符
-  const handleAuthorClick = (authorName) => {
-    navigate(`/search?author=${encodeURIComponent(authorName)}`);
+  // const handleAuthorClick = (authorName) => {
+  //   navigate(`/search?author=${encodeURIComponent(authorName)}`);
+  // };
+  const handleAuthorClick = (userId) => {
+    navigate(`/user/${userId}`);
   };
 
   const handleSourceClick = (sourceDomain) => {
@@ -71,8 +74,15 @@ const Leaderboard = () => {
               {leaderboardData.lastWeekContributions.map((entry, index) => (
                 <li
                   key={index}
-                  onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
-                  style={{ cursor: "pointer" }}
+                  // onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
+                  onClick={() => {
+                    if (entry.userId) handleAuthorClick(entry.userId);
+                  }}
+                  style={{
+                    cursor: entry.userId ? "pointer" : "default",
+                    color: entry.userId ? "inherit" : "gray",
+                  }}
+                  // style={{ cursor: "pointer" }}
                 >
                   <span className="rank-badge">
                     <div className="medal-container">
@@ -100,8 +110,15 @@ const Leaderboard = () => {
               {leaderboardData.existingIncidentReports.map((entry, index) => (
                 <li
                   key={index}
-                  onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
-                  style={{ cursor: "pointer" }}
+                  // onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
+                  // style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    if (entry.userId) handleAuthorClick(entry.userId);
+                  }}
+                  style={{
+                    cursor: entry.userId ? "pointer" : "default",
+                    color: entry.userId ? "inherit" : "gray",
+                  }}
                 >
                   <span className="rank-badge">
                     <div className="medal-container">
@@ -125,8 +142,15 @@ const Leaderboard = () => {
               {leaderboardData.totalContributions.map((entry, index) => (
                 <li
                   key={index}
-                  onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
-                  style={{ cursor: "pointer" }}
+                  // onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
+                  // style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    if (entry.userId) handleAuthorClick(entry.userId);
+                  }}
+                  style={{
+                    cursor: entry.userId ? "pointer" : "default",
+                    color: entry.userId ? "inherit" : "gray",
+                  }}
                 >
                   <span className="rank-badge">
                     <div className="medal-container">
@@ -149,8 +173,15 @@ const Leaderboard = () => {
               {leaderboardData.reportAuthorship.map((entry, index) => (
                 <li
                   key={index}
-                  onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
-                  style={{ cursor: "pointer" }}
+                  // onClick={() => handleAuthorClick(entry.author)} // ✅ 加点击
+                  // style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    if (entry.userId) handleAuthorClick(entry.userId);
+                  }}
+                  style={{
+                    cursor: entry.userId ? "pointer" : "default",
+                    color: entry.userId ? "inherit" : "gray",
+                  }}
                 >
                   <span className="rank-badge">
                     <div className="medal-container">
