@@ -119,6 +119,10 @@ const Navbar = () => {
           </Link>
         )}
 
+        <Link to="/points" className="nav-item">
+          Points
+        </Link>
+
         {!authState.status ? (
           <>
             <Link to="/register" onClick={() => setMenuOpen(false)}>

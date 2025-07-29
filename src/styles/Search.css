@@ -37,8 +37,14 @@
 }
 
 /* ✅ 搜索按钮和高级搜索按钮的容器 */
+/* .search-btn-container {
+  display: flex;
+  gap: 10px;
+} */
+
 .search-btn-container {
   display: flex;
+  align-items: center; /* ✅ 新增这一句，让里面的按钮 + 下拉对齐 */
   gap: 10px;
 }
 
@@ -103,13 +109,17 @@
   width: 95%;
 }
 
-/* Sort dropdown 样式 */
+.dropdown-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ⚠️ 覆盖你原来的 display: block */
 .dropdown-filter label {
-  display: block;
-  /* font-weight: bold; */
-  margin-bottom: 6px;
-  color: #333;
-  font-size: 14px;
+  display: inline;
+  font-weight: bold;
+  margin: 0;
 }
 
 #sort-by-select {

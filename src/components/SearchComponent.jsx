@@ -15,6 +15,9 @@ const SearchComponent = ({
   selectedAuthor,
   setSelectedAuthor,
   handleDownloadSearchCSV,
+  showStatusFilter,
+  selectedStatus, // ✅ 加这行
+  setSelectedStatus,
 }) => {
   const [query, setQuery] = useState("");
 
@@ -163,21 +166,6 @@ const SearchComponent = ({
             <select
               id="sort-by-select"
               value={`${filters.sortField}_${filters.sortOrder}`}
-              // onChange={(e) => {
-              //   // const [field, order] = e.target.value.split("_");
-              //   const value = e.target.value;
-              //   const lastUnderscoreIndex = value.lastIndexOf("_");
-              //   const field = value.slice(0, lastUnderscoreIndex);
-              //   const order = value.slice(lastUnderscoreIndex + 1);
-
-              //   const updatedFilters = {
-              //     ...filters,
-              //     sortField: field,
-              //     sortOrder: order,
-              //   };
-              //   setFilters(updatedFilters);
-              //   handleSearch(updatedFilters);
-              // }}
               onChange={(e) => {
                 const value = e.target.value;
                 const lastUnderscoreIndex = value.lastIndexOf("_");
@@ -200,6 +188,48 @@ const SearchComponent = ({
               <option value="createdAt_desc">Created Time ↓</option>
             </select>
           </div>
+
+          {showStatusFilter && (
+            <div className="dropdown-filter">
+              <label htmlFor="status-select">Status:</label>
+
+              <select
+                id="status-select"
+                value={selectedStatus}
+                onChange={(e) => {
+                  const newStatus = e.target.value;
+                  setSelectedStatus(newStatus);
+
+                  const updatedFilters = {
+                    ...filters,
+                  };
+
+                  if (newStatus === "") {
+                    delete updatedFilters.status; // ✅ 重点：清除 status 字段
+                  } else {
+                    updatedFilters.status = newStatus;
+                  }
+
+                  // const updatedFilters =
+                  //   newStatus && newStatus !== "All"
+                  //     ? { ...filters, status: newStatus }
+                  //     : (() => {
+                  //         const { status, ...rest } = filters;
+                  //         return rest;
+                  //       })();
+
+                  setFilters(updatedFilters); // ✅ 记得更新 filters 状态
+                  handleSearch(updatedFilters); // ✅ 调用搜索
+                }}
+              >
+                <option value="">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+          )}
+
           <div className="flex justify-end">
             <button onClick={handleDownloadSearchCSV} className="export-btn">
               <FaFileCsv style={{ marginRight: "6px" }} />

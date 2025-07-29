@@ -25,6 +25,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // 样式很重要，记得一起引入
 import Statistic from "./pages/Statistic";
 import FloatingChatWithAgent from "./components/FloatingChatWithAgent.jsx";
+import PointsSystem from "./pages/PointsSystem.jsx";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
               <Route path="/data" element={<Data />} />
               <Route path="/statistic" element={<Statistic />} />
               <Route path="/user/:id" element={<PublicUserProfile />} />
+              <Route path="/points" element={<PointsSystem />} />
             </Routes>
             <ToastContainer position="top-right" autoClose={3000} />
           </div>

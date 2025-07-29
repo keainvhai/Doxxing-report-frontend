@@ -54,6 +54,8 @@ const AdminDashboard = () => {
 
   const navigate = useNavigate();
 
+  const [selectedStatus, setSelectedStatus] = useState("");
+
   useEffect(() => {
     const tab = searchParams.get("tab");
     const userPageParam = parseInt(searchParams.get("page"));
@@ -176,6 +178,7 @@ const AdminDashboard = () => {
   const handleDelete = async (id) => {
     try {
       await deleteReport(id);
+      value = { selectedStatus };
       setReports((prevReports) =>
         prevReports.filter((report) => report.id !== id)
       );
@@ -186,9 +189,21 @@ const AdminDashboard = () => {
   };
 
   const handleSearch = (query, extraFilters = {}) => {
-    goToPage(1); // 重置页码
-    setFilters({ search: query.trim(), ...extraFilters });
+    setFilters({
+      search: query.trim(),
+      ...extraFilters,
+    });
+    goToPage(1); // 可选
   };
+  // const handleSearch = (query, extraFilters = {}) => {
+  //   const filtersWithStatus =
+  //     selectedStatus && selectedStatus !== "All"
+  //       ? { ...extraFilters, status: selectedStatus }
+  //       : extraFilters;
+
+  //   goToPage(1); // 重置页码
+  //   setFilters({ search: query.trim(), ...filtersWithStatus });
+  // };
 
   const handlePageChange = (event) => {
     setInputPage(event.target.value);
@@ -395,6 +410,10 @@ const AdminDashboard = () => {
             placeholder="Search reports..."
             onSearch={handleSearch}
             sources={sources}
+            showStatusFilter={true}
+            filters={filters}
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
           />
           {loading && <p>Loading reports...</p>}
           {error && <p className="error">{error}</p>}
