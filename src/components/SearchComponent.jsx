@@ -192,7 +192,6 @@ const SearchComponent = ({
           {showStatusFilter && (
             <div className="dropdown-filter">
               <label htmlFor="status-select">Status:</label>
-
               <select
                 id="status-select"
                 value={selectedStatus}
