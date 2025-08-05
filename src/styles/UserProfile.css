@@ -47,6 +47,22 @@
   gap: 8px;
 }
 
+.profile-level {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  color: #444;
+}
+
+.level-title {
+  display: inline-block;
+  background-color: #fef9c3;
+  color: #a16207;
+  font-weight: bold;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.85rem;
+}
+
 .profile-content .card-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);

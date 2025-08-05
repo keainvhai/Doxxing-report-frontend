@@ -46,11 +46,11 @@ const PointsSystem = () => {
             <td style={tdStyle}>+3</td>
             <td style={tdStyle}>Only once per report</td>
           </tr>
-          <tr>
+          {/* <tr>
             <td style={tdStyle}>Check updates for subscribed reports</td>
             <td style={tdStyle}>+2</td>
             <td style={tdStyle}>Up to 3 per day</td>
-          </tr>
+          </tr> */}
           <tr>
             <td style={tdStyle}>Daily login</td>
             <td style={tdStyle}>+2</td>

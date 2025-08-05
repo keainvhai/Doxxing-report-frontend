@@ -3,6 +3,7 @@ import { fetchUserProfile, updateUsername, fetchUserComments } from "../api";
 import { useNavigate } from "react-router-dom";
 import ReportList from "../components/ReportList";
 import "../styles/UserProfile.css";
+import { getLevelTitle } from "../utils/levels";
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
@@ -88,6 +89,11 @@ const UserProfile = () => {
             >
               {editing ? "Save" : "Edit"}
             </button>
+          </p>
+
+          <p className="profile-level">
+            🌟 {user.points ?? 0} pts · Level {user.level ?? 1}:{" "}
+            <span className="level-title">{getLevelTitle(user.level)}</span>
           </p>
 
           <h3 className="reports-title">My Reports</h3>
