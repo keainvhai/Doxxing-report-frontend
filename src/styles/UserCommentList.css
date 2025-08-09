@@ -1,0 +1,46 @@
+.user-comment-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+.user-comment-item {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+.comment-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 6px;
+}
+.comment-meta .link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #0b69ff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.comment-content {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.ai-badge {
+  margin-left: auto;
+  font-size: 10px;
+  border: 1px solid #ffdf80;
+  background: #fff8e1;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}

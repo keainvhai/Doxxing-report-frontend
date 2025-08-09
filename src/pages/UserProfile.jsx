@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { fetchUserProfile, updateUsername, fetchUserComments } from "../api";
 import { useNavigate } from "react-router-dom";
 import ReportList from "../components/ReportList";
+import UserCommentList from "../components/UserCommentList";
 import "../styles/UserProfile.css";
 import { getLevelTitle } from "../utils/levels";
 
@@ -124,7 +125,7 @@ const UserProfile = () => {
         <p>Loading user info...</p>
       )}
 
-      <h3 className="comments-title">My Comments</h3>
+      {/* <h3 className="comments-title">My Comments</h3>
       {comments.length > 0 ? (
         <ul className="comment-history">
           {comments.map((comment) => (
@@ -145,7 +146,16 @@ const UserProfile = () => {
         </ul>
       ) : (
         <p>No comments yet.</p>
-      )}
+      )} */}
+      <UserCommentList
+        isPublic={false}
+        data={{
+          rows: comments,
+          count: comments.length,
+          page: 1,
+          pageSize: comments.length || 10,
+        }} // 私有页暂时不分页，所以不传 onPageChange（组件内部会仅在 isPublic 时显示分页）
+      />
     </div>
   );
 };

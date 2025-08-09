@@ -109,5 +109,12 @@ export const updateUserReport = (id, formData) =>
 //get user's all comments
 export const fetchUserComments = () => API.get("/comments/user");
 // 获取公开用户主页数据
-export const fetchUserPublicProfile = (userId) =>
-  API.get(`/users/public/${userId}`);
+// export const fetchUserPublicProfile = (userId) =>
+//   API.get(`/users/public/${userId}`);
+export const fetchUserPublicProfile = (
+  userId,
+  { commentsPage = 1, pageSize = 10 } = {}
+) =>
+  API.get(`/users/public/${userId}`, {
+    params: { commentsPage, pageSize },
+  });
