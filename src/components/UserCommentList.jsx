@@ -1,6 +1,11 @@
-import "../styles/UserCommentList.css";
 // components/UserCommentList.jsx
+
+import "../styles/UserCommentList.css";
+import { useNavigate } from "react-router-dom";
+
 export default function UserCommentList({ data, onPageChange, isPublic }) {
+  const navigate = useNavigate();
+
   const {
     rows = [],
     count = rows.length,

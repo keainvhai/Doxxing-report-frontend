@@ -2,6 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import useChatStore from "../store/chatStore";
 import ReactMarkdown from "react-markdown";
 
+const DEFAULT_GREETING = {
+  role: "assistant",
+  content:
+    "I'm your AI companion. I can help you think through situations, suggest strategies, or just be here to listen. What's going on?",
+};
+
 const FloatingChatWithAgent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -18,6 +24,9 @@ const FloatingChatWithAgent = () => {
 
   useEffect(() => {
     if (isOpen) {
+      if (!messages || messages.length === 0) {
+        addMessage(DEFAULT_GREETING);
+      }
       const timeout = setTimeout(() => {
         scrollToBottom();
       }, 50);
