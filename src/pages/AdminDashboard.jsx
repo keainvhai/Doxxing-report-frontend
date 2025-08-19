@@ -52,6 +52,20 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("reports"); // "reports" or "users"
   const [users, setUsers] = useState([]);
 
+  // === AI Logs: Companion ===
+  const [cPage, setCPage] = useState(1);
+  const [cPageSize, setCPageSize] = useState(50);
+  const [cTotal, setCTotal] = useState(0);
+  const [cRows, setCRows] = useState([]);
+  const [cLoading, setCLoading] = useState(false);
+
+  // === AI Logs: Comment ===
+  const [mPage, setMPage] = useState(1);
+  const [mPageSize, setMPageSize] = useState(50);
+  const [mTotal, setMTotal] = useState(0);
+  const [mRows, setMRows] = useState([]);
+  const [mLoading, setMLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -107,6 +121,14 @@ const AdminDashboard = () => {
 
     getReportsAndSources();
   }, [authState, page, filters, limit]);
+
+  useEffect(() => {
+    if (!authState.status || authState.role !== "admin") return;
+    if (activeTab === "aiLogs") {
+      fetchCompanion();
+      fetchCommentLogs();
+    }
+  }, [authState, activeTab, cPage, cPageSize, mPage, mPageSize]);
 
   useEffect(() => {
     if (authState.status && authState.role !== "admin") {
@@ -314,6 +336,94 @@ const AdminDashboard = () => {
     }
   };
 
+  // 拉取 AI Companion 列表（无筛选）
+  const fetchCompanion = async () => {
+    setCLoading(true);
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/reports/admin/ai-companion-prompts`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          params: { page: cPage, pageSize: cPageSize },
+        }
+      );
+      setCRows(res.data.rows || []);
+      setCTotal(res.data.total || 0);
+    } finally {
+      setCLoading(false);
+    }
+  };
+
+  // 下载 AI Companion CSV（无筛选）
+
+  const downloadCompanionCSV = async () => {
+    try {
+      const url = `${
+        import.meta.env.VITE_API_URL
+      }/reports/admin/ai-companion-prompts?download=csv`;
+      const res = await axios.get(url, {
+        responseType: "blob",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      const blob = new Blob([res.data], { type: "text/csv;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `ai_companion_prompts_${new Date()
+        .toISOString()
+        .slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (e) {
+      console.error("❌ Download companion CSV failed:", e);
+      alert("Failed to download CSV. Please re-login or check permissions.");
+    }
+  };
+
+  // 拉取 AI Comment 列表（无筛选）
+  const fetchCommentLogs = async () => {
+    setMLoading(true);
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/reports/admin/ai-comment-prompts`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          params: { page: mPage, pageSize: mPageSize },
+        }
+      );
+      setMRows(res.data.rows || []);
+      setMTotal(res.data.total || 0);
+    } finally {
+      setMLoading(false);
+    }
+  };
+
+  // 下载 AI Comment CSV（无筛选）
+
+  const downloadCommentCSV = async () => {
+    try {
+      const url = `${
+        import.meta.env.VITE_API_URL
+      }/reports/admin/ai-comment-prompts?download=csv`;
+      const res = await axios.get(url, {
+        responseType: "blob",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      const blob = new Blob([res.data], { type: "text/csv;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `ai_comment_prompts_${new Date()
+        .toISOString()
+        .slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (e) {
+      console.error("❌ Download comment CSV failed:", e);
+      alert("Failed to download CSV. Please re-login or check permissions.");
+    }
+  };
+
   const openGmailCompose = (email) => {
     const subject = encodeURIComponent("Regarding your report");
     const body = encodeURIComponent(
@@ -400,6 +510,13 @@ const AdminDashboard = () => {
           }}
         >
           👥 Manage Users
+        </button>
+
+        <button
+          className={activeTab === "aiLogs" ? "active" : ""}
+          onClick={() => setActiveTab("aiLogs")}
+        >
+          🤖 AI Logs
         </button>
       </div>
 
@@ -776,6 +893,223 @@ const AdminDashboard = () => {
                 <option value="all">All</option>
               </select>
             </div>
+          </div>
+        </div>
+      )}
+      {activeTab === "aiLogs" && (
+        <div className="table-container">
+          <h3>AI Companion Logs</h3>
+          <div className="admin-actions" style={{ gap: 8 }}>
+            <button
+              className="action-btn"
+              onClick={fetchCompanion}
+              disabled={cLoading}
+            >
+              {cLoading ? "Loading..." : "Refresh"}
+            </button>
+            <button className="action-btn" onClick={downloadCompanionCSV}>
+              Download CSV
+            </button>
+
+            <div
+              style={{
+                marginLeft: "auto",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <span>Per Page:</span>
+              <select
+                value={cPageSize}
+                onChange={(e) => {
+                  setCPageSize(parseInt(e.target.value, 10));
+                  setCPage(1);
+                }}
+              >
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>createdAt</th>
+                <th>userId</th>
+                <th>username</th>
+                <th>prompt</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cRows.length === 0 ? (
+                <tr>
+                  <td colSpan="4">No data</td>
+                </tr>
+              ) : (
+                cRows.map((row) => (
+                  <tr key={row.id}>
+                    <td>{new Date(row.createdAt).toLocaleString()}</td>
+                    <td>{row.userId ?? ""}</td>
+                    <td>{row.username ?? ""}</td>
+                    <td
+                      title={row.prompt}
+                      style={{
+                        maxWidth: 420,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {row.prompt}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+
+          <div className="pagination">
+            <button onClick={() => setCPage(1)} disabled={cPage === 1}>
+              First
+            </button>
+            <button onClick={() => setCPage(cPage - 1)} disabled={cPage === 1}>
+              Previous
+            </button>
+            <span>
+              {cPage} / {Math.max(1, Math.ceil(cTotal / cPageSize))}
+            </span>
+            <button
+              onClick={() => setCPage(cPage + 1)}
+              disabled={cPage >= Math.ceil(cTotal / cPageSize)}
+            >
+              Next
+            </button>
+            <button
+              onClick={() =>
+                setCPage(Math.max(1, Math.ceil(cTotal / cPageSize)))
+              }
+              disabled={cPage >= Math.ceil(cTotal / cPageSize)}
+            >
+              Last
+            </button>
+          </div>
+
+          <hr style={{ margin: "24px 0" }} />
+
+          <h3>AI Comment Logs</h3>
+          <div className="admin-actions" style={{ gap: 8 }}>
+            <button
+              className="action-btn"
+              onClick={fetchCommentLogs}
+              disabled={mLoading}
+            >
+              {mLoading ? "Loading..." : "Refresh"}
+            </button>
+            <button className="action-btn" onClick={downloadCommentCSV}>
+              Download CSV
+            </button>
+
+            <div
+              style={{
+                marginLeft: "auto",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <span>Per Page:</span>
+              <select
+                value={mPageSize}
+                onChange={(e) => {
+                  setMPageSize(parseInt(e.target.value, 10));
+                  setMPage(1);
+                }}
+              >
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>createdAt</th>
+                <th>userId</th>
+                <th>username</th>
+                <th>reportId</th>
+                <th>reportTitle</th>
+                <th>prompt</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mRows.length === 0 ? (
+                <tr>
+                  <td colSpan="6">No data</td>
+                </tr>
+              ) : (
+                mRows.map((row) => (
+                  <tr key={row.id}>
+                    <td>{new Date(row.createdAt).toLocaleString()}</td>
+                    <td>{row.userId}</td>
+                    <td>{row.username ?? ""}</td>
+                    <td>{row.reportId}</td>
+                    <td
+                      title={row.reportTitle ?? ""}
+                      style={{
+                        maxWidth: 260,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {row.reportTitle ?? ""}
+                    </td>
+                    <td
+                      title={row.prompt}
+                      style={{
+                        maxWidth: 420,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {row.prompt}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+
+          <div className="pagination">
+            <button onClick={() => setMPage(1)} disabled={mPage === 1}>
+              First
+            </button>
+            <button onClick={() => setMPage(mPage - 1)} disabled={mPage === 1}>
+              Previous
+            </button>
+            <span>
+              {mPage} / {Math.max(1, Math.ceil(mTotal / mPageSize))}
+            </span>
+            <button
+              onClick={() => setMPage(mPage + 1)}
+              disabled={mPage >= Math.ceil(mTotal / mPageSize)}
+            >
+              Next
+            </button>
+            <button
+              onClick={() =>
+                setMPage(Math.max(1, Math.ceil(mTotal / mPageSize)))
+              }
+              disabled={mPage >= Math.ceil(mTotal / mPageSize)}
+            >
+              Last
+            </button>
           </div>
         </div>
       )}
