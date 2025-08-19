@@ -14,7 +14,7 @@
 
 /* ✅ Edit & Save 按钮统一样式 */
 .edituser-btn,
-.save-btn {
+.saveuser-btn {
   width: auto;
   padding: 6px 14px;
   background: #007bff;
@@ -29,15 +29,8 @@
 }
 
 /* ✅ Save 按钮颜色稍深 */
-.save-btn {
+.saveuser-btn {
   background: #0056b3;
-}
-
-/* ✅ Hover 效果 */
-.edituser-btn:hover,
-.save-btn:hover {
-  background: #004494;
-  transform: scale(1.05);
 }
 
 /* ✅ 让按钮与输入框对齐 */
@@ -57,6 +50,81 @@
   grid-column: span 6;
   display: flex;
   flex-direction: column;
+}
+
+/* 头部：标题 + 右侧小按钮 */
+.about-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.about-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #0b69ff;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 14px;
+}
+
+.about-read {
+  padding: 10px 12px;
+  border: 1px solid #eee;
+  background: #fafafa;
+  border-radius: 8px;
+  line-height: 1.6;
+}
+
+.about-empty {
+  color: #888;
+  font-style: italic;
+}
+
+.about-textarea {
+  width: 90%;
+  /* margin-right: 1rem; */
+  min-height: 120px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: vertical;
+}
+
+.about-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.char-count {
+  color: #666;
+}
+
+/* .saveuser-btn {
+  background: #0b69ff;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+} */
+
+.cancel-btn {
+  background: #f3f4f6;
+  color: #111;
+  border: 1px solid #e5e7eb;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .profile-content .report-list .report-card,

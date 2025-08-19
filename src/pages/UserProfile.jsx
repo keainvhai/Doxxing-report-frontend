@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { fetchUserProfile, updateUsername, fetchUserComments } from "../api";
+import {
+  fetchUserProfile,
+  updateUsername,
+  fetchUserComments,
+  updateMyDescription,
+} from "../api";
 import { useNavigate } from "react-router-dom";
 import ReportList from "../components/ReportList";
 import UserCommentList from "../components/UserCommentList";
@@ -11,11 +16,18 @@ const UserProfile = () => {
   const [username, setUsername] = useState("");
   const [editing, setEditing] = useState(false);
 
+  const [descEditing, setDescEditing] = useState(false);
+  const [desc, setDesc] = useState(""); //  简介文本
+  const [saving, setSaving] = useState(false); //  保存中
+  const [originalDesc, setOriginalDesc] = useState("");
+  const [msg, setMsg] = useState(""); // 提示
+
   const [comments, setComments] = useState([]);
 
   // ✅ 添加username错误提示状态
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const MAX_LEN = 500;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +38,8 @@ const UserProfile = () => {
         if (profileRes.data.success) {
           setUser(profileRes.data.user);
           setUsername(profileRes.data.user.username || ""); // 预填充 username
+          setDesc(profileRes.data.user.description || "");
+          setOriginalDesc(profileRes.data.user.description || "");
         } else {
           navigate("/login");
         }
@@ -60,6 +74,33 @@ const UserProfile = () => {
     }
   };
 
+  const handleSaveDescription = async () => {
+    try {
+      setSaving(true);
+      const trimmed = (desc || "").slice(0, MAX_LEN);
+      const res = await updateMyDescription(trimmed);
+      const updated = res.data?.user || res.data;
+      setUser((prev) => ({
+        ...(prev || {}),
+        ...(updated || {}),
+        description: updated?.description ?? trimmed,
+      }));
+      setDesc(updated?.description ?? trimmed);
+      setOriginalDesc(updated?.description ?? trimmed);
+      setDescEditing(false);
+    } catch (e) {
+      console.error(e);
+      alert(e.response?.data?.error || "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancelDescription = () => {
+    setDesc(originalDesc || "");
+    setDescEditing(false);
+  };
+
   return (
     <div className="profile-container">
       <h2 className="profile-title">My Profile</h2>
@@ -83,12 +124,21 @@ const UserProfile = () => {
               username
             )}
             <button
-              className={editing ? "save-btn" : "edituser-btn"}
+              className={editing ? "saveuser-btn" : "edituser-btn"}
               onClick={() =>
                 editing ? handleUsernameUpdate() : setEditing(true)
               }
             >
               {editing ? "Save" : "Edit"}
+            </button>
+            <button
+              className="cancel-btn"
+              onClick={() => {
+                setUsername(user.username);
+                setEditing(false);
+              }}
+            >
+              Cancel
             </button>
           </p>
 
@@ -96,6 +146,79 @@ const UserProfile = () => {
             🌟 {user.points ?? 0} pts · Level {user.level ?? 1}:{" "}
             <span className="level-title">{getLevelTitle(user.level)}</span>
           </p>
+
+          {/* ✅ About me：只读展示 → 点击 Edit 才进入编辑 */}
+          <div className="profile-about">
+            <div className="about-header">
+              <label className="about-label">About me (optional)</label>
+              {!descEditing && (
+                <button
+                  className="link-btn"
+                  onClick={() => setDescEditing(true)}
+                >
+                  {user?.description && user.description.trim() !== ""
+                    ? "Edit"
+                    : "Add"}
+                </button>
+              )}
+            </div>
+            {/* 只读态 */}
+            {!descEditing && (
+              <>
+                {user?.description && user.description.trim() !== "" ? (
+                  <p className="about-read" style={{ whiteSpace: "pre-wrap" }}>
+                    {user.description}
+                  </p>
+                ) : (
+                  <p className="about-empty">No description yet.</p>
+                )}
+              </>
+            )}
+
+            {/* 编辑态 */}
+            {descEditing && (
+              <>
+                <textarea
+                  className="about-textarea"
+                  value={desc}
+                  onChange={(e) => {
+                    const v = e.target.value || "";
+                    if (v.length <= MAX_LEN) setDesc(v);
+                  }}
+                  onKeyDown={(e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                      handleSaveDescription();
+                    }
+                    if (e.key === "Escape") {
+                      handleCancelDescription();
+                    }
+                  }}
+                  placeholder="Write a short description about yourself…"
+                  rows={5}
+                  autoFocus
+                />
+                <div className="about-actions">
+                  <small className="char-count">
+                    {desc.length}/{MAX_LEN}
+                  </small>
+                  <button
+                    className="saveuser-btn"
+                    onClick={handleSaveDescription}
+                    disabled={saving}
+                  >
+                    {saving ? "Saving…" : "Save"}
+                  </button>
+                  <button
+                    className="cancel-btn"
+                    onClick={handleCancelDescription}
+                    disabled={saving}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
 
           <h3 className="reports-title">My Reports</h3>
 

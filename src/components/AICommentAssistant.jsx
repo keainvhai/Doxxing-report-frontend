@@ -60,6 +60,21 @@ const AICommentAssistant = ({ reportId, onAdopt, onClose }) => {
     if (!input) {
       input = "Generate a comment for this article"; // 默认 placeholder 内容
     }
+
+    // ✅ 从本地取 JWT；没登录就阻止请求并提示
+    const token = localStorage.getItem("token"); // ← 和登录时保持一致
+
+    if (!token) {
+      setMessages(reportId, [
+        ...messages,
+        {
+          role: "assistant",
+          content: "⚠️ Please log in to use AI comment assistant.",
+        },
+      ]);
+      return;
+    }
+
     const newMessages = [...messages, { role: "user", content: input }];
     setMessages(reportId, newMessages);
     setUserInput("");
@@ -68,7 +83,12 @@ const AICommentAssistant = ({ reportId, onAdopt, onClose }) => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/comments/generate`,
-        { reportId, chatHistory: newMessages }
+        { reportId, chatHistory: newMessages },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ 关键：带上 JWT
+          },
+        }
       );
       const suggestion = res.data?.suggestion;
       const reply = suggestion
