@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {
+  formatLocationLabel,
+  isUnknownOrOnline,
+} from "../utils/formatLocation";
+
 import "../styles/Leaderboard.css";
 
 const Leaderboard = () => {
@@ -223,29 +228,36 @@ const Leaderboard = () => {
         )}
 
         {/* Victim Location 排行榜 */}
-        {excludeUnknownOnline(
+        {/* {excludeUnknownOnline(
           leaderboardData.victimLocations,
           "victim_location"
+        ).length > 0 && ( */}
+        {(leaderboardData.victimLocations || []).filter(
+          (e) => !isUnknownOrOnline(e.victim_location)
         ).length > 0 && (
           <div className="leaderboard-section">
             <h2>📍 Victim Locations</h2>
             <ul className="leaderboard-list">
-              {excludeUnknownOnline(
+              {/* {excludeUnknownOnline(
                 leaderboardData.victimLocations,
                 "victim_location"
-              ).map((entry, index) => (
-                <li key={index}>
-                  <span className="rank-badge">
-                    <div className="medal-container">
-                      <span className="medal">{getMedal(index)}</span>
-                    </div>
-                    <span className="rank-content">
-                      {entry.victim_location}
+              ).map((entry, index) => ( */}
+              {(leaderboardData.victimLocations || [])
+                .filter((entry) => !isUnknownOrOnline(entry.victim_location))
+                .map((entry, index) => (
+                  <li key={index}>
+                    <span className="rank-badge">
+                      <div className="medal-container">
+                        <span className="medal">{getMedal(index)}</span>
+                      </div>
+                      <span className="rank-content">
+                        {/* {entry.victim_location} */}
+                        {formatLocationLabel(entry.victim_location)}
+                      </span>
                     </span>
-                  </span>
-                  <span className="count-badge">{entry.count}</span>
-                </li>
-              ))}
+                    <span className="count-badge">{entry.count}</span>
+                  </li>
+                ))}
             </ul>
           </div>
         )}

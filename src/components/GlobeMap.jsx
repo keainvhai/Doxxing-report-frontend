@@ -61,6 +61,9 @@ function GlobeMap({ data }) {
           count: 0,
           lat,
           lng,
+          city: d.city ?? null,
+          state: d.state ?? null,
+          country: d.country ?? null,
         };
       }
 
@@ -75,6 +78,9 @@ function GlobeMap({ data }) {
           location: d.location,
           count: d.count,
           label: d.location,
+          city: d.city,
+          state: d.state,
+          country: d.country,
         },
         geometry: {
           type: "Point",
