@@ -128,13 +128,22 @@ const FloatingChatWithAgent = () => {
           </div>
 
           <div style={styles.inputArea}>
-            <input
+            {/* <input
               style={styles.input}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Say something..."
+            /> */}
+            <textarea
+              style={styles.input}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Say something..."
+              rows={2} // 默认显示两行
             />
+
             <button style={styles.clearBtn} onClick={handleClear}>
               🗑
             </button>
@@ -218,12 +227,18 @@ const styles = {
     display: "flex",
     gap: "0.5rem",
   },
+
   input: {
     flex: 1,
-    padding: "0.5rem",
-    borderRadius: "5px",
+    padding: "0.75rem 1rem",
+    borderRadius: "8px",
     border: "1px solid #ccc",
+    fontSize: "15px",
+    minHeight: "45px",
+    resize: "none",
+    lineHeight: "1.4",
   },
+
   sendButton: {
     padding: "0.5rem 1rem",
     borderRadius: "5px",
