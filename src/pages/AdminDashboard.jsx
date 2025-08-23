@@ -20,36 +20,36 @@ const AdminDashboard = () => {
   const [sources, setSources] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({}); // ✅ 解决 filters 未定义问题
+  const [filters, setFilters] = useState({});
 
-  // report page
+  // URL 参数
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // Reports 分页状态（默认从 URL 初始化）
   const initialPage = parseInt(searchParams.get("page")) || 1;
   const initialLimit = parseInt(searchParams.get("limit")) || 12;
   const [page, setPage] = useState(initialPage);
-  const [limit, setLimit] = useState(initialLimit); // 默认每页 12 条
-
+  const [limit, setLimit] = useState(initialLimit);
   const [totalPages, setTotalPages] = useState(1);
   const [inputPage, setInputPage] = useState("");
 
-  // User page
+  // Users 分页状态（默认从 URL 初始化）
   const initialUserPage = parseInt(searchParams.get("page")) || 1;
   const initialUserLimit = parseInt(searchParams.get("limit")) || 10;
   const [userPage, setUserPage] = useState(initialUserPage);
   const [userLimit, setUserLimit] = useState(initialUserLimit);
-
   const [userTotalPages, setUserTotalPages] = useState(1);
   const [userInputPage, setUserInputPage] = useState("");
 
-  // crawl report from google news
+  // 爬新闻 & 生成周报
   const [crawlLoading, setCrawlLoading] = useState(false);
   const [crawlMessage, setCrawlMessage] = useState("");
-
-  // generate weekly summary
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [summaryMessage, setSummaryMessage] = useState("");
 
-  const [activeTab, setActiveTab] = useState("reports"); // "reports" or "users"
+  // 标签页
+  const [activeTab, setActiveTab] = useState("reports");
   const [users, setUsers] = useState([]);
 
   // === AI Logs: Companion ===
@@ -66,88 +66,79 @@ const AdminDashboard = () => {
   const [mRows, setMRows] = useState([]);
   const [mLoading, setMLoading] = useState(false);
 
-  const navigate = useNavigate();
-
   const [selectedStatus, setSelectedStatus] = useState("");
 
+  // ---- 修复 0：首次进入 /admin 时，如果没有 tab，补上默认 tab=reports ----
   useEffect(() => {
     const tab = searchParams.get("tab");
-    const userPageParam = parseInt(searchParams.get("page"));
-    const userLimitParam = parseInt(searchParams.get("limit"));
-
-    if (tab === "users") {
-      setActiveTab("users");
-
-      if (!isNaN(userPageParam)) {
-        setUserPage(userPageParam);
-      }
-      if (!isNaN(userLimitParam)) {
-        setUserLimit(userLimitParam);
-      }
-
-      fetchUsers(
-        isNaN(userPageParam) ? 1 : userPageParam,
-        isNaN(userLimitParam) ? 10 : userLimitParam
-      );
-    } else {
-      setActiveTab("reports");
+    if (!tab) {
+      // 用 replace 避免多一条历史记录
+      navigate(`/admin?tab=reports&page=${page}&limit=${limit}`, {
+        replace: true,
+      });
     }
-  }, [searchParams]);
+    // 只需运行一次
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // ---- 解析 URL，决定当前 tab 和该 tab 对应的分页参数 ----
   useEffect(() => {
-    if (activeTab === "users") {
-      fetchUsers(userPage, userLimit);
-    }
-  }, [activeTab, userPage, userLimit]);
+    const tab = searchParams.get("tab") || "reports";
+    setActiveTab(tab);
 
-  useEffect(() => {
     const urlPage = parseInt(searchParams.get("page"));
-    const resolvedPage = !isNaN(urlPage) ? urlPage : 1;
-    if (resolvedPage !== page) {
-      setPage(resolvedPage);
-    }
-  }, [searchParams]); // 🔁 每当 URL 参数变化时触发
-
-  useEffect(() => {
     const urlLimit = parseInt(searchParams.get("limit"));
-    if (!isNaN(urlLimit) && urlLimit !== limit) {
-      setLimit(urlLimit);
+
+    if (tab === "reports") {
+      setPage(!isNaN(urlPage) ? urlPage : 1);
+      setLimit(!isNaN(urlLimit) ? urlLimit : 12);
+    } else if (tab === "users") {
+      setUserPage(!isNaN(urlPage) ? urlPage : 1);
+      setUserLimit(!isNaN(urlLimit) ? urlLimit : 10);
+    } else {
+      // aiLogs 不用从 URL 解析分页，这里忽略
     }
   }, [searchParams]);
 
+  // ---- 只在 Reports 标签下拉取报告数据（修复 1）----
   useEffect(() => {
-    // ✅ 确保登录完成再加载
     if (!authState.status || authState.role !== "admin") return;
-
+    if (activeTab !== "reports") return; // 只在 reports 页才请求
     getReportsAndSources();
-  }, [authState, page, filters, limit]);
+  }, [authState, activeTab, page, filters, limit]);
 
+  // Users：当前是 users 标签时才拉用户
   useEffect(() => {
     if (!authState.status || authState.role !== "admin") return;
-    if (activeTab === "aiLogs") {
-      fetchCompanion();
-      fetchCommentLogs();
-    }
+    if (activeTab !== "users") return;
+    fetchUsers(userPage, userLimit);
+  }, [authState, activeTab, userPage, userLimit]);
+
+  // AI Logs：当前是 aiLogs 标签时才拉
+  useEffect(() => {
+    if (!authState.status || authState.role !== "admin") return;
+    if (activeTab !== "aiLogs") return;
+    fetchCompanion();
+    fetchCommentLogs();
   }, [authState, activeTab, cPage, cPageSize, mPage, mPageSize]);
 
+  // 非管理员跳走
   useEffect(() => {
     if (authState.status && authState.role !== "admin") {
       navigate("/");
     }
-  }, [authState]);
+  }, [authState, navigate]);
 
   const getReportsAndSources = async () => {
     setLoading(true);
     setError(null);
     try {
       const [reportsRes, sourcesRes] = await Promise.all([
-        // fetchReports(filters, page), // ✅ 传递 `filters` 和 `page`
         fetchReports(filters, page, limit),
-
         fetchSources(),
       ]);
       setReports(reportsRes.data.reports);
-      setTotalPages(reportsRes.data.totalPages); // ✅ 修正错误
+      setTotalPages(reportsRes.data.totalPages);
       setSources(sourcesRes.data.sources);
     } catch (err) {
       console.error("❌ Error fetching data:", err);
@@ -157,32 +148,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // const handleApprove = async (id) => {
-  //   try {
-  //     await approveReport(id);
-  //     setReports((prevReports) =>
-  //       prevReports.map((report) =>
-  //         report.id === id ? { ...report, status: "Approved" } : report
-  //       )
-  //     );
-  //   } catch (err) {
-  //     console.error("❌ Error approving report:", err);
-  //     alert("Failed to approve the report.");
-  //   }
-  // };
-  // const handleReject = async (id) => {
-  //   try {
-  //     await rejectReport(id);
-  //     setReports((prevReports) =>
-  //       prevReports.map((report) =>
-  //         report.id === id ? { ...report, status: "Rejected" } : report
-  //       )
-  //     );
-  //   } catch (err) {
-  //     console.error("❌ Error rejecting report:", err);
-  //     alert("Failed to reject the report.");
-  //   }
-  // };
   const handleStatusUpdate = async (id, status) => {
     try {
       await updateReportStatus(id, status);
@@ -200,7 +165,7 @@ const AdminDashboard = () => {
   const handleDelete = async (id) => {
     try {
       await deleteReport(id);
-      value = { selectedStatus };
+      // value = { selectedStatus }; // ⛔️ 这行是无效代码，会报错 ReferenceError，已移除
       setReports((prevReports) =>
         prevReports.filter((report) => report.id !== id)
       );
@@ -215,31 +180,12 @@ const AdminDashboard = () => {
       search: query.trim(),
       ...extraFilters,
     });
-    goToPage(1); // 可选
+    goToPage(1); // 搜索回到第 1 页
   };
-  // const handleSearch = (query, extraFilters = {}) => {
-  //   const filtersWithStatus =
-  //     selectedStatus && selectedStatus !== "All"
-  //       ? { ...extraFilters, status: selectedStatus }
-  //       : extraFilters;
-
-  //   goToPage(1); // 重置页码
-  //   setFilters({ search: query.trim(), ...filtersWithStatus });
-  // };
 
   const handlePageChange = (event) => {
     setInputPage(event.target.value);
   };
-
-  // const handlePageJump = () => {
-  //   const pageNumber = parseInt(inputPage, 10);
-  //   if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= totalPages) {
-  //     setPage(pageNumber);
-  //   } else {
-  //     alert(`Please enter a page number between 1 and ${totalPages}!`);
-  //   }
-  //   setInputPage(""); // ✅ 清空输入框
-  // };
 
   const handlePageJump = () => {
     const pageNumber = parseInt(inputPage, 10);
@@ -271,7 +217,6 @@ const AdminDashboard = () => {
         }
       );
       setCrawlMessage(res.data.message);
-      // ✅ 爬取完成后刷新 reports 列表
       getReportsAndSources();
     } catch (err) {
       console.error("❌ Error crawling news:", err);
@@ -321,18 +266,19 @@ const AdminDashboard = () => {
     }
   };
 
+  // 只负责：更新 reports 分页并同步到 URL
   const goToPage = (targetPage) => {
     if (targetPage !== page) {
       setPage(targetPage);
-      navigate(`/admin?page=${targetPage}&limit=${limit}`);
+      navigate(`/admin?tab=reports&page=${targetPage}&limit=${limit}`);
     }
   };
 
+  // 只负责：更新 users 分页并同步到 URL
   const goToUserPage = (targetPage) => {
     if (targetPage !== userPage) {
       setUserPage(targetPage);
       navigate(`/admin?tab=users&page=${targetPage}&limit=${userLimit}`);
-      fetchUsers(targetPage, userLimit);
     }
   };
 
@@ -355,7 +301,6 @@ const AdminDashboard = () => {
   };
 
   // 下载 AI Companion CSV（无筛选）
-
   const downloadCompanionCSV = async () => {
     try {
       const url = `${
@@ -399,7 +344,6 @@ const AdminDashboard = () => {
   };
 
   // 下载 AI Comment CSV（无筛选）
-
   const downloadCommentCSV = async () => {
     try {
       const url = `${
@@ -455,17 +399,7 @@ const AdminDashboard = () => {
         >
           {summaryLoading ? "Generating Summary..." : "Generate Weekly Summary"}
         </button>
-        {/* <button
-          className="action-btn"
-          onClick={() => {
-            window.open(
-              `${import.meta.env.VITE_API_URL}/reports/approved-summary-csv`,
-              "_blank"
-            );
-          }}
-        >
-          Export Approved Report Summary
-        </button> */}
+
         <button
           className="action-btn"
           onClick={() => {
@@ -498,15 +432,20 @@ const AdminDashboard = () => {
       <div className="admin-tabs">
         <button
           className={activeTab === "reports" ? "active" : ""}
-          onClick={() => setActiveTab("reports")}
+          onClick={() => {
+            setActiveTab("reports");
+            navigate(`/admin?tab=reports&page=${page}&limit=${limit}`);
+          }}
         >
           📄 Manage Reports
         </button>
+
         <button
           className={activeTab === "users" ? "active" : ""}
-          onClick={async () => {
+          onClick={() => {
             setActiveTab("users");
-            goToUserPage(1); // 重置页码
+            // 保留用户当前分页
+            navigate(`/admin?tab=users&page=${userPage}&limit=${userLimit}`);
           }}
         >
           👥 Manage Users
@@ -514,13 +453,16 @@ const AdminDashboard = () => {
 
         <button
           className={activeTab === "aiLogs" ? "active" : ""}
-          onClick={() => setActiveTab("aiLogs")}
+          onClick={() => {
+            setActiveTab("aiLogs");
+            navigate("/admin?tab=aiLogs");
+          }}
         >
           🤖 AI Logs
         </button>
       </div>
 
-      {/* ✅ 报告管理部分 */}
+      {/* Reports 列表 */}
       {activeTab === "reports" && (
         <>
           <SearchComponent
@@ -574,12 +516,6 @@ const AdminDashboard = () => {
                         </td>
 
                         <td>
-                          {/* <span
-                            className="username-link"
-                            onClick={() => navigate(`/user/${report.userId}`)}
-                          >
-                            {report.author || "Anonymous"}
-                          </span> */}
                           {report.userId && report.userId > 0 ? (
                             <span
                               className="username-link"
@@ -593,9 +529,7 @@ const AdminDashboard = () => {
                             </span>
                           )}
                         </td>
-                        {/* <td>
-                          {new Date(report.date_published).toLocaleDateString()}
-                        </td> */}
+
                         <td>
                           <span
                             title={
@@ -606,7 +540,7 @@ const AdminDashboard = () => {
                             style={{
                               color: report.isEstimatedDate
                                 ? "#d97706"
-                                : "inherit", // amber color
+                                : "inherit",
                               fontWeight: report.isEstimatedDate
                                 ? "bold"
                                 : "normal",
@@ -618,6 +552,7 @@ const AdminDashboard = () => {
                             {report.isEstimatedDate}
                           </span>
                         </td>
+
                         <td>{report.status}</td>
                         <td>
                           <div className="action-buttons">
@@ -625,7 +560,7 @@ const AdminDashboard = () => {
                               className="view-btn"
                               onClick={() =>
                                 navigate(`/admin/report/${report.id}`, {
-                                  state: { fromPage: page }, // ✅ 添加当前页码
+                                  state: { fromPage: page },
                                 })
                               }
                             >
@@ -678,7 +613,7 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* ✅ 分页控件也只在 reports 页面展示 */}
+          {/* Reports 分页 */}
           <div className="pagination">
             <button onClick={() => goToPage(1)} disabled={page === 1}>
               First
@@ -719,8 +654,8 @@ const AdminDashboard = () => {
                   const value = e.target.value;
                   const newLimit = value === "all" ? 9999 : parseInt(value, 10);
                   setLimit(newLimit);
-                  setPage(1); // 重置页码
-                  navigate(`/admin?page=1&limit=${newLimit}`);
+                  setPage(1);
+                  navigate(`/admin?tab=reports&page=1&limit=${newLimit}`);
                 }}
               >
                 <option value={12}>12</option>
@@ -733,7 +668,7 @@ const AdminDashboard = () => {
         </>
       )}
 
-      {/* ✅ 用户管理表格 */}
+      {/* Users 列表 */}
       {activeTab === "users" && (
         <div className="table-container">
           <h3>Registered Users</h3>
@@ -753,7 +688,6 @@ const AdminDashboard = () => {
                 users.map((user) => (
                   <tr key={user.id}>
                     <td>{user.id}</td>
-                    {/* <td>{user.username}</td> */}
                     <td>
                       <span
                         className="username-link"
@@ -763,14 +697,10 @@ const AdminDashboard = () => {
                         {user.username}
                       </span>
                     </td>
-
                     <td>{user.email}</td>
                     <td>{user.role}</td>
                     <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                     <td>
-                      {/* <button className="user-action-btn message-btn">
-                        Send message
-                      </button> */}
                       <button
                         className="user-action-btn email-btn"
                         onClick={() => openGmailCompose(user.email)}
@@ -787,12 +717,12 @@ const AdminDashboard = () => {
               )}
             </tbody>
           </table>
+
+          {/* Users 分页 */}
           <div className="pagination">
             <button
               onClick={() => {
-                if (userPage !== 1) {
-                  goToUserPage(1);
-                }
+                if (userPage !== 1) goToUserPage(1);
               }}
               disabled={userPage === 1}
             >
@@ -801,9 +731,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => {
                 const newPage = userPage - 1;
-                if (newPage >= 1) {
-                  goToUserPage(newPage);
-                }
+                if (newPage >= 1) goToUserPage(newPage);
               }}
               disabled={userPage === 1}
             >
@@ -815,9 +743,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => {
                 const newPage = userPage + 1;
-                if (newPage <= userTotalPages) {
-                  goToUserPage(newPage);
-                }
+                if (newPage <= userTotalPages) goToUserPage(newPage);
               }}
               disabled={userPage === userTotalPages}
             >
@@ -860,9 +786,7 @@ const AdminDashboard = () => {
             </button>
             <button
               onClick={() => {
-                if (userPage !== userTotalPages) {
-                  goToUserPage(userTotalPages);
-                }
+                if (userPage !== userTotalPages) goToUserPage(userTotalPages);
               }}
               disabled={userPage === userTotalPages}
             >
@@ -873,19 +797,12 @@ const AdminDashboard = () => {
               <select
                 id="user-limit-select"
                 value={userLimit}
-                // onChange={(e) => {
-                //   const val = e.target.value;
-                //   const newLimit = val === "all" ? 9999 : parseInt(val, 10);
-                //   setUserLimit(newLimit);
-                //   goToUserPage(1);
-                // }}
                 onChange={(e) => {
                   const value = e.target.value;
                   const newLimit = value === "all" ? 9999 : parseInt(value, 10);
                   setUserLimit(newLimit);
-                  setUserPage(1); // 重置页码
+                  setUserPage(1);
                   navigate(`/admin?tab=users&page=1&limit=${newLimit}`);
-                  fetchUsers(1, newLimit);
                 }}
               >
                 <option value={10}>10</option>
@@ -896,6 +813,8 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* AI Logs */}
       {activeTab === "aiLogs" && (
         <div className="table-container">
           <h3>AI Companion Logs</h3>
@@ -941,6 +860,7 @@ const AdminDashboard = () => {
                 <th>userId</th>
                 <th>username</th>
                 <th>prompt</th>
+                <th>response</th>
               </tr>
             </thead>
             <tbody>
@@ -960,10 +880,21 @@ const AdminDashboard = () => {
                         maxWidth: 420,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        // whiteSpace: "nowrap",
                       }}
                     >
                       {row.prompt}
+                    </td>
+                    <td
+                      title={row.response ?? ""}
+                      style={{
+                        maxWidth: 420,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        // whiteSpace: "nowrap",
+                      }}
+                    >
+                      {row.response ?? ""}
                     </td>
                   </tr>
                 ))
@@ -1044,6 +975,7 @@ const AdminDashboard = () => {
                 <th>reportId</th>
                 <th>reportTitle</th>
                 <th>prompt</th>
+                <th>response</th>
               </tr>
             </thead>
             <tbody>
@@ -1064,7 +996,7 @@ const AdminDashboard = () => {
                         maxWidth: 260,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        // whiteSpace: "nowrap",
                       }}
                     >
                       {row.reportTitle ?? ""}
@@ -1075,10 +1007,21 @@ const AdminDashboard = () => {
                         maxWidth: 420,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        // whiteSpace: "nowrap",
                       }}
                     >
                       {row.prompt}
+                    </td>
+                    <td
+                      title={row.response ?? ""}
+                      style={{
+                        maxWidth: 420,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        // whiteSpace: "nowrap",
+                      }}
+                    >
+                      {row.response ?? ""}
                     </td>
                   </tr>
                 ))
