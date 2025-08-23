@@ -57,7 +57,11 @@ const PublicUserProfile = () => {
           <span className="level-title">{getLevelTitle(user.level ?? 1)}</span>
         </p>
       )}
+
+      {/* 📝 用户简介 */}
+      {user.description && <p className="public-desc">{user.description}</p>}
       {/* <p>Email: {user.email || "N/A"}</p> */}
+
       <h3>Submitted Reports</h3>
       <ReportList reports={reports} />
 
