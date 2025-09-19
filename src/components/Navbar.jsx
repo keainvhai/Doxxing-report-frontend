@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
 import logoImage from "../assets/logo2.png";
 import { AuthContext } from "../helpers/AuthContext";
+import AddToHomeScreenPrompt from "./AddToHomeScreenPrompt";
 
 const Navbar = () => {
   const { authState, setAuthState, handleLogout } = useContext(AuthContext);
@@ -77,6 +78,7 @@ const Navbar = () => {
       <Link to="/" className="logo">
         <img src={logoImage} alt="Logo" className="logo-image" />
       </Link>
+      <AddToHomeScreenPrompt />
       <button
         ref={buttonRef}
         className="menu-toggle"
